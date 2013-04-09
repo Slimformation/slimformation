@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Slimformation</title>
+
+		<meta name="description" content="">
+		<meta name="author" content="Basil Huang + Amelia Kaufman + Gursimran Singh + Katie Zhu">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/sky.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+
+				<section>
+					<h2>Slimformation</h2>
+
+                                        <p>
+                                          "Our brains are as finite in capacity as our waistlines."
+                                        </p>
+
+                                        <p>
+                                          <em>EECS 395, Spring 2013</em>
+                                        </p>
+                                        <p>
+                                          <a href="http://twitter.com/">Basil Huang</a>
+                                          <br>
+                                          <a href="http://twitter.com/">Amelia Kaufman</a>
+                                          <br>
+                                          <a href="http://twitter.com/">Gursmiran Singh</a>
+                                          <br>
+                                          <a href="http://twitter.com/ktzhu">Katie Zhu</a>
+                                          <br>
+                                        </p>
+				</section>
+
+				<section>
+					<h3>The case for conscious consumption</h3>
+					<p>
+                                          If we want to make the media better, we have to start consuming better media. Information is inherently social, so the consequences of our information habits go way beyond affecting the individual. There are social consequences.
+					</p>
+				</section>
+				<section>
+					<h3>Overview + Description</h3>
+					<p>
+                                          <ul>
+                                            <li>Measure user behavior + habits</li>
+                                            <li>Analyze trends from this data</li>
+                                            <li>Prescribe options for "slimming down."</li>
+                                          </ul>
+					</p>
+				</section>
+
+				<section>
+					<h3>What we want to build</h3>
+                                        <p>
+                                          A system that:
+
+                                          <ul>
+                                            <li>Analyzes content</li>
+                                            <li>Score reading habits</li>
+                                            <li>Presents analysis (data + viz)</li>
+                                            <li>Prescribes recommendations for future reading habits.</li>
+                                          </ul>
+					</p>
+				</section>
+
+				<section>
+					<h3>System specs</h3>
+					<p>
+                                          <ul>
+                                            <li>Multiplatform (mobile + tablet)</li>
+                                            <li>Integration with reading list apps (Pocket + Kippt + Readability, etc.)</li>
+                                          </ul>
+					</p>
+				</section>
+
+				<section>
+					<h3>Information pyramid</h3>
+					<p>
+                                          We've brainstormed some preliminary attributes our system will use to determine the healthiness of a user's information consumption:
+                                          <ul>
+                                            <li>Length of content</li>
+                                            <li>Type of article (oped / analysis / news brief / cat video?)</li>
+                                            <li>Source (NYT vs. Buzzfeed)</li>
+                                            <li>Reading level</li>
+                                            <li>Topic / category</li>
+                                            <li>Links (?)</li>
+                                          </ul>
+					</p>
+				</section>
+
+				<section>
+					<h3>UI + UX considerations</h3>
+					<p>
+                                          <ul>
+                                            <li>Graphs on graphs on graphs. Giving users a visual presentation of their consumption habits is a must.</li>
+                                            <li>
+                                              We want to make this fun. We'd like to incorporate some gaming principles:
+                                              <li>Reading level: You're currently reading at the leve of a second grader. Step it up!</li>
+                                              <li>Badges for topical expertise: political junkie, tech star, animal lover</li>
+                                            </li>
+                                            <li>Reading recommendations + new sources to consider.</li>
+                                          </ul>
+					</p>
+				</section>
+
+				<section>
+					<h3>Some questions</h3>
+					<p>
+                                          <ul>
+                                            <li>Tracking versus check-ins?</li>
+                                            <li>How do we make this experience consistent across platforms + not fragmented?</li>
+                                          </ul>
+					</p>
+				</section>
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: false,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
