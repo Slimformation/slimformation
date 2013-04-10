@@ -158,5 +158,10 @@ body {
 
 .reveal li {
   line-height: 1.3em;
+  list-style-type: none;
+  font-size: 0.6em;
+}
+
+.reveal p {
   font-size: 0.6em;
 }
