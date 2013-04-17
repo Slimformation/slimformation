@@ -13,7 +13,7 @@
       "19": "icons/19.png",
       "38": "icons/38.png"
     },
-    "default_popup": "views/popup.html",
+    "default_popup": "views/index.html",
     "default_title": "Slimformation"
   },
 
@@ -30,7 +30,7 @@
     "48": "icons/48.png",
     "128": "icons/128.png"
   },
-  
+
   "permissions": [
     "https://secure.flickr.com/"
   ]
