@@ -1,0 +1,11 @@
+@import url("/components/bootstrap/css/bootstrap.min.css");
+
+body {
+  padding-left: 0px;
+  padding-right: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+.table {
+  margin-bottom: 0px;
+}

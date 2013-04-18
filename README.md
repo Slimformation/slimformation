@@ -4,4 +4,4 @@ This tool is built on the idea of an "information diet" and conscious content co
 
 ## Slimformation - the Chrome Extension
 
-- Uses [Semantic Versioning](http://semver.org/)
+Check out `slimformation-extension` folder for the extension's README.

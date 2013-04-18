@@ -5,33 +5,32 @@
   "manifest_version": 2,
   
   "background" : {
-    "page" : "background.html"
+    "page" : "app/views/background.html"
   },
 
   "browser_action": {
     "default_icon": {
-      "19": "icons/19.png",
-      "38": "icons/38.png"
+      "19": "app/images/19.png",
+      "38": "app/images/38.png"
     },
-    "default_popup": "views/mockup.html",
+    "default_popup": "app/views/mockup.html",
     "default_title": "Slimformation"
   },
 
   "content_scripts": [
   {
     "matches": ["http://*/*"],
-    "js": ["vendor/jquery-1.9.1.min.js","lib/main.js"],
+    "js": ["app/scripts/js/background.js"],
     "run_at": "document_idle"
   }
   ],
 
   "icons": {
-    "16": "icons/16.png",
-    "48": "icons/48.png",
-    "128": "icons/128.png"
+    "16": "app/images/16.png",
+    "48": "app/images/48.png",
+    "128": "app/images/128.png"
   },
 
   "permissions": [
-    "https://secure.flickr.com/"
   ]
 }
