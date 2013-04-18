@@ -1,0 +1,8 @@
+# this file defines how coffeescript is compile into javascript
+
+Dir['app/*'].each do |widget|
+  w_name = widget.split("/")[-1]
+  guard "coffeescript", 
+        :input => "app/#{w_name}/scripts/coffee",
+        :output => "app/#{w_name}/scripts/js"
+end

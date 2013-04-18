@@ -8,9 +8,7 @@
     "coffee-script": "~1.6.2",
     "bower": "~0.8.5",
     "grunt": "~0.4.1",
-    "requirejs": "~2.1.5",
-    "grunt-contrib-coffee": "~0.6.6",
-    "grunt-contrib-watch": "~0.3.1",
+    "requirejs": "~2.1.5"
   },
   "engine": "node 0.8.8"
 }
