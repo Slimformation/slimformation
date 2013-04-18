@@ -13,7 +13,7 @@
       "19": "icons/19.png",
       "38": "icons/38.png"
     },
-    "default_popup": "views/index.html",
+    "default_popup": "views/mockup.html",
     "default_title": "Slimformation"
   },
 
