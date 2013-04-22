@@ -1,0 +1,435 @@
+<html>
+  <script>
+    var currentSite = null;
+    var currentTabId = null;
+    var startTime = null;
+    var siteRegexp = /^(\w+:\/\/[^\/]+).*$/;
+
+    var updateCounterInterval = 1000 * 60;  // 1 minute.
+
+    var trackerServer = "http://browser-timetracker.appspot.com";
+
+    var lastActivitySeconds = 0;
+
+    /**
+     * Returns just the site/domain from the url. Includes the protocol.
+     * chrome://extensions/some/other?blah=ffdf -> chrome://extensions
+     * @param {string} url The URL of the page, including the protocol.
+     * @return {string} The site, including protocol, but not paths.
+     */
+    function getSiteFromUrl(url) {
+      //match is now an array containing [0] the original url [1] the protocol and the url
+      var match = url.match(siteRegexp);
+      //if it matches the regExp
+      if (match) {
+        /* Check the ignored list. */
+        var ignoredSites = localStorage["ignoredSites"];
+        //if no ignoredSites, create empty Array
+        if (!ignoredSites) {
+          ignoredSites = [];
+        } else {
+          //else set ignoredSites as the list from localStorage / parse it
+          ignoredSites = JSON.parse(ignoredSites);
+        }
+        //for all sites in ignoredSites...
+        for (i in ignoredSites) {
+          //if the currentIgnoredSite matches the url we have... then return null
+          if (ignoredSites[i] == match[1]) {
+            console.log("Site is on ignore list: " + match[1]);
+            return null;
+          }
+        }
+        //otherwise, return the shortened url
+        return match[1];
+      }
+      // it didnt match so return null
+      return null;
+    }
+
+    function checkIdleTime() {
+      console.log("Checking idle time.");
+      //increment lastActivitySeconds by 10 seconds..
+      lastActivitySeconds += 10;
+      console.log("Last activity was " + lastActivitySeconds + " seconds ago.");
+      console.log("Paused = " + localStorage["paused"]);
+      //if currently resumed, and lastActivity was over a minute ago, then we are idle
+      if (localStorage["paused"] == "false" && lastActivitySeconds > 60) {
+        console.log("Idle for " + lastActivitySeconds + " seconds.");
+        //if idleDetection is turned off, then don't do anything
+        if (localStorage["idleDetection"] == "false") {
+          console.log("Idle detection disabled, not pausing timer.");
+        } else {
+          //else, idle detection is turned on, so pause
+          pause();
+        }
+      }
+    }
+
+    function pause() {
+      //set paused to true
+      localStorage["paused"] = "true";
+      chrome.browserAction.setIcon({path: 'images/icon_paused.png'});
+    }
+
+    function resume() {
+      //set paused to false
+      localStorage["paused"] = "false";
+      chrome.browserAction.setIcon({path: 'images/icon.png'});
+    }
+
+    /**
+     * This should be called whenever activity by the user is detected.
+     */
+    function resetActivity() {
+      //set lastActivity to 0 seconds ago (currently doing stuff)
+      lastActivitySeconds = 0;
+      //if was paused, then now resume
+      if (localStorage["paused"] == "true") {
+        resume();
+      }
+    }
+
+    function periodicClearStats() {
+      console.log("Checking to see if we should clear stats.");
+      var clearStatsInterval = localStorage["clearStatsInterval"];
+      //if timeInterval is 0 / undefined, set it to 0
+      if (!clearStatsInterval) {
+        clearStatsInterval = "0";
+        localStorage["clearStatsInterval"] = "0";
+      }
+      //convert this string into a base 10 integer
+      clearStatsInterval = parseInt(clearStatsInterval, 10);
+      console.log("Clear interval of " + clearStatsInterval);
+      //if the time is below an hour... delete the nextTimeToClear
+      if (clearStatsInterval < 3600) {
+        console.log("Invalid interval period, minimum is 3600.");
+        delete localStorage["nextTimeToClear"]; 
+        return;
+      }
+      
+      // get nextTimeToclear from localStorage
+      var nextTimeToClear = localStorage["nextTimeToClear"];
+      //if it is not set (meaning it was below an hour)
+      if (!nextTimeToClear) {
+        //create nextTimeToClear
+        var d = new Date();
+        d.setTime(d.getTime() + clearStatsInterval * 1000);
+        d.setMinutes(0);
+        d.setSeconds(0);
+        //if day
+        if (clearStatsInterval == 86400) {
+          d.setHours(0);
+        }
+        console.log("Next time to clear is " + d.toString());
+        // nextTimeToClear is this and store it in localStorage
+        nextTimeToClear = d.getTime();
+        localStorage["nextTimeToClear"] = "" + nextTimeToClear;
+      }
+      nextTimeToClear = parseInt(nextTimeToClear, 10);
+      var now = new Date();
+      //if we are past the NextTimeToClear.. then we need to clear stats
+      if (now.getTime() > nextTimeToClear) {
+        console.log("Yes, time to clear stats.");
+        //clear the stats
+        clearStatistics();
+        //increment the nextTimeToClear by clearStatsInterval*1000
+        nextTimeToClear = new Date(nextTimeToClear + clearStatsInterval * 1000);
+        console.log("Next time to clear is " + nextTimeToClear.toString());
+        //set nextTimeToClear in localstorage
+        localStorage["nextTimeToClear"] = "" + nextTimeToClear.getTime();
+        return;
+      }
+    }
+
+    /**
+     * Updates the counter for the current tab.
+     */
+    function updateCounter() {
+      /* Don't run if we are paused. */
+      if (localStorage["paused"] == "true") {
+        currentSite = null;
+        return;
+      }
+      //if no currentTab, don't do anything
+      if (currentTabId == null) {
+        return;
+      }
+
+      //on the currentTab...
+      chrome.tabs.get(currentTabId, function(tab) {
+        /* Make sure we're on the focused window, otherwise we're recording bogus stats. */
+        //grab the window
+        chrome.windows.get(tab.windowId, function(window) {
+          //if this isn't the active window, return
+          if (!window.focused) {
+            return;
+          }
+          //else get the siteURL (shortened)
+          var site = getSiteFromUrl(tab.url);
+          //if site didn't match, then return
+          if (site == null) {
+            console.log("Unable to update counter. Malformed url.");
+            return;
+          }
+
+          /* We can't update any counters if this is the first time visiting any
+           * site. This happens on browser startup. Initialize some variables so
+           * we can perform an update next time. */
+          if (currentSite == null) {
+            //store variables
+            currentSite = site;
+            startTime = new Date();
+            return;
+          }
+
+          /* Update the time spent for this site by comparing the current time to
+           * the last time we were ran. */
+          var now = new Date();
+          var delta = now.getTime() - startTime.getTime();
+          updateTime(currentSite, delta/1000);
+
+          /* This function could have been called as the result of a tab change,
+           * which means the site may have changed. */
+          currentSite = site;
+          startTime = now;
+        });
+      });
+    }
+
+    /**
+     * Clears all statistics stored on server.
+     */
+     function clearStatistics() {
+       if (localStorage["storageType"] == "appengine") {
+         var xhr = new XMLHttpRequest();
+         xhr.open(
+           "GET", trackerServer + "/stats/clear", false);
+         xhr.send(null);
+       }
+       localStorage.sites = JSON.stringify({});
+     }
+
+     /**
+      * Adds a site to the ignored list.
+      */
+      function addIgnoredSite(site) {
+        console.log("Removing " + site);
+        site = getSiteFromUrl(site);
+        //url doesn't match to any url, so return
+        if (!site) {
+          return;
+        }
+        //if we have no ignoredSites, create empty array
+        var ignoredSites = localStorage.ignoredSites;
+        if (!ignoredSites) {
+          ignoredSites = [];
+        } else {
+          //else set it as the list of ignoredSites
+          ignoredSites = JSON.parse(ignoredSites);
+        }
+        //add this new site to the list of ignoredSites
+        ignoredSites.push(site);
+        //store it into localSTorage
+        localStorage.ignoredSites = JSON.stringify(ignoredSites);
+
+        //sites are the sites in localStorage
+        var sites = JSON.parse(localStorage.sites);
+        //remove this ignoredSite
+        delete sites[site];
+        //put the sites back into localStorage
+        localStorage.sites = JSON.stringify(sites);
+      }
+
+    /**
+     * Sends statistics to the server. If there are no problems in sending the
+     * data, we clear local storage. */
+     function sendStatistics() {
+      //if paused, we don't send statistics, so return
+       if (localStorage["paused"] == "true") {
+         console.log("Paused, not sending statistics.");
+         return;
+       }
+      //otherwise, send statistics...
+       console.log("Sending statistics.");
+       //on appengine, then send stats to server
+       if (localStorage["storageType"] == "appengine") {
+         console.log("Sending stats to server.");
+         sendStatisticsToServer();
+       } else {
+        //else not support storage type
+         console.log("Warning: Unsupported storage type.");
+       }
+     }
+
+     function sendStatisticsToServer() {
+      //xml http request
+      var xhr = new XMLHttpRequest();
+      //set params: sites is sites in localstorage and now is current time
+      var params = "sites=" + escape(localStorage.sites) +
+                   "&now=" + escape(new Date().getTime()/1000);
+      //open the trackerserver
+      xhr.open("POST", trackerServer + "/stats/update", false);
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      try {
+        xhr.send(params);
+      } catch (e) {
+        console.log("Exception when sending stats to server.");
+        chrome.browserAction.setIcon({path: 'images/icon_error.png'});
+        return;
+      }
+      chrome.browserAction.setIcon({path: 'images/icon.png'});
+      if (xhr.status == 200) {
+        console.log("Successfully updated statistics.");
+        localStorage.sites = JSON.stringify({});
+      } else {
+        console.log("Something went wrong with updating stats: " + xhr.status);
+      }
+    }
+
+    /**
+     * Updates the amount of time we have spent on a given site.
+     * @param {string} site The site to update.
+     * @param {float} seconds The number of seconds to add to the counter.
+     */
+    function updateTime(site, seconds) {
+      //get all the sites
+      var sites = JSON.parse(localStorage.sites);
+      //if the new site is not listed... set its time to 0
+      if (!sites[site]) {
+        sites[site] = 0;
+      }
+      // update the time to be old time + seconds
+      sites[site] = sites[site] + seconds;
+      //store back into localStorage
+      localStorage.sites = JSON.stringify(sites);
+    }
+
+    /**
+     * Initailized our storage and sets up tab listeners.
+     */
+    function initialize() {
+      //if no sites listed in localStorage, handle edge case
+      if (!localStorage.sites) {
+        localStorage.sites = JSON.stringify({});
+      }
+
+      if (!localStorage.paused) {
+      //if localStorage is not paused (resumed) or undefined, then set the value to be false (not undefined)
+        localStorage.paused = "false";
+      }
+
+      //if localStorage has pause as true, set pause to true
+      if (localStorage["paused"] == "true") {
+        pause();
+      }
+
+      // Default is to do idle detection.
+      if (!localStorage.idleDetection) {
+        localStorage.idleDetection = "true";
+      }
+
+      /* Add some listeners for tab changing events. We want to update our
+      *  counters when this sort of stuff happens. */
+      chrome.tabs.onSelectionChanged.addListener(
+      //when selected tab changes
+      function(tabId, selectionInfo) {
+        console.log("Tab changed");
+        resetActivity(); //set time to 0
+        currentTabId = tabId; //set global variable currentTab to the current tab
+        updateCounter(); //update the counter
+      });
+
+      //when tab is updated
+      chrome.tabs.onUpdated.addListener(
+      function(tabId, changeInfo, tab) {
+        if (tabId == currentTabId) { //if we have the same tab
+          console.log("Tab updated");
+          //update the counter for this tab
+          updateCounter();
+        }
+      });
+
+      //when we change focus / window
+      chrome.windows.onFocusChanged.addListener(
+      function(windowId) {
+        console.log("Detected window focus changed.");
+        //reset the timer to 0
+        resetActivity();
+        //find the selected tab and update its counter
+        chrome.tabs.getSelected(windowId,
+        function(tab) {
+          console.log("Window/Tab changed");
+          currentTabId = tab.id;
+          updateCounter();
+        });
+      });
+
+      //on click, send statistics
+      chrome.browserAction.onClicked.addListener(function(tab) {
+        sendStatistics();
+      });
+
+      /* Listen for update requests. These come from the popup. */
+      //This handles all of the chrome.extension.sendRequest from the popup.html
+      chrome.extension.onRequest.addListener(
+        function(request, sender, sendResponse) {
+          if (request.action == "sendStats") {
+            console.log("Sending statistics by request.");
+            sendStatistics();
+            sendResponse({});
+          } else if (request.action == "clearStats") {
+            console.log("Clearing statistics by request.");
+            clearStatistics();
+            sendResponse({});
+          } else if (request.action == "addIgnoredSite") {
+            addIgnoredSite(request.site);
+            sendResponse({});
+          } else if (request.action == "pause") {
+            pause();
+          } else if (request.action == "resume") {
+            resume();
+          } else {
+            console.log("Invalid action given.");
+          }
+        });
+
+        //onConnect, resetActivity
+        chrome.extension.onConnect.addListener(function(port) {
+          console.assert(port.name == "idle");
+          port.onMessage.addListener(function(msg) {
+            resetActivity();
+          });
+        });
+
+      /* Force an update of the counter every minute. Otherwise, the counter
+         only updates for selection or URL changes. */
+         //call updateCounter every updateCounterInterval (1 min - global var)
+      window.setInterval(updateCounter, updateCounterInterval);
+
+      /* Periodically check to see if we should be clearing stats. */
+      //every minute
+      window.setInterval(periodicClearStats, 60 * 1000);
+
+      //If sendStatsInterval is not defined, then set it to an hour
+      if (!localStorage["sendStatsInterval"]) {
+        localStorage["sendStatsInterval"] = 3600 * 1000;
+      }
+
+      /* Default is to use local only storage. */
+      // if (!localStorage["storageType"]) {
+      //  localStorage["storageType"] = "local";
+      // }
+      localStorage["storageType"] = "local";
+
+      // Send statistics periodically.
+      console.log("Sending stats interval " + localStorage["sendStatsInterval"]);
+      window.setInterval(sendStatistics, localStorage["sendStatsInterval"]);
+
+      // Keep track of idle time.
+      window.setInterval(checkIdleTime, 10 * 1000);
+    }
+
+  </script>
+  <body onload="initialize()">
+  </body>
+</html>

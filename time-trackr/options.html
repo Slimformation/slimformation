@@ -1,0 +1,143 @@
+<html>
+  <head><title>Time Tracker Preferences</title></head>
+  <script type="text/javascript">
+    //Right click on icon -> Options is this page
+
+    // if IdleDetection is checked, then set this value on the user as true, else false
+    function saveIdle() {
+      var idleCheck = document.getElementById("idle_check");
+      if (idleCheck.checked) {
+        localStorage["idleDetection"] = "true";
+      } else {
+        localStorage["idleDetection"] = "false";
+      }
+    }
+
+    //Get the value of Clear Statistics Every... and set it in localStorage
+    function updateClearStatsInterval() {
+      var select = document.getElementById("clear_stats_interval");
+      var option = select.options[select.selectedIndex];
+      localStorage["clearStatsInterval"] = option.value;
+      if (localStorage["nextTimeToClear"]) {
+        delete localStorage["nextTimeToClear"];
+      }
+      restoreOptions();
+    }
+
+    function addIgnoredSite() {
+    //Get value in the text field
+      var newSite = document.getElementById("new_ignored_site").value;
+    //check if it begins with http or https
+      if (newSite.indexOf("http://") != 0 &&
+          newSite.indexOf("https://") != 0) {
+        alert("Include http:// or https:// prefix.");
+        return;
+      }
+
+    //if so, then send a request to add this site to the ignoredSite and then once this is done, restore the settings
+      chrome.extension.sendRequest(
+         {action: "addIgnoredSite", site: newSite},
+         function(response) {
+           restoreOptions();
+         });
+    }
+
+    function removeIgnoredSites() {
+    //Get the list of ignored sites
+      var select = document.getElementById("ignored_sites");
+      var ignoredSites = [];
+      for (var i = 0; i < select.children.length; i++) {
+    //Then iterate through them all
+        var child = select.children[i];
+        if (child.selected == false) {
+          ignoredSites.push(child.value);
+    //If the site isn't selected, then add it to the ignoredSites list (meaning don't remove it)
+        }
+      }
+    //Set the list of ignoredSites in local storage
+      localStorage['ignoredSites'] = JSON.stringify(ignoredSites);
+      restoreOptions();
+    }
+
+    // Restores options from localStorage, if available.
+    function restoreOptions() {
+      //Get value for Idle Detection checkbox
+      var idleCheck = document.getElementById("idle_check");
+      //Get value from localStorage for idleDetection
+      var idleDetection = localStorage["idleDetection"];
+      //is this supposed to be idleDetection||idleCheck? Otherwise, this seems to always return false. !A || A gives true. True=="false"==false. 
+      if (!idleDetection || idleDetection == "false") {
+        idle_check.checked = false;
+      } else {
+        //set idle_check to be true
+        idle_check.checked = true;
+      }
+
+      //Get list of ignoredSites from local storage
+      var ignoredSites = localStorage['ignoredSites'];
+      if (!ignoredSites) {
+      //If there aren't any, return
+        return;
+      }
+      ignoredSites = JSON.parse(ignoredSites);
+      //Get list of ignoredSites in the page right now
+      var select = document.getElementById("ignored_sites");
+      select.options.length = 0;
+      //For each site listed in localStorage's list of ignored sites...
+      for (var i in ignoredSites) {
+        //create a new element called option
+        var option = document.createElement("option");
+        //set its text to be that of the ignoredSite
+        option.text = ignoredSites[i];
+        //set its value to that of the ignoredSite
+        option.value = ignoredSites[i];
+        //add it to the list on the page
+        select.appendChild(option);
+      }
+
+      //get clearStatsInterval from localStorage
+      var clearStatsInterval = localStorage['clearStatsInterval'];
+      //if it wasn't set
+      if (!clearStatsInterval) {
+      //set it to 0 (never)
+        clearStatsInterval = "0";
+      }
+      //grab the value on the page for clear_stats_interval
+      select = document.getElementById("clear_stats_interval");
+      //iterate through the options
+      for (var i = 0; i < select.options.length; i++) {
+      //for this option..
+        var option = select.options[i];
+        //check if it is the same as the one in localStorage
+        if (option.value == clearStatsInterval) {
+          //if yes, then set it as the selected option, then break. otherwise, continue iterating.
+          option.selected = true;
+          break;
+        }
+      }
+    }
+
+  </script>
+
+  <body onload="restoreOptions()">
+    <input type="checkbox" id="idle_check" onclick="saveIdle()"><b>Idle Detection</b>: When enabled, time
+    tracker attempts to detect if you are actively using the browser or not and
+    will pause and resume automatically. If disabled, you must pause and resume
+    the timer yourself.
+    <br/>
+    <b>Manage Ignored Sites</b>: <br/>
+    <input type="text" id="new_ignored_site"></input>
+    <button onclick="addIgnoredSite()">Add</button><br/>
+    <select id="ignored_sites" MULTIPLE size="10">
+    </select><br/>
+    <button onclick="removeIgnoredSites()">Remove Selected</button>
+    <br/>
+    <b>Clear Statistics Every:</b>:
+    <select id="clear_stats_interval" onchange="updateClearStatsInterval()">
+      <option value="0">never</option>
+      <option value="3600">Hour</option>
+      <option value="86400">Day</option>
+    </select>
+  </body>
+
+  </body>
