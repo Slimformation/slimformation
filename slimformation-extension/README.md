@@ -4,11 +4,11 @@
 
 `app` has subfolders that we're calling 'widgets'. they're just simple HTML and related assets, bunched together because they relate to each other. 
 
-You can create other such widgets by running `rake create_widget['foo']`.
-
 `manifest.json` is this Chrome extension's main file.
 
 `icons` has images needed by this Chrome extension.
+
+The other files are needed for development and dependency management.
 
 ## Development
 
@@ -18,24 +18,17 @@ node and npm
 
 - `brew install node`, or go [here](http://nodejs.org/download/).
   - Installs `node` and `npm`
-- Add this to your `~/.profile` or zsh or bash config:
+- To make sure you have access to all the dev dependency binaries that this project installs when you run `npm install`, add this to your `~/.profile` or zsh or bash config:
   - `export PATH="./node_modules/.bin:$PATH"`
-
-ruby 1.9.3 and bundler
-
-- Totally new? [Rails Installer](http://railsinstaller.org/)
-- [RVM](http://rvm.io)
-- [Bundler](http://rubygems.org/gems/bundler)
 
 ### Build
 
-You don't need to build, per se, but you need to build your dev environment. Also, without third party components downloaded, things probably won't work.
+`./build.sh`
 
-So, just do `./build.sh`.
+### Compiling and Auto-Compiling
 
-### Watch CoffeeScript & Compile to JavaScript
-
-`guard`
+- `cake compile`
+- `cake watch`
 
 ### Test
 
@@ -60,17 +53,10 @@ So, just do `./build.sh`.
 - `component.json`
 - Run `bower install` after adding components to `component.json`.
 
-**Managing Dependencies (JavaScript)**
+**Managing Dependencies**
 
 - `package.json`
 - `npm install`
-
-**Managing Dependencies (Ruby)**
-
-- `Gemfile`
-- `bundle install`
-
-
 
 ### RequireJS Usage
 - An [example setup](http://requirejs.org/docs/start.html).
