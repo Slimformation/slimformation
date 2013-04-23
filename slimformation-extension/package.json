@@ -8,7 +8,12 @@
     "coffee-script": "~1.6.2",
     "bower": "~0.8.5",
     "grunt": "~0.4.1",
-    "requirejs": "~2.1.5"
+    "requirejs": "~2.1.5",
+    "mocha": "~1.9.0",
+    "chai": "~1.5.0"
+  },
+  "scripts": {
+    "test": "mocha test --recursive --compilers coffee:coffee-script --require coffee-script --require test/testHelper.coffee"
   },
   "engine": "node 0.8.8"
 }

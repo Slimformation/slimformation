@@ -18,6 +18,8 @@ node and npm
 
 - `brew install node`, or go [here](http://nodejs.org/download/).
   - Installs `node` and `npm`
+- Add this to your `~/.profile` or zsh or bash config:
+  - `export PATH="./node_modules/.bin:$PATH"`
 
 ruby 1.9.3 and bundler
 
@@ -31,25 +33,42 @@ You don't need to build, per se, but you need to build your dev environment. Als
 
 So, just do `./build.sh`.
 
+### Watch CoffeeScript & Compile to JavaScript
 
-### Managing Components
+`guard`
+
+### Test
+
+- We're using [mocha](http://visionmedia.github.io/mocha/) and [chai](http://chaijs.com/)
+- `npm test` (command defined in `package.json`)
+- Export what you want in source files, then require it and test it in `test/`.
+  ```coffeescript
+  # at the end of a source file (eg: biz.coffee), export the things you want to test
+  root = exports ? window
+  root.foo = foo
+  root.Bar = Bar
+
+  # then, require it and test it in another coffeescript file
+  biz = require 'path/to/biz.coffee'
+  # biz.foo and biz.Bar can now be tested
+  ```
+
+### Dependency Management
+
+**Managing Components**
 
 - `component.json`
 - Run `bower install` after adding components to `component.json`.
 
-### Managing Dependencies (JavaScript)
+**Managing Dependencies (JavaScript)**
 
 - `package.json`
 - `npm install`
 
-### Managing Dependencies (Ruby)
+**Managing Dependencies (Ruby)**
 
 - `Gemfile`
 - `bundle install`
-
-### Watch CoffeeScript & Compile
-
-`guard`
 
 
 
