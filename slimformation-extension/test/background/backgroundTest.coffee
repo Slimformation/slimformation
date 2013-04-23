@@ -4,7 +4,7 @@ puts = (error, stdout, stderr) ->
   console.log(stdout)
 
 # require the particular file we're testing
-background = require '../../app/background/scripts/coffee/background'
+background = require '../../app/background/scripts/background'
 
 describe "tautology", ->
   it "should be equal to 1", ->
