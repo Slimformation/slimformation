@@ -23,6 +23,12 @@ node and npm
 
 ### Build
 
+First make sure you have Bower installed globally. Do so like this:
+
+```npm install -g bower```
+
+Then run:
+
 `./build.sh`
 
 ### Compiling and Auto-Compiling
