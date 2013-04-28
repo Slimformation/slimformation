@@ -288,7 +288,10 @@ window.require.register("models/base/model", function(exports, require, module) 
 });
 window.require.register("routes", function(exports, require, module) {
   module.exports = function(match) {
-    return match('', 'home#index');
+    match('', 'home#index');
+    match('index.html', 'home#index');
+    match('background.html', 'home#index');
+    return match('popup.html', 'home#index');
   };
   
 });
