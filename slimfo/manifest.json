@@ -1,0 +1,36 @@
+{
+  "name": "Slimformation",
+  "description": "This extension helps you be more conscious about your information consumption.",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  
+  "background" : {
+    "page" : "public/background.html"
+  },
+
+  "browser_action": {
+    "default_icon": {
+      "19": "public/images/icons/19.png",
+      "38": "public/images/icons/38.png"
+    },
+    "default_popup": "public/popup.html",
+    "default_title": "Slimformation"
+  },
+
+  // "content_scripts": [
+  // {
+  //   "matches": ["http://*/*"],
+  //   "js": ["path/to/content.js"],
+  //   "run_at": "document_idle"
+  // }
+  // ],
+
+  "icons": {
+    "16": "public/images/icons/16.png",
+    "48": "public/images/icons/48.png",
+    "128": "public/images/icons/128.png"
+  },
+
+  "permissions": [
+  ]
+}
