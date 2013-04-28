@@ -10849,7 +10849,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       render = new Function(settings.variable || 'obj', '_', source);
     } catch (e) {
       e.source = source;
-      throw e;
+      // throw e;
     }
 
     if (data) return render(data, _);
