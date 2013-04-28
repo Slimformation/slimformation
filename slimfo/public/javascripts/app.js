@@ -79,8 +79,18 @@
   globals.require.brunch = true;
 })();
 
-window.require.register("application", function(exports, require, module) {
-  var Application, Chaplin, routes, _ref,
+window.require.register("background-initialize", function(exports, require, module) {
+  var Background;
+
+  Background = require('background');
+
+  $(function() {
+    return (new Background).initialize();
+  });
+  
+});
+window.require.register("background", function(exports, require, module) {
+  var Background, Chaplin, routes, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -88,18 +98,18 @@ window.require.register("application", function(exports, require, module) {
 
   routes = require('routes');
 
-  module.exports = Application = (function(_super) {
-    __extends(Application, _super);
+  module.exports = Background = (function(_super) {
+    __extends(Background, _super);
 
-    function Application() {
-      _ref = Application.__super__.constructor.apply(this, arguments);
+    function Background() {
+      _ref = Background.__super__.constructor.apply(this, arguments);
       return _ref;
     }
 
-    Application.prototype.title = 'Brunch example application';
+    Background.prototype.title = 'Brunch example application';
 
-    Application.prototype.initialize = function() {
-      Application.__super__.initialize.apply(this, arguments);
+    Background.prototype.initialize = function() {
+      Background.__super__.initialize.apply(this, arguments);
       this.initDispatcher({
         controllerSuffix: '-controller'
       });
@@ -111,11 +121,11 @@ window.require.register("application", function(exports, require, module) {
       return typeof Object.freeze === "function" ? Object.freeze(this) : void 0;
     };
 
-    Application.prototype.initMediator = function() {
+    Background.prototype.initMediator = function() {
       return Chaplin.mediator.seal();
     };
 
-    return Application;
+    return Background;
 
   })(Chaplin.Application);
   
@@ -177,16 +187,6 @@ window.require.register("controllers/home-controller", function(exports, require
     return HomeController;
 
   })(Controller);
-  
-});
-window.require.register("initialize", function(exports, require, module) {
-  var Application;
-
-  Application = require('application');
-
-  $(function() {
-    return (new Application).initialize();
-  });
   
 });
 window.require.register("lib/support", function(exports, require, module) {
