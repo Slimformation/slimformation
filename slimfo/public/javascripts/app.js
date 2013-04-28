@@ -291,7 +291,8 @@ window.require.register("routes", function(exports, require, module) {
     match('', 'home#index');
     match('index.html', 'home#index');
     match('background.html', 'home#index');
-    return match('popup.html', 'home#index');
+    match('popup.html', 'home#index');
+    return match('public/popup.html', 'home#index');
   };
   
 });
