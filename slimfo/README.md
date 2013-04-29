@@ -21,7 +21,7 @@ It's being built using [Brunch](http://brunch.io) and [Chaplin](http://chaplinjs
     - `export PATH="./node_modules/.bin:$PATH"`
 2. `./scripts/init.sh`
 
-**For building, watching, etc, use brunch...**
+**Building, watching, etc**
 
 `brunch build`
 `brunch watch`
@@ -31,6 +31,15 @@ The above will compile everything to their proper places.
 - [Brunch's documentation](http://brunch.io/#documentation)
 - [How Brunch's config.coffee works](https://github.com/brunch/brunch/blob/master/docs/config.md)
 - [Chaplin's documentation](https://github.com/chaplinjs/chaplin/tree/master/docs)
+
+**Scaffolding**
+
+We use `scaffolt`, so run `scaffolt -l` to see the things you can generate. Also, `--revert` will come in handy.
+
+**Managing 3rd party components**
+
+Let's just put stuff in `vendor/scripts` and `vendor/styles`, and then change in which order it's loaded in `config.coffee`.
+
 
 ## Testing
 
