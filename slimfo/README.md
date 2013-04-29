@@ -1,4 +1,42 @@
-# Brunch with Chaplin
+# Slimformation
+
+## Overview
+
+Slimformation helps you be more conscious about what your information consumption. We track your open tabs, categorize URL's, graph out your activity, and track your goals.
+
+## Development
+
+It's being built using [Brunch](http://brunch.io) and [Chaplin](http://chaplinjs.org/), which is just [Backbone](http://documentcloud.github.io/backbone/) all coffee'd and sugar'd up.
+
+**If you're starting from scratch, you need the following:**
+
+1. node and npm
+  - `brew install node`, or go [here](http://nodejs.org/download/).
+    - Installs `node` and `npm`
+  - To make sure you have access to all the dev dependency binaries that this project installs when you run `npm install`, prepend `./node_modules/.bin` to your `~/.profile` or zsh or bash config:
+    - `export PATH="./node_modules/.bin:$PATH"`
+2. `./scripts/init.sh`
+
+**For building, watching, etc, use brunch...**
+
+`brunch build`
+`brunch watch`
+
+The above will compile everything to their proper places.
+
+- [Brunch's documentation](http://brunch.io/#documentation)
+- [How Brunch's config.coffee works](https://github.com/brunch/brunch/blob/master/docs/config.md)
+- [Chaplin's documentation](https://github.com/chaplinjs/chaplin/tree/master/docs)
+
+## Testing
+
+There's a few simple tests included in the [default skeleton](https://github.com/paulmillr/brunch-with-chaplin). Overall, since the `require`'s work sanely, it's not too bad.
+
+
+
+---
+
+# Brunch with Chaplin - Readme
 ![](https://a248.e.akamai.net/camo.github.com/b7ebb8bbcec7938940cf8e9c441124c3bddafd3a/687474703a2f2f662e636c2e6c792f6974656d732f34373039326b30423141334a317a3166306b34362f6277632e706e67)
 
 Brunch with Chaplin is a skeleton (boilerplate) for [Brunch](http://brunch.io)

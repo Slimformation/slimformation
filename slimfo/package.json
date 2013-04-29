@@ -1,7 +1,7 @@
 {
-  "author": "Your Name",
-  "name": "package-name",
-  "description": "Package description",
+  "author": "@ameliakaufman, @spicybasil34, @gnarmis, @ktzhu",
+  "name": "Slimformation",
+  "description": "This extension helps you be more conscious about your information consumption.",
   "version": "0.0.1",
   "homepage": "",
   "repository": {
@@ -25,5 +25,6 @@
     "clean-css-brunch": ">= 1.0 < 1.7"
   },
   "devDependencies": {
+    "brunch": "~ 1.6.3"
   }
 }
