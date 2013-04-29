@@ -316,13 +316,9 @@ window.require.register("models/base/model", function(exports, require, module) 
 });
 window.require.register("routes", function(exports, require, module) {
   module.exports = function(match) {
-    match('', 'home#index');
     match('public', 'home#index');
-    match('index.html', 'home#index');
     match('public/index.html', 'home#index');
-    match('background.html', 'home#index');
     match('public/background.html', 'home#index');
-    match('popup.html', 'popup#index');
     return match('public/popup.html', 'popup#index');
   };
   
@@ -505,7 +501,7 @@ window.require.register("views/templates/header", function(exports, require, mod
     
 
 
-    return "<a class=\"header-link\" href=\"test/\">App tests</a>\n<a class=\"header-link\" href=\"http://brunch.readthedocs.org/\">Docs</a>\n<a class=\"header-link\" href=\"https://github.com/brunch/brunch/issues\">\n  GitHub issues\n</a>\n<a class=\"header-link\" href=\"https://github.com/paulmillr/ostio\">\n  Ost.io example app\n</a>\n";
+    return "<div class=\"navbar\">\n  <div class=\"navbar-inner\">\n    <a class=\"brand\" href=\"#\">Title</a>\n    <ul class=\"nav\">\n      <li class=\"active\"><a href=\"#\">Home</a></li>\n      <li><a href=\"#\">Link</a></li>\n      <li><a href=\"#\">Link</a></li>\n    </ul>\n  </div>\n</div>\n";
     });
 });
 window.require.register("views/templates/home", function(exports, require, module) {
@@ -535,6 +531,6 @@ window.require.register("views/templates/site", function(exports, require, modul
     
 
 
-    return "<header class=\"header-container\" id=\"header-container\"></header>\n\n<div class=\"container outer-container\">\n  <div class=\"page-container\" id=\"page-container\">\n  </div>\n</div>\n";
+    return "<header id=\"header-container\" class=\"header-container\"></header>\n\n<div class=\"container outer-container\">\n  <div id=\"page-container\" class=\"container\" >\n  </div>\n</div>\n";
     });
 });
