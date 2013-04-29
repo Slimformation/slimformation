@@ -17,7 +17,7 @@
     "coffee-script-brunch": ">= 1.0 < 1.7",
 
     "css-brunch": ">= 1.0 < 1.7",
-    "stylus-brunch": ">= 1.0 < 1.6",
+    "stylus-brunch": ">= 1.0 < 1.7",
 
     "handlebars-brunch": ">= 1.0 < 1.7",
 
@@ -27,5 +27,6 @@
   "devDependencies": {
     "brunch": "~ 1.6.3",
     "scaffolt": "~ 0.2.0"
-  }
+  },
+  "engine": "node 0.8.8"
 }
