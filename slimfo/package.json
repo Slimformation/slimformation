@@ -25,6 +25,7 @@
     "clean-css-brunch": ">= 1.0 < 1.7"
   },
   "devDependencies": {
-    "brunch": "~ 1.6.3"
+    "brunch": "~ 1.6.3",
+    "scaffolt": "~ 0.2.0"
   }
 }

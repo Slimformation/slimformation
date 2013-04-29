@@ -79,6 +79,18 @@
   globals.require.brunch = true;
 })();
 
+window.require.register("test/controllers/popup-controller-test", function(exports, require, module) {
+  var Popup;
+
+  Popup = require('controllers/popup-controller');
+
+  describe('Popup', function() {
+    return beforeEach(function() {
+      return this.controller = new Popup();
+    });
+  });
+  
+});
 window.require.register("test/initialize", function(exports, require, module) {
   var test, tests, _i, _len;
 
@@ -143,6 +155,18 @@ window.require.register("test/views/home-page-view-test", function(exports, requ
     });
     return it('should auto-render', function() {
       return expect(this.view.$el.find('img')).to.have.length(1);
+    });
+  });
+  
+});
+window.require.register("test/views/popup-view-test", function(exports, require, module) {
+  var PopupView;
+
+  PopupView = require('views/popup-view');
+
+  describe('PopupView', function() {
+    return beforeEach(function() {
+      return this.view = new PopupView();
     });
   });
   

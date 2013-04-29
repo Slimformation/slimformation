@@ -79,18 +79,8 @@
   globals.require.brunch = true;
 })();
 
-window.require.register("background-initialize", function(exports, require, module) {
-  var Background;
-
-  Background = require('background');
-
-  $(function() {
-    return (new Background).initialize();
-  });
-  
-});
-window.require.register("background", function(exports, require, module) {
-  var Background, Chaplin, routes, _ref,
+window.require.register("application", function(exports, require, module) {
+  var Application, Chaplin, routes, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -98,18 +88,18 @@ window.require.register("background", function(exports, require, module) {
 
   routes = require('routes');
 
-  module.exports = Background = (function(_super) {
-    __extends(Background, _super);
+  module.exports = Application = (function(_super) {
+    __extends(Application, _super);
 
-    function Background() {
-      _ref = Background.__super__.constructor.apply(this, arguments);
+    function Application() {
+      _ref = Application.__super__.constructor.apply(this, arguments);
       return _ref;
     }
 
-    Background.prototype.title = 'Brunch example application';
+    Application.prototype.title = 'Slimformation';
 
-    Background.prototype.initialize = function() {
-      Background.__super__.initialize.apply(this, arguments);
+    Application.prototype.initialize = function() {
+      Application.__super__.initialize.apply(this, arguments);
       this.initDispatcher({
         controllerSuffix: '-controller'
       });
@@ -121,11 +111,11 @@ window.require.register("background", function(exports, require, module) {
       return typeof Object.freeze === "function" ? Object.freeze(this) : void 0;
     };
 
-    Background.prototype.initMediator = function() {
+    Application.prototype.initMediator = function() {
       return Chaplin.mediator.seal();
     };
 
-    return Background;
+    return Application;
 
   })(Chaplin.Application);
   
@@ -187,6 +177,44 @@ window.require.register("controllers/home-controller", function(exports, require
     return HomeController;
 
   })(Controller);
+  
+});
+window.require.register("controllers/popup-controller", function(exports, require, module) {
+  var Controller, PopupController, PopupView, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Controller = require('controllers/base/controller');
+
+  PopupView = require('views/popup-view');
+
+  module.exports = PopupController = (function(_super) {
+    __extends(PopupController, _super);
+
+    function PopupController() {
+      _ref = PopupController.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    PopupController.prototype.index = function() {
+      return this.view = new PopupView({
+        region: 'main'
+      });
+    };
+
+    return PopupController;
+
+  })(Controller);
+  
+});
+window.require.register("initialize", function(exports, require, module) {
+  var Application;
+
+  Application = require('application');
+
+  $(function() {
+    return (new Application).initialize();
+  });
   
 });
 window.require.register("lib/support", function(exports, require, module) {
@@ -289,10 +317,13 @@ window.require.register("models/base/model", function(exports, require, module) 
 window.require.register("routes", function(exports, require, module) {
   module.exports = function(match) {
     match('', 'home#index');
+    match('public', 'home#index');
     match('index.html', 'home#index');
+    match('public/index.html', 'home#index');
     match('background.html', 'home#index');
-    match('popup.html', 'home#index');
-    return match('public/popup.html', 'home#index');
+    match('public/background.html', 'home#index');
+    match('popup.html', 'popup#index');
+    return match('public/popup.html', 'popup#index');
   };
   
 });
@@ -406,6 +437,34 @@ window.require.register("views/home-page-view", function(exports, require, modul
   })(View);
   
 });
+window.require.register("views/popup-view", function(exports, require, module) {
+  var PopupView, View, template, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  View = require('views/base/view');
+
+  template = require('views/templates/popup');
+
+  module.exports = PopupView = (function(_super) {
+    __extends(PopupView, _super);
+
+    function PopupView() {
+      _ref = PopupView.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    PopupView.prototype.autoRender = true;
+
+    PopupView.prototype.className = 'popup';
+
+    PopupView.prototype.template = template;
+
+    return PopupView;
+
+  })(View);
+  
+});
 window.require.register("views/site-view", function(exports, require, module) {
   var SiteView, View, template, _ref,
     __hasProp = {}.hasOwnProperty,
@@ -457,6 +516,16 @@ window.require.register("views/templates/home", function(exports, require, modul
 
 
     return "<a href=\"http://brunch.io/\">\n  <img src=\"http://brunch.io/images/brunch.png\" alt=\"Brunch\" />\n</a>\n";
+    });
+});
+window.require.register("views/templates/popup", function(exports, require, module) {
+  module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+    this.compilerInfo = [2,'>= 1.0.0-rc.3'];
+  helpers = helpers || Handlebars.helpers; data = data || {};
+    
+
+
+    return "<h1>This is a Popup!</h1>";
     });
 });
 window.require.register("views/templates/site", function(exports, require, module) {
