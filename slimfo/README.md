@@ -4,6 +4,10 @@
 
 Slimformation helps you be more conscious about what your information consumption. We track your open tabs, categorize URL's, graph out your activity, and track your goals.
 
+## Documents
+
+Check out the `docs/` directory.
+
 ## Development
 
 It's being built using [Brunch](http://brunch.io) and [Chaplin](http://chaplinjs.org/), which is just [Backbone](http://documentcloud.github.io/backbone/) all coffee'd and sugar'd up.
