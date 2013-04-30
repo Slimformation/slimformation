@@ -156,13 +156,15 @@ window.require.register("controllers/base/controller", function(exports, require
   
 });
 window.require.register("controllers/home-controller", function(exports, require, module) {
-  var Controller, HomeController, HomePageView, _ref,
+  var Chrome, Controller, HomeController, HomePageView, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Controller = require('controllers/base/controller');
 
   HomePageView = require('views/home-page-view');
+
+  Chrome = require('lib/chrome-interop');
 
   module.exports = HomeController = (function(_super) {
     __extends(HomeController, _super);
@@ -173,9 +175,10 @@ window.require.register("controllers/home-controller", function(exports, require
     }
 
     HomeController.prototype.index = function() {
-      return this.view = new HomePageView({
+      this.view = new HomePageView({
         region: 'main'
       });
+      return Chrome.listenUpdatedTabs();
     };
 
     return HomeController;
@@ -247,6 +250,11 @@ window.require.register("lib/chrome-interop", function(exports, require, module)
         windowId: chrome.windows.WINDOW_ID_CURRENT
       };
       return chrome.tabs.query(queryInfo, callback);
+    },
+    listenUpdatedTabs: function() {
+      return chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+        return console.log("Update: the url of tab " + tabId + " changed to " + changeInfo.url);
+      });
     }
   };
 
