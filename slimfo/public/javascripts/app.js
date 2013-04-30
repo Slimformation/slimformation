@@ -156,7 +156,7 @@ window.require.register("controllers/base/controller", function(exports, require
   
 });
 window.require.register("controllers/home-controller", function(exports, require, module) {
-  var Chrome, Controller, HomeController, HomePageView, _ref,
+  var ChromeService, Controller, HomeController, HomePageView, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -164,7 +164,7 @@ window.require.register("controllers/home-controller", function(exports, require
 
   HomePageView = require('views/home-page-view');
 
-  Chrome = require('lib/chrome-interop');
+  ChromeService = require('services/chrome-service');
 
   module.exports = HomeController = (function(_super) {
     __extends(HomeController, _super);
@@ -174,11 +174,18 @@ window.require.register("controllers/home-controller", function(exports, require
       return _ref;
     }
 
+    HomeController.services = chrome - {
+      service: new ChromeService
+    };
+
+    HomeController.prototype.initialize = function() {
+      return this.publishEvent('listen:onUpdatedTab');
+    };
+
     HomeController.prototype.index = function() {
-      this.view = new HomePageView({
+      return this.view = new HomePageView({
         region: 'main'
       });
-      return Chrome.listenUpdatedTabs();
     };
 
     return HomeController;
@@ -187,15 +194,13 @@ window.require.register("controllers/home-controller", function(exports, require
   
 });
 window.require.register("controllers/popup-controller", function(exports, require, module) {
-  var Chrome, Controller, PopupController, PopupView, _ref,
+  var Controller, PopupController, PopupView, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Controller = require('controllers/base/controller');
 
   PopupView = require('views/popup-view');
-
-  Chrome = require('lib/chrome-interop');
 
   module.exports = PopupController = (function(_super) {
     __extends(PopupController, _super);
@@ -206,11 +211,8 @@ window.require.register("controllers/popup-controller", function(exports, requir
     }
 
     PopupController.prototype.index = function() {
-      this.view = new PopupView({
+      return this.view = new PopupView({
         region: 'main'
-      });
-      return Chrome.withCompleteTabs(function(tabs) {
-        return console.log(_.last(tabs).url);
       });
     };
 
@@ -229,10 +231,10 @@ window.require.register("initialize", function(exports, require, module) {
   });
   
 });
-window.require.register("lib/chrome-interop", function(exports, require, module) {
-  var ChromeInterop;
+window.require.register("lib/chrome-helpers", function(exports, require, module) {
+  var ChromeHelpers;
 
-  ChromeInterop = {
+  ChromeHelpers = {
     withActiveTabs: function(callback) {
       var queryInfo;
 
@@ -250,15 +252,10 @@ window.require.register("lib/chrome-interop", function(exports, require, module)
         windowId: chrome.windows.WINDOW_ID_CURRENT
       };
       return chrome.tabs.query(queryInfo, callback);
-    },
-    listenUpdatedTabs: function() {
-      return chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-        return console.log("Update: the url of tab " + tabId + " changed to " + changeInfo.url);
-      });
     }
   };
 
-  module.exports = ChromeInterop;
+  module.exports = ChromeHelpers;
   
 });
 window.require.register("lib/support", function(exports, require, module) {
@@ -365,6 +362,61 @@ window.require.register("routes", function(exports, require, module) {
     match('public/background.html', 'home#index');
     return match('public/popup.html', 'popup#index');
   };
+  
+});
+window.require.register("services/base/service", function(exports, require, module) {
+  var Chaplin, Service;
+
+  Chaplin = require('chaplin');
+
+  module.exports = Service = (function() {
+    function Service() {}
+
+    _(Service.prototype).extend(Chaplin.EventBroker);
+
+    Service.prototype.disposed = false;
+
+    Service.prototype.dispose = function() {
+      if (this.disposed) {
+        return;
+      }
+      this.unsubscribeAllEvents();
+      return this.disposed = true;
+    };
+
+    if (typeof Object.freeze === "function") {
+      Object.freeze(Service);
+    }
+
+    return Service;
+
+  })();
+  
+});
+window.require.register("services/chrome-service", function(exports, require, module) {
+  var ChromeService, Service,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Service = require('services/base/service');
+
+  module.exports = ChromeService = (function(_super) {
+    __extends(ChromeService, _super);
+
+    function ChromeService() {
+      ChromeService.__super__.constructor.apply(this, arguments);
+      this.subscribeEvent('listen:onUpdatedTab', this.onUpdatedTab);
+    }
+
+    ChromeService.prototype.onUpdatedTab = function() {
+      return chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+        return console.log("Update: the url of tab " + tabId + " changed to " + changeInfo.url);
+      });
+    };
+
+    return ChromeService;
+
+  })(Service);
   
 });
 window.require.register("views/base/collection-view", function(exports, require, module) {
