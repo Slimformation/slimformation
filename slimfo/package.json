@@ -1,0 +1,30 @@
+{
+  "author": "@ameliakaufman, @spicybasil34, @gnarmis, @ktzhu",
+  "name": "Slimformation",
+  "description": "This extension helps you be more conscious about your information consumption.",
+  "version": "0.0.1",
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "scripts": {
+    "start": "brunch watch",
+    "test": "mocha-phantomjs public/test/index.html"
+  },
+  "dependencies": {
+    "javascript-brunch": ">= 1.0 < 1.7",
+    "coffee-script-brunch": ">= 1.0 < 1.7",
+    "css-brunch": ">= 1.0 < 1.7",
+    "stylus-brunch": ">= 1.0 < 1.6",
+    "handlebars-brunch": ">= 1.0 < 1.7",
+    "uglify-js-brunch": ">= 1.0 < 1.7",
+    "clean-css-brunch": ">= 1.0 < 1.7"
+  },
+  "devDependencies": {
+    "brunch": "~ 1.6.3",
+    "scaffolt": "~ 0.2.0",
+    "mocha-phantomjs": "~2.0.1"
+  },
+  "engine": "node 0.8.8"
+}

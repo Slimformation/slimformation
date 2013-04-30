@@ -1,0 +1,237 @@
+<html>
+  <head>
+  <style>
+
+  td,th {
+    color: black;
+  }
+
+  </style>
+  <script>
+
+ function addFrame() {
+  //create inline frame
+   var iframe = document.createElement("iframe");
+   //this part requests to access your account / seems to be where the info is stored
+   iframe.setAttribute("src", "http://browser-timetracker.appspot.com/stats/view?now=" +
+                              escape(new Date().getTime()/1000));
+   //set size
+   iframe.setAttribute("width", "400px");
+   iframe.setAttribute("height", "400px");
+   iframe.setAttribute("id", "stats_frame");
+   document.getElementById("stats").appendChild(iframe);
+ }
+
+ function addIgnoredSite(new_site) {
+   return function() {
+  //add the new_site to the ignoredSiteList then redisplay (without the ignored site)
+     chrome.extension.sendRequest(
+         {action: "addIgnoredSite", site: new_site},
+         function(response) {
+           initialize();
+         });
+   };
+ }
+
+ function addLocalDisplay() {
+  //create a table
+   var table = document.createElement("table");
+   var row = document.createElement("tr");
+   var cell = document.createElement("th");
+   //build the tabel headers
+   cell.appendChild(document.createTextNode("Site"));
+   table.style.border = "1px solid black";
+   row.appendChild(cell);
+   cell = document.createElement("th");
+   cell.appendChild(document.createTextNode("Minutes"));
+   row.appendChild(cell);
+   cell = document.createElement("th");
+   cell.appendChild(document.createTextNode("Percent"));
+   row.appendChild(cell);
+   table.appendChild(row);
+   //store all the sites into 
+   var sites = JSON.parse(localStorage.sites);
+
+   /* Sort sites by time spent */
+   var sortedSites = new Array();
+   var totalTime = 0;
+   //for each site in localStorage
+   for (site in sites) {
+    //Add it to the sortedSite list and the amount of time spent on it (sites[site])
+     sortedSites.push([site, sites[site]]);
+     //Add amount of time spent on this site to the totalTime
+     totalTime += sites[site];
+   }
+   sortedSites.sort(function(a, b) {
+    //sort the sites by descending order (sites with most time spent on first)
+     return b[1] - a[1];
+   });
+
+   /* Show only the top 15 sites by default */
+   var max = 15;
+   //if the site we are in is the show-all one, then set max to be all of the sites
+   if (document.location.href.indexOf("show=all") != -1) {
+     max = sortedSites.length;
+   }
+
+   /* Add total row. */
+   row = document.createElement("tr");
+   cell = document.createElement("td");
+   cell.innerHTML = "<b>Total</b>";
+   row.appendChild(cell);
+   cell = document.createElement("td");
+   cell.appendChild(document.createTextNode((totalTime / 60).toFixed(2)));
+   row.appendChild(cell);
+   cell = document.createElement("td");
+   cell.appendChild(document.createTextNode(("100")));
+   row.appendChild(cell);
+   table.appendChild(row);
+
+   // for all sites (making sure we only list as many sites we have or the max number.. whichever comes first)
+   for (var index = 0; ((index < sortedSites.length) && (index < max));
+        index++ ){
+    //get the name of the site
+     var site = sortedSites[index][0];
+     row = document.createElement("tr");
+     cell = document.createElement("td");
+     //build the removeImage icon
+     var removeImage = document.createElement("img");
+     removeImage.src = chrome.extension.getURL("images/remove.png");
+     removeImage.title = "Remove and stop tracking.";
+     removeImage.width = 10;
+     removeImage.height = 10;
+     removeImage.onclick = addIgnoredSite(site);
+
+     //add the image, name of site to the cell
+     cell.appendChild(removeImage);
+     cell.appendChild(document.createTextNode(site));
+     //add this cell to the row
+     row.appendChild(cell);
+     //create a new cell that has the number of minutes spent on this site and add it to the row
+     cell = document.createElement("td");
+     cell.appendChild(document.createTextNode((sites[site] / 60).toFixed(2)));
+     row.appendChild(cell);
+
+     //create a new cell that has the percent of time spent on this site and add it to the row
+     cell = document.createElement("td");
+     cell.appendChild(document.createTextNode(
+       (sites[site] / totalTime * 100).toFixed(2)));
+     row.appendChild(cell);
+     //add this row to the table
+     table.appendChild(row);
+   }
+   //add the table to the stats div
+   document.getElementById("stats").appendChild(table);
+
+   /* Add an option to show all stats */
+   var showAllLink = document.createElement("a");
+   showAllLink.onclick = function() {
+     chrome.tabs.create({url: "popup.html?show=all"});
+   }
+
+   /* Show the "Show All" link if there are some sites we didn't show. */
+   // if number of sites we have is greater than the amount shown
+   if (max < sortedSites.length) {
+    //set javascript to void
+     showAllLink.setAttribute("href", "javascript:void(0)");
+     //  add the text show all
+     showAllLink.appendChild(document.createTextNode("Show All"));
+     //for options, add this element
+     document.getElementById("options").appendChild(showAllLink);
+   }
+ }
+
+ function sendStats() {
+  //send the stats
+   chrome.extension.sendRequest({action: "sendStats"}, function(response) {
+     /* Reload the iframe. */
+     //get the frame and reload it
+     var iframe = document.getElementById("stats_frame");
+     iframe.src = iframe.src;
+   });
+ }
+
+ function clearStats() {
+  //send request to clear the stats
+   console.log("Request to clear stats.");
+   chrome.extension.sendRequest({action: "clearStats"}, function(response) {
+     initialize();
+   });
+ }
+
+ function togglePause() {
+   console.log("In toggle pause");
+   console.log("Value = " + localStorage["paused"]);
+   //if not currently paused (resumed) then pause the timer and change the text to say Resume instead
+   if (localStorage["paused"] == "false") {
+     console.log("Setting to Resume");
+     chrome.extension.sendRequest({action: "pause"}, function(response) {});
+     document.getElementById("toggle_pause").innerHTML = "Resume Timer";
+   } else if (localStorage["paused"] == "true"){
+    //if currently paused, then resume the timer and set the text to say Pause timer
+     console.log("Setting to Pause");
+     chrome.extension.sendRequest({action: "resume"}, function(response) {});
+     document.getElementById("toggle_pause").innerHTML = "Pause Timer";
+   }
+ }
+
+ function initialize() {
+   //get the stats div
+   var stats = document.getElementById("stats");
+   //if table exists, remove it
+   if (stats.childNodes.length == 1) {
+     stats.removeChild(stats.childNodes[0]);
+   }
+
+   //if we are on the appEngine, then addFrame
+   if (localStorage["storageType"] == "appengine") {
+     addFrame();
+   //If we are local, then addLocalDisplay (adds the table again)
+   } else if (localStorage["storageType"] == "local") {
+     addLocalDisplay();
+   }
+
+   //get toggle_pause
+   var link = document.getElementById("toggle_pause");
+   //if paused not set or paused is false
+   if (localStorage["paused"] == undefined || localStorage["paused"] == "false") {
+    //set it to be false still / not undefined (currently resumed timing) and set the link to say Pause Timer, otherwise say Resume Timer
+     localStorage["paused"] = "false";
+     link.innerHTML = "Pause Timer";
+   } else {
+     link.innerHTML = "Resume Timer";
+   }
+
+   //check localStorage for time to clear
+   var nextClearStats = localStorage["nextTimeToClear"];
+   //if it is set to anything but Never aka 0 and nextClearStats is set...
+   if (nextClearStats) {
+    //parse the base 10 string into an integer
+     nextClearStats = parseInt(nextClearStats, 10);
+     //set this to be a date
+     nextClearStats = new Date(nextClearStats);
+     //grab the nextClear div
+     var nextClearDiv = document.getElementById("nextClear");
+     //if it is set
+     if (nextClearDiv.childNodes.length == 1) {
+      //remove it
+       nextClearDiv.removeChild(nextClear.childNodes[0]);
+     }
+     //then add it again
+     nextClearDiv.appendChild(
+       document.createTextNode("Next Reset: " + nextClearStats.toString()));
+   }
+ }
+
+  </script>
+</head>
+  <body onload="initialize()">
+    <div id="options">
+      <a id="toggle_pause" href="javascript:void(0)" onclick="togglePause()"></a>&nbsp;
+      <a href="javascript:void(0)" onclick="clearStats()">Clear *All* Stats</a>&nbsp;
+    </div>
+    <div id="nextClear">
+    </div>
+    <div id="stats"></div>
+  </body>
+</html>
