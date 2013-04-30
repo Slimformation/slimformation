@@ -1,10 +1,10 @@
 Controller = require 'controllers/base/controller'
 PopupView = require 'views/popup-view'
-BasicChrome = require 'lib/chrome/basic'
+Chrome = require 'lib/chrome-interop'
 
 module.exports = class PopupController extends Controller
   index: ->
     @view = new PopupView region: 'main'
-    (new BasicChrome).withActiveTabs (tabs) ->
-      console.log tabs[0].url
+    Chrome.withCompleteTabs (tabs) ->
+      console.log _.last(tabs).url
 

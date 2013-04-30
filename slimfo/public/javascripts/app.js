@@ -184,7 +184,7 @@ window.require.register("controllers/home-controller", function(exports, require
   
 });
 window.require.register("controllers/popup-controller", function(exports, require, module) {
-  var BasicChrome, Controller, PopupController, PopupView, _ref,
+  var Chrome, Controller, PopupController, PopupView, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -192,7 +192,7 @@ window.require.register("controllers/popup-controller", function(exports, requir
 
   PopupView = require('views/popup-view');
 
-  BasicChrome = require('lib/chrome/basic');
+  Chrome = require('lib/chrome-interop');
 
   module.exports = PopupController = (function(_super) {
     __extends(PopupController, _super);
@@ -206,8 +206,8 @@ window.require.register("controllers/popup-controller", function(exports, requir
       this.view = new PopupView({
         region: 'main'
       });
-      return (new BasicChrome).withActiveTabs(function(tabs) {
-        return console.log(tabs[0].url);
+      return Chrome.withCompleteTabs(function(tabs) {
+        return console.log(_.last(tabs).url);
       });
     };
 
@@ -226,26 +226,31 @@ window.require.register("initialize", function(exports, require, module) {
   });
   
 });
-window.require.register("lib/chrome/basic", function(exports, require, module) {
-  var BasicChrome;
+window.require.register("lib/chrome-interop", function(exports, require, module) {
+  var ChromeInterop;
 
-  BasicChrome = (function() {
-    function BasicChrome() {}
-
-    BasicChrome.prototype.withActiveTabs = function(callback) {
+  ChromeInterop = {
+    withActiveTabs: function(callback) {
       var queryInfo;
 
       queryInfo = {
-        active: true
+        active: true,
+        windowId: chrome.windows.WINDOW_ID_CURRENT
       };
       return chrome.tabs.query(queryInfo, callback);
-    };
+    },
+    withCompleteTabs: function(callback) {
+      var queryInfo;
 
-    return BasicChrome;
+      queryInfo = {
+        status: "complete",
+        windowId: chrome.windows.WINDOW_ID_CURRENT
+      };
+      return chrome.tabs.query(queryInfo, callback);
+    }
+  };
 
-  })();
-
-  module.exports = BasicChrome;
+  module.exports = ChromeInterop;
   
 });
 window.require.register("lib/support", function(exports, require, module) {
