@@ -14,4 +14,11 @@ ChromeInterop =
       windowId: chrome.windows.WINDOW_ID_CURRENT
     chrome.tabs.query(queryInfo, callback)
 
+  listenUpdatedTabs: () ->
+    chrome.tabs.onUpdated.addListener (tabId, changeInfo, tab) ->
+      console.log "Update: the url of tab #{tabId} changed to #{changeInfo.url}"
+
+
+
+
 module.exports = ChromeInterop
