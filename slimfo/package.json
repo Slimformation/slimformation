@@ -9,7 +9,7 @@
     "url": ""
   },
   "scripts": {
-    "start": "brunch watch --server",
+    "start": "brunch watch",
     "test": "mocha-phantomjs public/test/index.html"
   },
   "dependencies": {
