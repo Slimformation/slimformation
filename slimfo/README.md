@@ -38,7 +38,7 @@ We use `scaffolt`, so run `scaffolt -l` to see the things you can generate. Also
 
 **Managing 3rd party components**
 
-Let's just put stuff in `vendor/scripts` and `vendor/styles`, and then change in which order it's loaded in `config.coffee`.
+Let's just put stuff in `vendor/scripts` and `vendor/styles`, and then change in which order it's loaded in `config.coffee` if needed. Stylesheets are all compiled into one file by default, but you might want to reorder how the javascript files are ordered.
 
 
 ## Testing
