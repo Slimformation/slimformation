@@ -102,6 +102,18 @@ window.require.register("test/initialize", function(exports, require, module) {
   }
   
 });
+window.require.register("test/models/PageVisit-test", function(exports, require, module) {
+  var PageVisit;
+
+  PageVisit = require('models/PageVisit');
+
+  describe('PageVisit', function() {
+    return beforeEach(function() {
+      return this.model = new PageVisit();
+    });
+  });
+  
+});
 window.require.register("test/views/header-view-test", function(exports, require, module) {
   var HeaderView, HeaderViewTest, _ref,
     __hasProp = {}.hasOwnProperty,
