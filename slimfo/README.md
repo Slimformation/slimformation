@@ -24,7 +24,7 @@ It's being built using [Brunch](http://brunch.io) and [Chaplin](http://chaplinjs
 
 **Building, watching, etc**
 
-`npm play`
+`npm start`
 
 The above will compile everything to their proper places. You can also do `brunch watch` or `brunch build`.
 
