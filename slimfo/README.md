@@ -14,11 +14,11 @@ It's being built using [Brunch](http://brunch.io) and [Chaplin](http://chaplinjs
 
 **If you're starting from scratch, you need the following:**
 
-1. node and npm
+1. Install node and npm.
   - `brew install node`, or go [here](http://nodejs.org/download/).
-    - Installs `node` and `npm`
-  - To make sure you have access to all the dev dependency binaries that this project installs when you run `npm install`, prepend `./node_modules/.bin` to your `~/.profile` or zsh or bash config:
-    - `export PATH="./node_modules/.bin:$PATH"`
+      - Installs `node` and `npm`
+  - To make sure you have access to all the dev dependency binaries that this project installs when you run `npm install`, prepend `./node_modules/.bin` to your PATH in `~/.profile` or zsh/bash config:
+      - `export PATH="./node_modules/.bin:$PATH"`
 2. Install Phantomjs. `brew install phantomjs` or go [here](http://phantomjs.org/download.html).
 3. `./scripts/init.sh`
 
