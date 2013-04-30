@@ -17,13 +17,13 @@
     "default_title": "Slimformation"
   },
 
-  // "content_scripts": [
-  // {
-  //   "matches": ["http://*/*"],
-  //   "js": ["path/to/content.js"],
-  //   "run_at": "document_idle"
-  // }
-  // ],
+  "content_scripts": [
+  {
+    "matches": ["http://*/*"],
+    "js": ["public/javascripts/content-script.js"],
+    "run_at": "document_idle"
+  }
+  ],
 
   "icons": {
     "16": "public/images/icons/16.png",
@@ -32,5 +32,6 @@
   },
 
   "permissions": [
+    "tabs"
   ]
 }

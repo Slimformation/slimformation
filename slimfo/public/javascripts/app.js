@@ -120,6 +120,10 @@ window.require.register("application", function(exports, require, module) {
   })(Chaplin.Application);
   
 });
+window.require.register("content_scripts/tab-reporter", function(exports, require, module) {
+  console.log('I loaded the content script!');
+  
+});
 window.require.register("controllers/base/controller", function(exports, require, module) {
   var Chaplin, Controller, HeaderView, SiteView, _ref,
     __hasProp = {}.hasOwnProperty,
@@ -180,13 +184,15 @@ window.require.register("controllers/home-controller", function(exports, require
   
 });
 window.require.register("controllers/popup-controller", function(exports, require, module) {
-  var Controller, PopupController, PopupView, _ref,
+  var BasicChrome, Controller, PopupController, PopupView, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Controller = require('controllers/base/controller');
 
   PopupView = require('views/popup-view');
+
+  BasicChrome = require('lib/chrome/basic');
 
   module.exports = PopupController = (function(_super) {
     __extends(PopupController, _super);
@@ -197,8 +203,11 @@ window.require.register("controllers/popup-controller", function(exports, requir
     }
 
     PopupController.prototype.index = function() {
-      return this.view = new PopupView({
+      this.view = new PopupView({
         region: 'main'
+      });
+      return (new BasicChrome).withActiveTabs(function(tabs) {
+        return console.log(tabs[0].url);
       });
     };
 
@@ -215,6 +224,28 @@ window.require.register("initialize", function(exports, require, module) {
   $(function() {
     return (new Application).initialize();
   });
+  
+});
+window.require.register("lib/chrome/basic", function(exports, require, module) {
+  var BasicChrome;
+
+  BasicChrome = (function() {
+    function BasicChrome() {}
+
+    BasicChrome.prototype.withActiveTabs = function(callback) {
+      var queryInfo;
+
+      queryInfo = {
+        active: true
+      };
+      return chrome.tabs.query(queryInfo, callback);
+    };
+
+    return BasicChrome;
+
+  })();
+
+  module.exports = BasicChrome;
   
 });
 window.require.register("lib/support", function(exports, require, module) {
