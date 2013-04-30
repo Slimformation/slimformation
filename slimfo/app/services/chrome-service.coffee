@@ -1,5 +1,6 @@
 Service = require 'services/base/service'
 PageVisit = require 'models/PageVisit'
+NewPageVisits = require 'models/NewPageVisits'
 
 module.exports = class ChromeService extends Service
   constructor: ->
@@ -11,8 +12,7 @@ module.exports = class ChromeService extends Service
       if changeInfo.url == undefined
         return
       console.log "Update: the url of tab #{tabId} changed to #{changeInfo.url}" 
-      pv = new PageVisit
-      pv.build
+      npv = new NewPageVisits
+      npv.create
         url: changeInfo.url
-      console.log pv.serialize()
      

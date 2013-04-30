@@ -102,6 +102,27 @@ window.require.register("test/initialize", function(exports, require, module) {
   }
   
 });
+window.require.register("test/models/NewPageVisits-test", function(exports, require, module) {
+  var Collection, NewPageVisits;
+
+  Collection = require('models/base/collection');
+
+  NewPageVisits = require('models/NewPageVisits');
+
+  NewPageVisits = require('models/NewPageVisits');
+
+  describe('NewPageVisits', function() {
+    beforeEach(function() {
+      this.model = new NewPageVisits();
+      return this.collection = new NewPageVisits();
+    });
+    return afterEach(function() {
+      this.model.dispose();
+      return this.collection.dispose();
+    });
+  });
+  
+});
 window.require.register("test/models/PageVisit-test", function(exports, require, module) {
   var PageVisit;
 
