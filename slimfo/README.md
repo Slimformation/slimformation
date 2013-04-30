@@ -24,10 +24,9 @@ It's being built using [Brunch](http://brunch.io) and [Chaplin](http://chaplinjs
 
 **Building, watching, etc**
 
-`brunch build`
-`brunch watch`
+`npm play`
 
-The above will compile everything to their proper places.
+The above will compile everything to their proper places. You can also do `brunch watch` or `brunch build`.
 
 - [Brunch's documentation](http://brunch.io/#documentation)
 - [How Brunch's config.coffee works](https://github.com/brunch/brunch/blob/master/docs/config.md)
@@ -36,6 +35,11 @@ The above will compile everything to their proper places.
 **Scaffolding**
 
 We use `scaffolt`, so run `scaffolt -l` to see the things you can generate. Also, `--revert` will come in handy.
+
+**Managing Dependencies**
+
+- `package.json`
+- `npm install`
 
 **Managing 3rd party components**
 
