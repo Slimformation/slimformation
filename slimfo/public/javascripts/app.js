@@ -311,6 +311,38 @@ window.require.register("lib/view-helper", function(exports, require, module) {
   });
   
 });
+window.require.register("models/PageVisit", function(exports, require, module) {
+  var Model, PageVisit, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Model = require('models/base/model');
+
+  module.exports = PageVisit = (function(_super) {
+    __extends(PageVisit, _super);
+
+    function PageVisit() {
+      _ref = PageVisit.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    PageVisit.prototype.initialize = function() {
+      return this.set('created_at', (new Date()).getTime());
+    };
+
+    PageVisit.prototype.build = function(options) {
+      return this.set('url', options.url);
+    };
+
+    PageVisit.prototype.created_at = null;
+
+    PageVisit.prototype.url = null;
+
+    return PageVisit;
+
+  })(Model);
+  
+});
 window.require.register("models/base/collection", function(exports, require, module) {
   var Chaplin, Collection, Model, _ref,
     __hasProp = {}.hasOwnProperty,
@@ -394,11 +426,13 @@ window.require.register("services/base/service", function(exports, require, modu
   
 });
 window.require.register("services/chrome-service", function(exports, require, module) {
-  var ChromeService, Service,
+  var ChromeService, PageVisit, Service,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Service = require('services/base/service');
+
+  PageVisit = require('models/PageVisit');
 
   module.exports = ChromeService = (function(_super) {
     __extends(ChromeService, _super);
@@ -410,7 +444,17 @@ window.require.register("services/chrome-service", function(exports, require, mo
 
     ChromeService.prototype.onUpdatedTab = function() {
       return chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-        return console.log("Update: the url of tab " + tabId + " changed to " + changeInfo.url);
+        var pv;
+
+        if (changeInfo.url === void 0) {
+          return;
+        }
+        console.log("Update: the url of tab " + tabId + " changed to " + changeInfo.url);
+        pv = new PageVisit;
+        pv.build({
+          url: changeInfo.url
+        });
+        return console.log(pv.serialize());
       });
     };
 
