@@ -120,6 +120,16 @@ window.require.register("application", function(exports, require, module) {
   })(Chaplin.Application);
   
 });
+window.require.register("config", function(exports, require, module) {
+  var Config;
+
+  Config = {
+    categorizerEndpoint: "http://gentle-mesa-7611.herokuapp.com/categorize.json"
+  };
+
+  module.exports = Config;
+  
+});
 window.require.register("content_scripts/tab-reporter", function(exports, require, module) {
   console.log('I loaded the content script!');
   
@@ -277,6 +287,12 @@ window.require.register("lib/utils", function(exports, require, module) {
 
   utils = Chaplin.utils.beget(Chaplin.utils);
 
+  _(utils).extend({
+    removeProtocol: function(url) {
+      return url.replace(/.*?:\/\//g, "");
+    }
+  });
+
   module.exports = utils;
   
 });
@@ -338,9 +354,13 @@ window.require.register("models/NewPageVisits", function(exports, require, modul
   
 });
 window.require.register("models/PageVisit", function(exports, require, module) {
-  var Model, PageVisit, _ref,
+  var Config, Model, PageVisit, utils, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  utils = require('lib/utils');
+
+  Config = require('config');
 
   Model = require('models/base/model');
 
@@ -353,12 +373,32 @@ window.require.register("models/PageVisit", function(exports, require, module) {
     }
 
     PageVisit.prototype.initialize = function() {
-      return this.set('created_at', (new Date()).getTime());
+      this.set('created_at', (new Date()).getTime());
+      return this.subscribeEvent('add', this.categorize);
     };
 
     PageVisit.prototype.created_at = null;
 
     PageVisit.prototype.url = null;
+
+    PageVisit.prototype.category = null;
+
+    PageVisit.prototype.categorize = function(pageVisit) {
+      var pageUrl;
+
+      pageUrl = pageVisit.attributes.url;
+      console.log("trying to categorize " + pageUrl);
+      if (pageUrl === null) {
+        return;
+      }
+      return $.ajax({
+        url: Config.categorizerEndpoint + ("?url=" + (utils.removeProtocol(pageUrl)))
+      }).done(function(data) {
+        return pageVisit.save({
+          category: data.category
+        });
+      });
+    };
 
     return PageVisit;
 
@@ -448,9 +488,11 @@ window.require.register("services/base/service", function(exports, require, modu
   
 });
 window.require.register("services/chrome-service", function(exports, require, module) {
-  var ChromeService, NewPageVisits, PageVisit, Service,
+  var Chaplin, ChromeService, NewPageVisits, PageVisit, Service,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Chaplin = require('chaplin');
 
   Service = require('services/base/service');
 
@@ -468,16 +510,17 @@ window.require.register("services/chrome-service", function(exports, require, mo
 
     ChromeService.prototype.onUpdatedTab = function() {
       return chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-        var npv;
+        var npv, pv;
 
         if (changeInfo.url === void 0) {
           return;
         }
         console.log("Update: the url of tab " + tabId + " changed to " + changeInfo.url);
         npv = new NewPageVisits;
-        return npv.create({
+        pv = npv.create({
           url: changeInfo.url
         });
+        return Chaplin.mediator.publish('add', pv);
       });
     };
 
