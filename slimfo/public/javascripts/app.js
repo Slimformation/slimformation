@@ -383,6 +383,19 @@ window.require.register("models/PageVisit", function(exports, require, module) {
 
     PageVisit.prototype.category = null;
 
+    PageVisit.prototype.defaults = {
+      category: "Other"
+    };
+
+    PageVisit.prototype.validate = function(attrs, options) {
+      var isChromeUrl;
+
+      isChromeUrl = /^chrome/i.test(attrs.url);
+      if (isChromeUrl) {
+        return "Not a valid URL.";
+      }
+    };
+
     PageVisit.prototype.categorize = function(pageVisit) {
       var pageUrl;
 
