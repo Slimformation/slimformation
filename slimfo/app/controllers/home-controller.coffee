@@ -1,11 +1,13 @@
 Controller = require 'controllers/base/controller'
 HomePageView = require 'views/home-page-view'
 ChromeService = require 'services/chrome-service'
+CategorizerService = require 'services/categorizer-service'
 
 module.exports = class HomeController extends Controller
   # hardcoded loading of services; maybe there's a better way
   @services =
-    chrome-service: new ChromeService
+    chromeService: new ChromeService
+    categorizerService: new CategorizerService
 
   initialize: ->
     # publish a new event, to register a listener for the chrome event

@@ -20,7 +20,7 @@ module.exports = class ChromeService extends Service
       npv = new NewPageVisits
       pv = npv.create
         url: changeInfo.url
-      Chaplin.mediator.publish 'add', pv
+      Chaplin.mediator.publish 'add:PageVisit', pv
       # send a message to the content script in that tab
       chrome.tabs.getSelected null, (tab) ->
         chrome.tabs.sendMessage tab.id, {greeting: "hello"}, (response) ->

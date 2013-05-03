@@ -130,10 +130,6 @@ window.require.register("config", function(exports, require, module) {
   module.exports = Config;
   
 });
-window.require.register("content_scripts/tab-reporter", function(exports, require, module) {
-  console.log('I loaded the content script!');
-  
-});
 window.require.register("controllers/base/controller", function(exports, require, module) {
   var Chaplin, Controller, HeaderView, SiteView, _ref,
     __hasProp = {}.hasOwnProperty,
@@ -166,7 +162,7 @@ window.require.register("controllers/base/controller", function(exports, require
   
 });
 window.require.register("controllers/home-controller", function(exports, require, module) {
-  var ChromeService, Controller, HomeController, HomePageView, _ref,
+  var CategorizerService, ChromeService, Controller, HomeController, HomePageView, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -176,6 +172,8 @@ window.require.register("controllers/home-controller", function(exports, require
 
   ChromeService = require('services/chrome-service');
 
+  CategorizerService = require('services/categorizer-service');
+
   module.exports = HomeController = (function(_super) {
     __extends(HomeController, _super);
 
@@ -184,8 +182,9 @@ window.require.register("controllers/home-controller", function(exports, require
       return _ref;
     }
 
-    HomeController.services = chrome - {
-      service: new ChromeService
+    HomeController.services = {
+      chromeService: new ChromeService,
+      categorizerService: new CategorizerService
     };
 
     HomeController.prototype.initialize = function() {
@@ -373,8 +372,7 @@ window.require.register("models/PageVisit", function(exports, require, module) {
     }
 
     PageVisit.prototype.initialize = function() {
-      this.set('created_at', (new Date()).getTime());
-      return this.subscribeEvent('add', this.categorize);
+      return this.set('created_at', (new Date()).getTime());
     };
 
     PageVisit.prototype.created_at = null;
@@ -394,23 +392,6 @@ window.require.register("models/PageVisit", function(exports, require, module) {
       if (isChromeUrl) {
         return "Not a valid URL.";
       }
-    };
-
-    PageVisit.prototype.categorize = function(pageVisit) {
-      var pageUrl;
-
-      pageUrl = pageVisit.attributes.url;
-      if (pageUrl === null) {
-        return;
-      }
-      console.log("trying to categorize " + pageUrl);
-      return $.ajax({
-        url: Config.categorizerEndpoint + ("?url=" + (utils.removeProtocol(pageUrl)))
-      }).done(function(data) {
-        return pageVisit.save({
-          category: data.category
-        });
-      });
     };
 
     return PageVisit;
@@ -500,6 +481,50 @@ window.require.register("services/base/service", function(exports, require, modu
   })();
   
 });
+window.require.register("services/categorizer-service", function(exports, require, module) {
+  var CategorizerService, Config, Service, utils,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  utils = require('lib/utils');
+
+  Config = require('config');
+
+  Service = require('services/base/service');
+
+  module.exports = CategorizerService = (function(_super) {
+    __extends(CategorizerService, _super);
+
+    function CategorizerService() {
+      CategorizerService.__super__.constructor.apply(this, arguments);
+      this.subscribeEvent('add:PageVisit', this.categorize);
+    }
+
+    CategorizerService.prototype.categorize = function(pageVisit) {
+      var pageUrl;
+
+      pageUrl = pageVisit.attributes.url;
+      if (pageUrl === null) {
+        return;
+      }
+      console.log("trying to categorize " + pageUrl);
+      return $.ajax({
+        url: Config.categorizerEndpoint + ("?url=" + (utils.removeProtocol(pageUrl)))
+      }).done(function(data) {
+        return pageVisit.save({
+          category: data.category
+        });
+      }).fail(function(data) {
+        console.log("Ajax request failed");
+        return console.log(data);
+      });
+    };
+
+    return CategorizerService;
+
+  })(Service);
+  
+});
 window.require.register("services/chrome-service", function(exports, require, module) {
   var Chaplin, ChromeService, NewPageVisits, PageVisit, Service,
     __hasProp = {}.hasOwnProperty,
@@ -533,7 +558,7 @@ window.require.register("services/chrome-service", function(exports, require, mo
         pv = npv.create({
           url: changeInfo.url
         });
-        Chaplin.mediator.publish('add', pv);
+        Chaplin.mediator.publish('add:PageVisit', pv);
         return chrome.tabs.getSelected(null, function(tab) {
           return chrome.tabs.sendMessage(tab.id, {
             greeting: "hello"
