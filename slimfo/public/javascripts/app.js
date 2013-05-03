@@ -400,10 +400,10 @@ window.require.register("models/PageVisit", function(exports, require, module) {
       var pageUrl;
 
       pageUrl = pageVisit.attributes.url;
-      console.log("trying to categorize " + pageUrl);
       if (pageUrl === null) {
         return;
       }
+      console.log("trying to categorize " + pageUrl);
       return $.ajax({
         url: Config.categorizerEndpoint + ("?url=" + (utils.removeProtocol(pageUrl)))
       }).done(function(data) {
@@ -525,7 +525,7 @@ window.require.register("services/chrome-service", function(exports, require, mo
       return chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
         var npv, pv;
 
-        if (changeInfo.url === void 0) {
+        if ((changeInfo.url === void 0) || (/^chrome/i.test(changeInfo.url))) {
           return;
         }
         console.log("Update: the url of tab " + tabId + " changed to " + changeInfo.url);
@@ -533,7 +533,14 @@ window.require.register("services/chrome-service", function(exports, require, mo
         pv = npv.create({
           url: changeInfo.url
         });
-        return Chaplin.mediator.publish('add', pv);
+        Chaplin.mediator.publish('add', pv);
+        return chrome.tabs.getSelected(null, function(tab) {
+          return chrome.tabs.sendMessage(tab.id, {
+            greeting: "hello"
+          }, function(response) {
+            return console.log(response);
+          });
+        });
       });
     };
 

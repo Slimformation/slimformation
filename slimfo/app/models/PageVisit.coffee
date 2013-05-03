@@ -24,9 +24,8 @@ module.exports = class PageVisit extends Model
   # callback that is called with a newly added PageVisit, and categorizes it
   categorize: (pageVisit) ->
     pageUrl = pageVisit.attributes.url
+    return if pageUrl == null
     console.log "trying to categorize #{pageUrl}"
-    if pageUrl == null
-      return
     $.ajax(
       url: Config.categorizerEndpoint + "?url=#{utils.removeProtocol(pageUrl)}"
     ).done (data) ->

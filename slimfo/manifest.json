@@ -20,8 +20,8 @@
   "content_scripts": [
   {
     "matches": ["http://*/*"],
-    "js": ["public/javascripts/content-script.js"],
-    "run_at": "document_idle"
+    "js": ["public/javascripts/inject.js"],
+    "run_at": "document_start"
   }
   ],
 
@@ -33,6 +33,6 @@
 
   "permissions": [
     "tabs",
-    "http://*.herokuapp.com/"
+    "http://*/*"
   ]
 }
