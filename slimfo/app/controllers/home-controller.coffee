@@ -14,5 +14,8 @@ module.exports = class HomeController extends Controller
     # whenever a tab is updated; one of the services will serve us
     @publishEvent 'listen:onUpdatedTab'
 
+    # listen to activity updates from content scripts
+    @publishEvent 'listen:activityPort'
+
   index: ->
     @view = new HomePageView region: 'main'
