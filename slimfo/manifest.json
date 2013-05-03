@@ -20,12 +20,12 @@
   "content_scripts": [
   {
     "matches": ["http://*/*"],
-    "js": ["public/javascripts/inject.js"],
+    "js": ["public/javascripts/content-scripts.js","public/javascripts/inject.js"],
     "run_at": "document_start"
   },
   {
     "matches": ["https://*/*"],
-    "js": ["public/javascripts/inject.js"],
+    "js": ["public/javascripts/content-scripts.js","public/javascripts/inject.js"],
     "run_at": "document_start"
   }
   ],
