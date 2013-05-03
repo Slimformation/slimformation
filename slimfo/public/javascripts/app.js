@@ -188,7 +188,8 @@ window.require.register("controllers/home-controller", function(exports, require
     };
 
     HomeController.prototype.initialize = function() {
-      return this.publishEvent('listen:onUpdatedTab');
+      this.publishEvent('listen:onUpdatedTab');
+      return this.publishEvent('listen:activityPort');
     };
 
     HomeController.prototype.index = function() {
@@ -372,10 +373,13 @@ window.require.register("models/PageVisit", function(exports, require, module) {
     }
 
     PageVisit.prototype.initialize = function() {
-      return this.set('created_at', (new Date()).getTime());
+      this.set('created_at', (new Date()).getTime());
+      return this.set('updated_at', (new Date()).getTime());
     };
 
     PageVisit.prototype.created_at = null;
+
+    PageVisit.prototype.updated_at = null;
 
     PageVisit.prototype.url = null;
 
@@ -544,6 +548,7 @@ window.require.register("services/chrome-service", function(exports, require, mo
     function ChromeService() {
       ChromeService.__super__.constructor.apply(this, arguments);
       this.subscribeEvent('listen:onUpdatedTab', this.onUpdatedTab);
+      this.subscribeEvent('listen:activityPort', this.updateActvity);
     }
 
     ChromeService.prototype.onUpdatedTab = function() {
@@ -558,13 +563,34 @@ window.require.register("services/chrome-service", function(exports, require, mo
         pv = npv.create({
           url: changeInfo.url
         });
-        Chaplin.mediator.publish('add:PageVisit', pv);
-        return chrome.tabs.getSelected(null, function(tab) {
-          return chrome.tabs.sendMessage(tab.id, {
-            greeting: "hello"
-          }, function(response) {
-            return console.log(response);
-          });
+        return Chaplin.mediator.publish('add:PageVisit', pv);
+      });
+    };
+
+    ChromeService.prototype.updateActvity = function() {
+      var npv;
+
+      npv = new NewPageVisits;
+      npv.fetch();
+      return chrome.runtime.onConnect.addListener(function(port) {
+        console.assert(port.name === "activity");
+        port.postMessage({
+          type: "initialize"
+        });
+        return port.onMessage.addListener(function(msg) {
+          var pv;
+
+          console.log(msg);
+          switch (msg.type) {
+            case "update":
+              pv = npv.findWhere({
+                url: msg.pageVisitUrl
+              });
+              console.log(pv);
+              return pv.save({
+                updated_at: msg.timestamp
+              });
+          }
         });
       });
     };

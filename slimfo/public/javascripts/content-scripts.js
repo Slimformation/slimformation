@@ -80,12 +80,27 @@
 })();
 
 window.require.register("content-scripts/inject", function(exports, require, module) {
-  chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    console.log((sender.tab ? "from a content script:" + sender.tab.url : "from the extension"));
-    if (request.greeting === "hello") {
-      return sendResponse({
-        farewell: "goodbye"
+  var ActivityPort, measureActivity;
+
+  ActivityPort = chrome.runtime.connect({
+    name: "activity"
+  });
+
+  measureActivity = function() {
+    return setInterval((function() {
+      return ActivityPort.postMessage({
+        type: "update",
+        timestamp: (new Date()).getTime(),
+        pageVisitUrl: window.location.href
       });
+    }), 1000);
+  };
+
+  ActivityPort.onMessage.addListener(function(msg) {
+    console.log(msg);
+    switch (msg.type) {
+      case "initialize":
+        return measureActivity();
     }
   });
   
