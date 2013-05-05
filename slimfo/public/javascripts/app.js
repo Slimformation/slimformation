@@ -365,32 +365,59 @@ window.require.register("lib/lexer", function(exports, require, module) {
   
 });
 window.require.register("lib/reading-score", function(exports, require, module) {
-  var Lexer, ReadingScore, newCount;
+  var Lexer, ReadingScore, text;
 
   Lexer = require('lib/lexer');
 
-  newCount = function(word) {
-    word = word.toLowerCase();
-    if (word.length <= 3) {
-      return 1;
+  ReadingScore = (function() {
+    function ReadingScore(text) {
+      this.words = (new Lexer).lex(text);
     }
-    word = word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, "");
-    word = word.replace(/^y/, "");
-    return word.match(/[aeiouy]{1,2}/g).length;
-  };
 
-  ReadingScore = {
-    numSyllables: function(text) {
-      var count, words;
+    ReadingScore.prototype.newCount = function(word) {
+      word = word.toLowerCase();
+      if (word.length <= 3) {
+        return 1;
+      }
+      word = word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, "");
+      word = word.replace(/^y/, "");
+      return word.match(/[aeiouy]{1,2}/g).length;
+    };
 
-      words = (new Lexer).lex(text);
-      return count = _.reduce(words, (function(memo, word) {
-        return memo + newCount(word);
-      }), 0);
-    }
-  };
+    ReadingScore.prototype.numSyllables = function() {
+      var count;
 
-  console.log(ReadingScore.numSyllables("why the lucky stiff"));
+      return count = _.reduce(this.words, (function(memo, word) {
+        return memo + this.newCount(word);
+      }), 0, this);
+    };
+
+    ReadingScore.prototype.numSentences = function() {
+      return _.filter(this.words, (function(word) {
+        return /[.?!]/.test(word);
+      })).length;
+    };
+
+    ReadingScore.prototype.numWords = function() {
+      return this.words.length - this.numSentences.length;
+    };
+
+    ReadingScore.prototype.fleschKincaid = function() {
+      var numWords;
+
+      numWords = this.numWords();
+      return 206.835 - 1.015 * (numWords / this.numSentences()) - 84.6 * (this.numSyllables() / numWords);
+    };
+
+    return ReadingScore;
+
+  })();
+
+  text = "Once there were three tribes. The Optimists, whose patron saints were Drake and Sagan, believed in a universe crawling with gentle intelligence—spiritual brethren vaster and more enlightened than we, a great galactic siblinghood into whose ranks we would someday ascend. Surely, said the Optimists, space travel implies enlightenment, for it requires the control of great destructive energies. Any race which can't rise above its own brutal instincts will wipe itself out long before it learns to bridge the interstellar gulf.Across from the Optimists sat the Pessimists, who genuflected before graven images of Saint Fermi and a host of lesser lightweights. The Pessimists envisioned a lonely universe full of dead rocks and prokaryotic slime. The odds are just too low, they insisted. Too many rogues, too much radiation, too much eccentricity in too many orbits. It is a surpassing miracle that even one Earth exists; to hope for many is to abandon reason and embrace religious mania. After all, the universe is fourteen billion years old: if the galaxy were alive with intelligence, wouldn't it be here by now?Equidistant to the other two tribes sat the Historians. They didn't have too many thoughts on the probable prevalence of intelligent, spacefaring extraterrestrials— but if there are any, they said, they're not just going to be smart. They're going to be mean.";
+
+  console.log(text);
+
+  console.log((new ReadingScore(text)).fleschKincaid());
 
   module.exports = ReadingScore;
   
