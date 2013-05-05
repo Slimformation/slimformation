@@ -2,6 +2,7 @@ Controller = require 'controllers/base/controller'
 HomePageView = require 'views/home-page-view'
 ChromeService = require 'services/chrome-service'
 CategorizerService = require 'services/categorizer-service'
+ReadabilityService = require 'services/readability-service'
 ReadingScore = require 'lib/reading-score'
 
 module.exports = class HomeController extends Controller
@@ -9,6 +10,7 @@ module.exports = class HomeController extends Controller
   @services =
     chromeService: new ChromeService
     categorizerService: new CategorizerService
+    readabilityService: new ReadabilityService
 
   initialize: ->
     # publish a new event, to register a listener for the chrome event

@@ -14,7 +14,7 @@ module.exports = class CategorizerService extends Service
     return if pageUrl == null
     console.log "trying to categorize #{pageUrl}"
     $.ajax(
-      url: Config.categorizerEndpoint + "?url=#{utils.removeProtocol(pageUrl)}"
+      url: Config.categorizerEndpoint + "?url=#{pageUrl}"
     ).done((data) ->
       pageVisit.save
         category: data.category

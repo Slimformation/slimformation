@@ -15,6 +15,15 @@ module.exports = class PageVisit extends Model
 
   category: null
 
+  title: null
+
+  content: null
+
+  wordCount: null
+
+  readingScore: null
+
+
   defaults:
     created_at: (new Date()).getTime()
     updated_at: (new Date()).getTime()

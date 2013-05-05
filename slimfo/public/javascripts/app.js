@@ -124,7 +124,8 @@ window.require.register("config", function(exports, require, module) {
   var Config;
 
   Config = {
-    categorizerEndpoint: "http://gentle-mesa-7611.herokuapp.com/categorize.json"
+    categorizerEndpoint: "http://gentle-mesa-7611.herokuapp.com/categorize.json",
+    simplifierEndpoint: "http://gentle-mesa-7611.herokuapp.com/simplify.json"
   };
 
   module.exports = Config;
@@ -162,7 +163,7 @@ window.require.register("controllers/base/controller", function(exports, require
   
 });
 window.require.register("controllers/home-controller", function(exports, require, module) {
-  var CategorizerService, ChromeService, Controller, HomeController, HomePageView, ReadingScore, _ref,
+  var CategorizerService, ChromeService, Controller, HomeController, HomePageView, ReadabilityService, ReadingScore, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -173,6 +174,8 @@ window.require.register("controllers/home-controller", function(exports, require
   ChromeService = require('services/chrome-service');
 
   CategorizerService = require('services/categorizer-service');
+
+  ReadabilityService = require('services/readability-service');
 
   ReadingScore = require('lib/reading-score');
 
@@ -186,7 +189,8 @@ window.require.register("controllers/home-controller", function(exports, require
 
     HomeController.services = {
       chromeService: new ChromeService,
-      categorizerService: new CategorizerService
+      categorizerService: new CategorizerService,
+      readabilityService: new ReadabilityService
     };
 
     HomeController.prototype.initialize = function() {
@@ -375,13 +379,21 @@ window.require.register("lib/reading-score", function(exports, require, module) 
     }
 
     ReadingScore.prototype.newCount = function(word) {
+      var w;
+
       word = word.toLowerCase();
       if (word.length <= 3) {
         return 1;
       }
       word = word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, "");
       word = word.replace(/^y/, "");
-      return word.match(/[aeiouy]{1,2}/g).length;
+      word = word.replace(/[0-9]+/, "");
+      w = word.match(/[aeiouy]{1,2}/g);
+      if (w) {
+        return w.length;
+      } else {
+        return 0;
+      }
     };
 
     ReadingScore.prototype.numSyllables = function() {
@@ -534,6 +546,14 @@ window.require.register("models/PageVisit", function(exports, require, module) {
 
     PageVisit.prototype.category = null;
 
+    PageVisit.prototype.title = null;
+
+    PageVisit.prototype.content = null;
+
+    PageVisit.prototype.wordCount = null;
+
+    PageVisit.prototype.readingScore = null;
+
     PageVisit.prototype.defaults = {
       created_at: (new Date()).getTime(),
       updated_at: (new Date()).getTime(),
@@ -664,7 +684,7 @@ window.require.register("services/categorizer-service", function(exports, requir
       }
       console.log("trying to categorize " + pageUrl);
       return $.ajax({
-        url: Config.categorizerEndpoint + ("?url=" + (utils.removeProtocol(pageUrl)))
+        url: Config.categorizerEndpoint + ("?url=" + pageUrl)
       }).done(function(data) {
         return pageVisit.save({
           category: data.category
@@ -728,7 +748,7 @@ window.require.register("services/chrome-service", function(exports, require, mo
           type: "initialize"
         });
         return port.onMessage.addListener(function(msg) {
-          console.log("Activity Update: " + msg);
+          console.log("Activity Update: " + JSON.stringify(msg));
           switch (msg.type) {
             case "update":
               return npv.fetch().then(function() {
@@ -746,6 +766,55 @@ window.require.register("services/chrome-service", function(exports, require, mo
     };
 
     return ChromeService;
+
+  })(Service);
+  
+});
+window.require.register("services/readability-service", function(exports, require, module) {
+  var Config, ReadabilityService, ReadingScore, Service,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  ReadingScore = require('lib/reading-score');
+
+  Config = require('config');
+
+  Service = require('services/base/service');
+
+  module.exports = ReadabilityService = (function(_super) {
+    __extends(ReadabilityService, _super);
+
+    function ReadabilityService() {
+      ReadabilityService.__super__.constructor.apply(this, arguments);
+      this.subscribeEvent('add:PageVisit', this.simplify);
+    }
+
+    ReadabilityService.prototype.simplify = function(pageVisit) {
+      var pageUrl;
+
+      pageUrl = pageVisit.attributes.url;
+      if (pageUrl === null) {
+        return;
+      }
+      console.log("trying to simplify " + pageUrl);
+      return $.ajax({
+        url: Config.simplifierEndpoint + ("?url=" + pageUrl)
+      }).done(function(data) {
+        return pageVisit.save({
+          title: data.title,
+          content: data.content,
+          wordCount: data.word_count,
+          readingScore: (new ReadingScore($(data.content).text())).fleschKincaid()
+        }).then(function(pv) {
+          return console.log(pv);
+        });
+      }).fail(function(data) {
+        console.log("Ajax request failed");
+        return console.log(data);
+      });
+    };
+
+    return ReadabilityService;
 
   })(Service);
   
