@@ -11,7 +11,12 @@ class ReadingScore
     return 1  if word.length <= 3 #return 1 if word.length <= 3
     word = word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, "") #word.sub!(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '')
     word = word.replace(/^y/, "") #word.sub!(/^y/, '')
-    word.match(/[aeiouy]{1,2}/g).length #word.scan(/[aeiouy]{1,2}/).size
+    word = word.replace(/[0-9]+/,"")
+    w = word.match(/[aeiouy]{1,2}/g)
+    if w
+      w.length
+    else
+      0
 
   numSyllables: () ->
     count = _.reduce @words, ((memo, word) -> memo + @newCount(word)), 0, this

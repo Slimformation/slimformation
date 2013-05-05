@@ -41,7 +41,7 @@ module.exports = class ChromeService extends Service
       port.postMessage
         type: "initialize"
       port.onMessage.addListener (msg) ->
-        console.log "Activity Update: " + msg
+        console.log "Activity Update: " + JSON.stringify(msg)
         switch msg.type
           when "update"
             npv.fetch().then(->
