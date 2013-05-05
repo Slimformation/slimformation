@@ -6,13 +6,23 @@
 # register a chrome.runtime.Port
 ActivityPort = chrome.runtime.connect {name: "activity"}
 
+window.isActive = true
+
+window.onfocus = ->
+  window.isActive = true
+
+window.onblur = ->
+  window.isActive = false
+
 # given a certain ID, set an interval to measure activity
 measureActivity = () ->
   setInterval((->
-    ActivityPort.postMessage
-      type: "update"
-      timestamp: (new Date()).getTime()
-      pageVisitUrl: window.location.href
+    do ->
+      if window.isActive
+        ActivityPort.postMessage
+          type: "update"
+          timestamp: (new Date()).getTime()
+          pageVisitUrl: window.location.href
   ), 1000)
 
 ActivityPort.onMessage.addListener (msg) ->

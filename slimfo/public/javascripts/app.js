@@ -372,11 +372,6 @@ window.require.register("models/PageVisit", function(exports, require, module) {
       return _ref;
     }
 
-    PageVisit.prototype.initialize = function() {
-      this.set('created_at', (new Date()).getTime());
-      return this.set('updated_at', (new Date()).getTime());
-    };
-
     PageVisit.prototype.created_at = null;
 
     PageVisit.prototype.updated_at = null;
@@ -386,6 +381,8 @@ window.require.register("models/PageVisit", function(exports, require, module) {
     PageVisit.prototype.category = null;
 
     PageVisit.prototype.defaults = {
+      created_at: (new Date()).getTime(),
+      updated_at: (new Date()).getTime(),
       category: "Other"
     };
 
@@ -558,7 +555,7 @@ window.require.register("services/chrome-service", function(exports, require, mo
         if ((changeInfo.url === void 0) || (/^chrome/i.test(changeInfo.url))) {
           return;
         }
-        console.log("Update: the url of tab " + tabId + " changed to " + changeInfo.url);
+        console.log("Tab Update: the url of tab " + tabId + " changed to " + changeInfo.url);
         npv = new NewPageVisits;
         pv = npv.create({
           url: changeInfo.url
@@ -571,24 +568,23 @@ window.require.register("services/chrome-service", function(exports, require, mo
       var npv;
 
       npv = new NewPageVisits;
-      npv.fetch();
       return chrome.runtime.onConnect.addListener(function(port) {
         console.assert(port.name === "activity");
         port.postMessage({
           type: "initialize"
         });
         return port.onMessage.addListener(function(msg) {
-          var pv;
-
-          console.log(msg);
+          console.log("Activity Update: " + msg);
           switch (msg.type) {
             case "update":
-              pv = npv.findWhere({
-                url: msg.pageVisitUrl
-              });
-              console.log(pv);
-              return pv.save({
-                updated_at: msg.timestamp
+              return npv.fetch().then(function() {
+                return npv.findWhere({
+                  url: msg.pageVisitUrl
+                });
+              }).then(function(pv) {
+                return pv.save({
+                  updated_at: msg.timestamp
+                });
               });
           }
         });
