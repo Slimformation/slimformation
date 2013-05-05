@@ -86,13 +86,27 @@ window.require.register("content-scripts/inject", function(exports, require, mod
     name: "activity"
   });
 
+  window.isActive = true;
+
+  window.onfocus = function() {
+    return window.isActive = true;
+  };
+
+  window.onblur = function() {
+    return window.isActive = false;
+  };
+
   measureActivity = function() {
     return setInterval((function() {
-      return ActivityPort.postMessage({
-        type: "update",
-        timestamp: (new Date()).getTime(),
-        pageVisitUrl: window.location.href
-      });
+      return (function() {
+        if (window.isActive) {
+          return ActivityPort.postMessage({
+            type: "update",
+            timestamp: (new Date()).getTime(),
+            pageVisitUrl: window.location.href
+          });
+        }
+      })();
     }), 1000);
   };
 

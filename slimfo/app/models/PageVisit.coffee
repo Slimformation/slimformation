@@ -3,9 +3,9 @@ Config = require 'config'
 Model = require 'models/base/model'
 
 module.exports = class PageVisit extends Model
-  initialize: () ->
-    @set 'created_at', (new Date()).getTime()
-    @set 'updated_at', (new Date()).getTime()
+  # initialize: () ->
+  #   @set 'created_at', (new Date()).getTime()
+  #   @set 'updated_at', (new Date()).getTime()
 
   created_at: null
 
@@ -16,6 +16,8 @@ module.exports = class PageVisit extends Model
   category: null
 
   defaults:
+    created_at: (new Date()).getTime()
+    updated_at: (new Date()).getTime()
     category: "Other"
 
   validate: (attrs, options) ->

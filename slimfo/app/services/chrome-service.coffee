@@ -17,7 +17,7 @@ module.exports = class ChromeService extends Service
     chrome.tabs.onUpdated.addListener (tabId, changeInfo, tab) ->
       # check if URL is valid
       return if (changeInfo.url == undefined) or (/^chrome/i.test(changeInfo.url)) 
-      console.log "Update: the url of tab #{tabId} changed to #{changeInfo.url}" 
+      console.log "Tab Update: the url of tab #{tabId} changed to #{changeInfo.url}" 
       # add new PageVisit
       npv = new NewPageVisits
       pv = npv.create
@@ -34,18 +34,22 @@ module.exports = class ChromeService extends Service
   # handler to update activity for page visits
   # http://developer.chrome.com/extensions/messaging.html
   updateActvity: () ->
-    # load up all new page visits
     npv = new NewPageVisits
-    npv.fetch()
     # connect to port, send hello, and start listening to updates
     chrome.runtime.onConnect.addListener (port) ->
       console.assert port.name == "activity"
       port.postMessage
         type: "initialize"
       port.onMessage.addListener (msg) ->
-        console.log msg
+        console.log "Activity Update: " + msg
         switch msg.type
           when "update"
-            pv = npv.findWhere {url: msg.pageVisitUrl}
-            console.log pv
-            pv.save {updated_at: msg.timestamp}
+            npv.fetch().then(->
+             npv.findWhere {url: msg.pageVisitUrl}
+            ).then((pv) ->
+              pv.save
+                updated_at: msg.timestamp
+            )
+            # console.log pv
+            # do (pv) ->
+            #   pv.save {updated_at: msg.timestamp}
