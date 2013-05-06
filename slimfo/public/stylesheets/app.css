@@ -7274,6 +7274,43 @@ a.badge:focus {
   color: #fff;
   background-color: #4276b6;
 }
+.navbar .navbar-inner {
+  padding-bottom: 10px;
+}
+.navbar .brand {
+  background: url('/public/images/icons/19.png') center no-repeat;
+}
+.navbar li {
+  display: inline-block;
+  line-height: 50px;
+}
+.navbar li.activity {
+  background: url('/public/images/activity.png') center no-repeat;
+  background-size: 25px 25px;
+}
+.navbar li.activity a {
+  position: relative;
+  top: 30px;
+}
+.navbar li.goals {
+  background: url('/public/images/goals.png') center no-repeat;
+  background-size: 25px 25px;
+}
+.navbar li.goals a {
+  position: relative;
+  top: 30px;
+}
+.navbar li.prescrip {
+  background: url('/public/images/prescrip.png') center no-repeat;
+  background-size: 25px 25px;
+}
+.navbar li.prescrip a {
+  position: relative;
+  top: 30px;
+}
+.navbar .nav > li > a {
+  padding: 8px 10px 10px;
+}
 body {
   padding-left: 0px;
   padding-right: 0px;
