@@ -227,9 +227,10 @@ window.require.register("controllers/popup-controller", function(exports, requir
     }
 
     PopupController.prototype.index = function() {
-      return this.view = new PopupView({
+      this.view = new PopupView({
         region: 'main'
       });
+      return this.view.render();
     };
 
     return PopupController;
@@ -946,11 +947,13 @@ window.require.register("views/popup-view", function(exports, require, module) {
       return _ref;
     }
 
-    PopupView.prototype.autoRender = true;
-
     PopupView.prototype.className = 'popup';
 
     PopupView.prototype.template = template;
+
+    PopupView.prototype.render = function() {
+      return this.template();
+    };
 
     return PopupView;
 
