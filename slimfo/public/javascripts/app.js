@@ -210,13 +210,17 @@ window.require.register("controllers/home-controller", function(exports, require
   
 });
 window.require.register("controllers/popup-controller", function(exports, require, module) {
-  var Controller, PopupController, PopupView, _ref,
+  var Controller, GoalsView, PopupController, PopupView, PrescriptionView, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Controller = require('controllers/base/controller');
 
   PopupView = require('views/popup-view');
+
+  GoalsView = require('views/goals-view');
+
+  PrescriptionView = require('views/prescription-view');
 
   module.exports = PopupController = (function(_super) {
     __extends(PopupController, _super);
@@ -226,11 +230,35 @@ window.require.register("controllers/popup-controller", function(exports, requir
       return _ref;
     }
 
-    PopupController.prototype.index = function() {
-      this.view = new PopupView({
+    PopupController.prototype.initialize = function() {
+      this.subscribeEvent('activity_tab', (function() {
+        return this.redirectTo('#activity');
+      }));
+      this.subscribeEvent('goals_tab', (function() {
+        return this.redirectTo('#goals');
+      }));
+      return this.subscribeEvent('prescription_tab', (function() {
+        return this.redirectTo('#prescription');
+      }));
+    };
+
+    PopupController.prototype.activity = function() {
+      return this.view = new PopupView({
         region: 'main'
       });
-      return this.view.render();
+    };
+
+    PopupController.prototype.goals = function() {
+      return this.view = new GoalsView({
+        region: 'main'
+      });
+    };
+
+    PopupController.prototype.prescription = function() {
+      console.log('yo');
+      return this.view = new PrescriptionView({
+        region: 'main'
+      });
     };
 
     return PopupController;
@@ -624,7 +652,10 @@ window.require.register("routes", function(exports, require, module) {
     match('public', 'home#index');
     match('public/index.html', 'home#index');
     match('public/background.html', 'home#index');
-    return match('public/popup.html', 'popup#index');
+    match('public/popup.html', 'popup#activity');
+    match('#activity', 'popup#activity');
+    match('#goals', 'popup#goals');
+    return match('#prescription', 'popup#prescription');
   };
   
 });
@@ -870,12 +901,42 @@ window.require.register("views/base/view", function(exports, require, module) {
   })(Chaplin.View);
   
 });
-window.require.register("views/header-view", function(exports, require, module) {
-  var HeaderView, View, template, _ref,
+window.require.register("views/goals-view", function(exports, require, module) {
+  var GoalsView, View, template, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   View = require('views/base/view');
+
+  template = require('views/templates/goals');
+
+  module.exports = GoalsView = (function(_super) {
+    __extends(GoalsView, _super);
+
+    function GoalsView() {
+      _ref = GoalsView.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    GoalsView.prototype.className = 'goals';
+
+    GoalsView.prototype.autoRender = true;
+
+    GoalsView.prototype.template = template;
+
+    return GoalsView;
+
+  })(View);
+  
+});
+window.require.register("views/header-view", function(exports, require, module) {
+  var Chaplin, HeaderView, View, template, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  View = require('views/base/view');
+
+  Chaplin = require('chaplin');
 
   template = require('views/templates/header');
 
@@ -896,6 +957,25 @@ window.require.register("views/header-view", function(exports, require, module) 
     HeaderView.prototype.id = 'header';
 
     HeaderView.prototype.template = template;
+
+    HeaderView.prototype.initialize = function() {
+      HeaderView.__super__.initialize.apply(this, arguments);
+      this.delegate('click', '.activity', this.renderActivityTab);
+      this.delegate('click', '.goals', this.renderGoalsTab);
+      return this.delegate('click', '.prescrip', this.renderPrescriptionTab);
+    };
+
+    HeaderView.prototype.renderActivityTab = function() {
+      return Chaplin.mediator.publish('activity_tab');
+    };
+
+    HeaderView.prototype.renderGoalsTab = function() {
+      return Chaplin.mediator.publish('goals_tab');
+    };
+
+    HeaderView.prototype.renderPrescriptionTab = function() {
+      return Chaplin.mediator.publish('prescription_tab');
+    };
 
     return HeaderView;
 
@@ -949,13 +1029,44 @@ window.require.register("views/popup-view", function(exports, require, module) {
 
     PopupView.prototype.className = 'popup';
 
+    PopupView.prototype.autoRender = true;
+
     PopupView.prototype.template = template;
 
-    PopupView.prototype.render = function() {
-      return this.template();
+    return PopupView;
+
+  })(View);
+  
+});
+window.require.register("views/prescription-view", function(exports, require, module) {
+  var PrescriptionView, View, template, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  View = require('views/base/view');
+
+  template = require('views/templates/prescription');
+
+  module.exports = PrescriptionView = (function(_super) {
+    __extends(PrescriptionView, _super);
+
+    function PrescriptionView() {
+      _ref = PrescriptionView.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    PrescriptionView.prototype.className = 'prescription';
+
+    PrescriptionView.prototype.autoRender = true;
+
+    PrescriptionView.prototype.template = template;
+
+    PrescriptionView.prototype.initialize = function() {
+      PrescriptionView.__super__.initialize.apply(this, arguments);
+      return console.log('ugh');
     };
 
-    return PopupView;
+    return PrescriptionView;
 
   })(View);
   
@@ -993,6 +1104,16 @@ window.require.register("views/site-view", function(exports, require, module) {
   })(View);
   
 });
+window.require.register("views/templates/goals", function(exports, require, module) {
+  module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+    this.compilerInfo = [2,'>= 1.0.0-rc.3'];
+  helpers = helpers || Handlebars.helpers; data = data || {};
+    
+
+
+    return "<h1>GOALS</h1>\n";
+    });
+});
 window.require.register("views/templates/header", function(exports, require, module) {
   module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
     this.compilerInfo = [2,'>= 1.0.0-rc.3'];
@@ -1021,6 +1142,16 @@ window.require.register("views/templates/popup", function(exports, require, modu
 
 
     return "<h1>This is a Popup!</h1>";
+    });
+});
+window.require.register("views/templates/prescription", function(exports, require, module) {
+  module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+    this.compilerInfo = [2,'>= 1.0.0-rc.3'];
+  helpers = helpers || Handlebars.helpers; data = data || {};
+    
+
+
+    return "<h1>PRESCRIPTION</h1>\n";
     });
 });
 window.require.register("views/templates/site", function(exports, require, module) {
