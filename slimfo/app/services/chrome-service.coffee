@@ -16,8 +16,8 @@ module.exports = class ChromeService extends Service
   onUpdatedTab: () ->
     chrome.tabs.onUpdated.addListener (tabId, changeInfo, tab) ->
       # check if URL is valid
-      return if (changeInfo.url == undefined) or (/^chrome/i.test(changeInfo.url)) 
-      console.log "Tab Update: the url of tab #{tabId} changed to #{changeInfo.url}" 
+      return if (changeInfo.url == undefined) or (/^chrome/i.test(changeInfo.url))
+      console.log "Tab Update: the url of tab #{tabId} changed to #{changeInfo.url}"
       # add new PageVisit
       npv = new NewPageVisits
       pv = npv.create
@@ -44,8 +44,10 @@ module.exports = class ChromeService extends Service
         console.log "Activity Update: " + JSON.stringify(msg)
         switch msg.type
           when "update"
-            npv.fetch().then(->
-             npv.findWhere {url: msg.pageVisitUrl}
+            $.when(
+              npv.fetch()
+            ).then(->
+              npv.findWhere {url: msg.pageVisitUrl}
             ).then((pv) ->
               pv.save
                 updated_at: msg.timestamp
