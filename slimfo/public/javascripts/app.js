@@ -751,7 +751,7 @@ window.require.register("services/chrome-service", function(exports, require, mo
           console.log("Activity Update: " + JSON.stringify(msg));
           switch (msg.type) {
             case "update":
-              return npv.fetch().then(function() {
+              return $.when(npv.fetch()).then(function() {
                 return npv.findWhere({
                   url: msg.pageVisitUrl
                 });
