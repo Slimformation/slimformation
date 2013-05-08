@@ -7300,11 +7300,11 @@ a.badge:focus {
   position: relative;
   top: 30px;
 }
-.navbar li.prescrip {
-  background: url('/public/images/prescrip.png') center no-repeat;
+.navbar li.prescription {
+  background: url('/public/images/prescription.png') center no-repeat;
   background-size: 25px 25px;
 }
-.navbar li.prescrip a {
+.navbar li.prescription a {
   position: relative;
   top: 30px;
 }

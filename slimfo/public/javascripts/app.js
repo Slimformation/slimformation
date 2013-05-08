@@ -962,7 +962,7 @@ window.require.register("views/header-view", function(exports, require, module) 
       HeaderView.__super__.initialize.apply(this, arguments);
       this.delegate('click', '.activity', this.renderActivityTab);
       this.delegate('click', '.goals', this.renderGoalsTab);
-      return this.delegate('click', '.prescrip', this.renderPrescriptionTab);
+      return this.delegate('click', '.prescription', this.renderPrescriptionTab);
     };
 
     HeaderView.prototype.renderActivityTab = function() {
@@ -1121,7 +1121,7 @@ window.require.register("views/templates/header", function(exports, require, mod
     
 
 
-    return "<div class=\"navbar\">\n  <div class=\"navbar-inner\">\n    <a class=\"brand\"></a>\n    <ul class=\"nav\">\n      <li class=\"activity selected\"><a href=\"#\">Activity</a></li>\n      <li class=\"goals\"><a href=\"#\">Goals</a></li>\n      <li class=\"prescrip\"><a href=\"#\">Prescription</a></li>\n    </ul>\n  </div>\n</div>\n";
+    return "<div class=\"navbar\">\n  <div class=\"navbar-inner\">\n    <a class=\"brand\"></a>\n    <ul class=\"nav\">\n      <li class=\"activity selected\"><a href=\"#\">Activity</a></li>\n      <li class=\"goals\"><a href=\"#\">Goals</a></li>\n      <li class=\"prescription\"><a href=\"#\">Prescription</a></li>\n    </ul>\n  </div>\n</div>\n";
     });
 });
 window.require.register("views/templates/home", function(exports, require, module) {
