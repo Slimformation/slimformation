@@ -485,6 +485,15 @@ window.require.register("lib/utils", function(exports, require, module) {
   _(utils).extend({
     removeProtocol: function(url) {
       return url.replace(/.*?:\/\//g, "");
+    },
+    validListenUrl: function(url) {
+      var falseConditions, testAll;
+
+      falseConditions = [/^chrome/i.test(url)];
+      testAll = _.reduce(falseConditions, (function(element, memo) {
+        return memo = memo || element;
+      }), false, this);
+      return !testAll;
     }
   });
 
@@ -733,9 +742,11 @@ window.require.register("services/categorizer-service", function(exports, requir
   
 });
 window.require.register("services/chrome-service", function(exports, require, module) {
-  var Chaplin, ChromeService, NewPageVisits, PageVisit, Service,
+  var Chaplin, ChromeService, NewPageVisits, PageVisit, Service, utils,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  utils = require('lib/utils');
 
   Chaplin = require('chaplin');
 
@@ -758,7 +769,7 @@ window.require.register("services/chrome-service", function(exports, require, mo
       return chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
         var npv, pv;
 
-        if ((changeInfo.url === void 0) || (/^chrome/i.test(changeInfo.url))) {
+        if ((changeInfo.url === void 0) || !utils.validListenUrl(changeInfo.url)) {
           return;
         }
         console.log("Tab Update: the url of tab " + tabId + " changed to " + changeInfo.url);

@@ -1,3 +1,4 @@
+utils = require 'lib/utils'
 Chaplin = require 'chaplin'
 Service = require 'services/base/service'
 PageVisit = require 'models/PageVisit'
@@ -16,7 +17,7 @@ module.exports = class ChromeService extends Service
   onUpdatedTab: () ->
     chrome.tabs.onUpdated.addListener (tabId, changeInfo, tab) ->
       # check if URL is valid
-      return if (changeInfo.url == undefined) or (/^chrome/i.test(changeInfo.url))
+      return if (changeInfo.url == undefined) or !utils.validListenUrl(changeInfo.url)
       console.log "Tab Update: the url of tab #{tabId} changed to #{changeInfo.url}"
       # add new PageVisit
       npv = new NewPageVisits
