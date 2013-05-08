@@ -10,4 +10,13 @@ _(utils).extend
  removeProtocol: (url) ->
   url.replace(/.*?:\/\//g, "")
 
+ validListenUrl: (url) ->
+   falseConditions = [
+    /^chrome/i.test(url)
+   ]
+   testAll = _.reduce(falseConditions, ((element, memo) ->
+     memo = memo || element
+   ), false, this)
+   !testAll
+
 module.exports = utils
