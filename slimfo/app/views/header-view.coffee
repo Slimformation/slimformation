@@ -14,7 +14,7 @@ module.exports = class HeaderView extends View
     super
     @delegate('click', '.activity', @renderActivityTab)
     @delegate('click', '.goals', @renderGoalsTab)
-    @delegate('click', '.prescrip', @renderPrescriptionTab)
+    @delegate('click', '.prescription', @renderPrescriptionTab)
 
   renderActivityTab: ->
     Chaplin.mediator.publish 'activity_tab'
