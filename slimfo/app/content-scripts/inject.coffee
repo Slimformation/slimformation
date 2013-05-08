@@ -22,7 +22,6 @@ measureActivity = () ->
         ActivityPort.postMessage
           type: "update"
           timestamp: (new Date()).getTime()
-          pageVisitUrl: window.location.href
   ), 1000)
 
 ActivityPort.onMessage.addListener (msg) ->

@@ -489,7 +489,7 @@ window.require.register("lib/utils", function(exports, require, module) {
     validListenUrl: function(url) {
       var falseConditions, testAll;
 
-      falseConditions = [/^chrome/i.test(url)];
+      falseConditions = [/^chrome/i.test(url), /www.google.com\/search/i.test(url)];
       testAll = _.reduce(falseConditions, (function(element, memo) {
         return memo = memo || element;
       }), false, this);
@@ -790,13 +790,17 @@ window.require.register("services/chrome-service", function(exports, require, mo
         port.postMessage({
           type: "initialize"
         });
-        return port.onMessage.addListener(function(msg) {
+        return port.onMessage.addListener(function(msg, senderPort) {
+          if (!senderPort.sender.tab.highlighted || !utils.validListenUrl(senderPort.sender.tab.url)) {
+            return;
+          }
+          console.log(senderPort.sender.tab);
           console.log("Activity Update: " + JSON.stringify(msg));
           switch (msg.type) {
             case "update":
               return $.when(npv.fetch()).then(function() {
                 return npv.findWhere({
-                  url: msg.pageVisitUrl
+                  url: senderPort.sender.tab.url
                 });
               }).then(function(pv) {
                 return pv.save({

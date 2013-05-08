@@ -41,14 +41,19 @@ module.exports = class ChromeService extends Service
       console.assert port.name == "activity"
       port.postMessage
         type: "initialize"
-      port.onMessage.addListener (msg) ->
+      port.onMessage.addListener (msg, senderPort) ->
+        # check if tab is highlighted
+        if (!senderPort.sender.tab.highlighted or
+            !utils.validListenUrl(senderPort.sender.tab.url))
+          return
+        console.log senderPort.sender.tab
         console.log "Activity Update: " + JSON.stringify(msg)
         switch msg.type
           when "update"
             $.when(
               npv.fetch()
             ).then(->
-              npv.findWhere {url: msg.pageVisitUrl}
+              npv.findWhere {url: senderPort.sender.tab.url}
             ).then((pv) ->
               pv.save
                 updated_at: msg.timestamp

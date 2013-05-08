@@ -12,7 +12,8 @@ _(utils).extend
 
  validListenUrl: (url) ->
    falseConditions = [
-    /^chrome/i.test(url)
+    /^chrome/i.test(url),
+    /www.google.com\/search/i.test(url)
    ]
    testAll = _.reduce(falseConditions, ((element, memo) ->
      memo = memo || element
