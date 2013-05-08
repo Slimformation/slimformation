@@ -102,8 +102,7 @@ window.require.register("content-scripts/inject", function(exports, require, mod
         if (window.isActive) {
           return ActivityPort.postMessage({
             type: "update",
-            timestamp: (new Date()).getTime(),
-            pageVisitUrl: window.location.href
+            timestamp: (new Date()).getTime()
           });
         }
       })();
