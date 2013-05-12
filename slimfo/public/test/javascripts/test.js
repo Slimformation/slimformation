@@ -79,6 +79,18 @@
   globals.require.brunch = true;
 })();
 
+window.require.register("test/controllers/popup-activity-controller-test", function(exports, require, module) {
+  var PopupActivity;
+
+  PopupActivity = require('controllers/popup-activity-controller');
+
+  describe('PopupActivity', function() {
+    return beforeEach(function() {
+      return this.controller = new PopupActivity();
+    });
+  });
+  
+});
 window.require.register("test/controllers/popup-controller-test", function(exports, require, module) {
   var Popup;
 
@@ -87,6 +99,30 @@ window.require.register("test/controllers/popup-controller-test", function(expor
   describe('Popup', function() {
     return beforeEach(function() {
       return this.controller = new Popup();
+    });
+  });
+  
+});
+window.require.register("test/controllers/popup-goals-controller-test", function(exports, require, module) {
+  var PopupGoals;
+
+  PopupGoals = require('controllers/popup-goals-controller');
+
+  describe('PopupGoals', function() {
+    return beforeEach(function() {
+      return this.controller = new PopupGoals();
+    });
+  });
+  
+});
+window.require.register("test/controllers/popup-prescription-controller-test", function(exports, require, module) {
+  var PopupPrescription;
+
+  PopupPrescription = require('controllers/popup-prescription-controller');
+
+  describe('PopupPrescription', function() {
+    return beforeEach(function() {
+      return this.controller = new PopupPrescription();
     });
   });
   
@@ -131,6 +167,18 @@ window.require.register("test/models/PageVisit-test", function(exports, require,
   describe('PageVisit', function() {
     return beforeEach(function() {
       return this.model = new PageVisit();
+    });
+  });
+  
+});
+window.require.register("test/views/activity-view-test", function(exports, require, module) {
+  var ActivityView;
+
+  ActivityView = require('views/activity-view');
+
+  describe('ActivityView', function() {
+    return beforeEach(function() {
+      return this.view = new ActivityView();
     });
   });
   
@@ -188,6 +236,18 @@ window.require.register("test/views/home-page-view-test", function(exports, requ
     });
     return it('should auto-render', function() {
       return expect(this.view.$el.find('img')).to.have.length(1);
+    });
+  });
+  
+});
+window.require.register("test/views/popup-footer-view-test", function(exports, require, module) {
+  var PopupFooterView;
+
+  PopupFooterView = require('views/popup-footer-view');
+
+  describe('PopupFooterView', function() {
+    return beforeEach(function() {
+      return this.view = new PopupFooterView();
     });
   });
   

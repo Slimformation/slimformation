@@ -132,15 +132,11 @@ window.require.register("config", function(exports, require, module) {
   
 });
 window.require.register("controllers/base/controller", function(exports, require, module) {
-  var Chaplin, Controller, HeaderView, SiteView, _ref,
+  var Chaplin, Controller, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Chaplin = require('chaplin');
-
-  SiteView = require('views/site-view');
-
-  HeaderView = require('views/header-view');
 
   module.exports = Controller = (function(_super) {
     __extends(Controller, _super);
@@ -149,13 +145,6 @@ window.require.register("controllers/base/controller", function(exports, require
       _ref = Controller.__super__.constructor.apply(this, arguments);
       return _ref;
     }
-
-    Controller.prototype.beforeAction = {
-      '.*': function() {
-        this.compose('site', SiteView);
-        return this.compose('header', HeaderView);
-      }
-    };
 
     return Controller;
 
@@ -209,28 +198,125 @@ window.require.register("controllers/home-controller", function(exports, require
   })(Controller);
   
 });
-window.require.register("controllers/popup-controller", function(exports, require, module) {
-  var Controller, GoalsView, PopupController, PopupView, PrescriptionView, _ref,
+window.require.register("controllers/popup-activity-controller", function(exports, require, module) {
+  var PopupActivityController, PopupActivityView, PopupSiteController, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  PopupSiteController = require('controllers/popup-site-controller');
+
+  PopupActivityView = require('views/popup-activity-view');
+
+  module.exports = PopupActivityController = (function(_super) {
+    __extends(PopupActivityController, _super);
+
+    function PopupActivityController() {
+      _ref = PopupActivityController.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    PopupActivityController.prototype.show = function() {
+      return this.view = new PopupActivityView({
+        region: 'popup-main'
+      });
+    };
+
+    return PopupActivityController;
+
+  })(PopupSiteController);
+  
+});
+window.require.register("controllers/popup-goals-controller", function(exports, require, module) {
+  var PopupGoalsController, PopupGoalsView, PopupSiteController, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  PopupSiteController = require('controllers/popup-site-controller');
+
+  PopupGoalsView = require('views/popup-goals-view');
+
+  module.exports = PopupGoalsController = (function(_super) {
+    __extends(PopupGoalsController, _super);
+
+    function PopupGoalsController() {
+      _ref = PopupGoalsController.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    PopupGoalsController.prototype.show = function() {
+      return this.view = new PopupGoalsView({
+        region: 'popup-main'
+      });
+    };
+
+    return PopupGoalsController;
+
+  })(PopupSiteController);
+  
+});
+window.require.register("controllers/popup-prescription-controller", function(exports, require, module) {
+  var PopupPrescriptionController, PopupPrescriptionView, PopupSiteController, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  PopupSiteController = require('controllers/popup-site-controller');
+
+  PopupPrescriptionView = require('views/popup-prescription-view');
+
+  module.exports = PopupPrescriptionController = (function(_super) {
+    __extends(PopupPrescriptionController, _super);
+
+    function PopupPrescriptionController() {
+      _ref = PopupPrescriptionController.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    PopupPrescriptionController.prototype.show = function() {
+      return this.view = new PopupPrescriptionView({
+        region: 'popup-main'
+      });
+    };
+
+    return PopupPrescriptionController;
+
+  })(PopupSiteController);
+  
+});
+window.require.register("controllers/popup-site-controller", function(exports, require, module) {
+  var Controller, PopupFooterView, PopupHeaderView, PopupSiteController, PopupSiteView, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Controller = require('controllers/base/controller');
 
-  PopupView = require('views/popup-view');
+  PopupSiteView = require('views/popup-site-view');
 
-  GoalsView = require('views/goals-view');
+  PopupHeaderView = require('views/popup-header-view');
 
-  PrescriptionView = require('views/prescription-view');
+  PopupFooterView = require('views/popup-footer-view');
 
-  module.exports = PopupController = (function(_super) {
-    __extends(PopupController, _super);
+  module.exports = PopupSiteController = (function(_super) {
+    __extends(PopupSiteController, _super);
 
-    function PopupController() {
-      _ref = PopupController.__super__.constructor.apply(this, arguments);
+    function PopupSiteController() {
+      _ref = PopupSiteController.__super__.constructor.apply(this, arguments);
       return _ref;
     }
 
-    PopupController.prototype.initialize = function() {
+    PopupSiteController.prototype.beforeAction = {
+      '.*': function() {
+        this.compose('popup-site', PopupSiteView);
+        this.compose('popup-header', PopupHeaderView, {
+          region: 'popup-header'
+        });
+        return this.compose('popup-footer', PopupFooterView, {
+          region: 'popup-footer'
+        });
+      }
+    };
+
+    PopupSiteController.prototype.initialize = function() {
+      PopupSiteController.__super__.initialize.apply(this, arguments);
       this.subscribeEvent('activity_tab', (function() {
         return this.redirectTo('#activity');
       }));
@@ -242,26 +328,7 @@ window.require.register("controllers/popup-controller", function(exports, requir
       }));
     };
 
-    PopupController.prototype.activity = function() {
-      return this.view = new PopupView({
-        region: 'main'
-      });
-    };
-
-    PopupController.prototype.goals = function() {
-      return this.view = new GoalsView({
-        region: 'main'
-      });
-    };
-
-    PopupController.prototype.prescription = function() {
-      console.log('yo');
-      return this.view = new PrescriptionView({
-        region: 'main'
-      });
-    };
-
-    return PopupController;
+    return PopupSiteController;
 
   })(Controller);
   
@@ -661,10 +728,10 @@ window.require.register("routes", function(exports, require, module) {
     match('public', 'home#index');
     match('public/index.html', 'home#index');
     match('public/background.html', 'home#index');
-    match('public/popup.html', 'popup#activity');
-    match('#activity', 'popup#activity');
-    match('#goals', 'popup#goals');
-    return match('#prescription', 'popup#prescription');
+    match('public/popup.html', 'popup-activity#show');
+    match('#activity', 'popup-activity#show');
+    match('#goals', 'popup-goals#show');
+    return match('#prescription', 'popup-prescription#show');
   };
   
 });
@@ -916,14 +983,72 @@ window.require.register("views/base/view", function(exports, require, module) {
   })(Chaplin.View);
   
 });
-window.require.register("views/goals-view", function(exports, require, module) {
+window.require.register("views/popup-activity-view", function(exports, require, module) {
+  var ActivityView, View, template, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  View = require('views/base/view');
+
+  template = require('views/templates/popup-activity');
+
+  module.exports = ActivityView = (function(_super) {
+    __extends(ActivityView, _super);
+
+    function ActivityView() {
+      _ref = ActivityView.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    ActivityView.prototype.className = 'popup-activity';
+
+    ActivityView.prototype.autoRender = true;
+
+    ActivityView.prototype.template = template;
+
+    return ActivityView;
+
+  })(View);
+  
+});
+window.require.register("views/popup-footer-view", function(exports, require, module) {
+  var PopupFooterView, View, template, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  View = require('views/base/view');
+
+  template = require('views/templates/popup-footer');
+
+  module.exports = PopupFooterView = (function(_super) {
+    __extends(PopupFooterView, _super);
+
+    function PopupFooterView() {
+      _ref = PopupFooterView.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    PopupFooterView.prototype.template = template;
+
+    PopupFooterView.prototype.autoRender = true;
+
+    PopupFooterView.prototype.className = 'popup-footer';
+
+    PopupFooterView.prototype.id = 'popup-footer';
+
+    return PopupFooterView;
+
+  })(View);
+  
+});
+window.require.register("views/popup-goals-view", function(exports, require, module) {
   var GoalsView, View, template, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   View = require('views/base/view');
 
-  template = require('views/templates/goals');
+  template = require('views/templates/popup-goals');
 
   module.exports = GoalsView = (function(_super) {
     __extends(GoalsView, _super);
@@ -933,7 +1058,7 @@ window.require.register("views/goals-view", function(exports, require, module) {
       return _ref;
     }
 
-    GoalsView.prototype.className = 'goals';
+    GoalsView.prototype.className = 'popup-goals';
 
     GoalsView.prototype.autoRender = true;
 
@@ -944,7 +1069,7 @@ window.require.register("views/goals-view", function(exports, require, module) {
   })(View);
   
 });
-window.require.register("views/header-view", function(exports, require, module) {
+window.require.register("views/popup-header-view", function(exports, require, module) {
   var Chaplin, HeaderView, View, template, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -953,7 +1078,7 @@ window.require.register("views/header-view", function(exports, require, module) 
 
   Chaplin = require('chaplin');
 
-  template = require('views/templates/header');
+  template = require('views/templates/popup-header');
 
   module.exports = HeaderView = (function(_super) {
     __extends(HeaderView, _super);
@@ -965,11 +1090,9 @@ window.require.register("views/header-view", function(exports, require, module) 
 
     HeaderView.prototype.autoRender = true;
 
-    HeaderView.prototype.className = 'header';
+    HeaderView.prototype.className = 'popup-header';
 
-    HeaderView.prototype.region = 'header';
-
-    HeaderView.prototype.id = 'header';
+    HeaderView.prototype.id = 'popup-header';
 
     HeaderView.prototype.template = template;
 
@@ -997,70 +1120,14 @@ window.require.register("views/header-view", function(exports, require, module) 
   })(View);
   
 });
-window.require.register("views/home-page-view", function(exports, require, module) {
-  var HomePageView, View, template, _ref,
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  template = require('views/templates/home');
-
-  View = require('views/base/view');
-
-  module.exports = HomePageView = (function(_super) {
-    __extends(HomePageView, _super);
-
-    function HomePageView() {
-      _ref = HomePageView.__super__.constructor.apply(this, arguments);
-      return _ref;
-    }
-
-    HomePageView.prototype.autoRender = true;
-
-    HomePageView.prototype.className = 'home-page';
-
-    HomePageView.prototype.template = template;
-
-    return HomePageView;
-
-  })(View);
-  
-});
-window.require.register("views/popup-view", function(exports, require, module) {
-  var PopupView, View, template, _ref,
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  View = require('views/base/view');
-
-  template = require('views/templates/popup');
-
-  module.exports = PopupView = (function(_super) {
-    __extends(PopupView, _super);
-
-    function PopupView() {
-      _ref = PopupView.__super__.constructor.apply(this, arguments);
-      return _ref;
-    }
-
-    PopupView.prototype.className = 'popup';
-
-    PopupView.prototype.autoRender = true;
-
-    PopupView.prototype.template = template;
-
-    return PopupView;
-
-  })(View);
-  
-});
-window.require.register("views/prescription-view", function(exports, require, module) {
+window.require.register("views/popup-prescription-view", function(exports, require, module) {
   var PrescriptionView, View, template, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   View = require('views/base/view');
 
-  template = require('views/templates/prescription');
+  template = require('views/templates/popup-prescription');
 
   module.exports = PrescriptionView = (function(_super) {
     __extends(PrescriptionView, _super);
@@ -1070,56 +1137,72 @@ window.require.register("views/prescription-view", function(exports, require, mo
       return _ref;
     }
 
-    PrescriptionView.prototype.className = 'prescription';
+    PrescriptionView.prototype.className = 'popup-prescription';
 
     PrescriptionView.prototype.autoRender = true;
 
     PrescriptionView.prototype.template = template;
-
-    PrescriptionView.prototype.initialize = function() {
-      PrescriptionView.__super__.initialize.apply(this, arguments);
-      return console.log('ugh');
-    };
 
     return PrescriptionView;
 
   })(View);
   
 });
-window.require.register("views/site-view", function(exports, require, module) {
-  var SiteView, View, template, _ref,
+window.require.register("views/popup-site-view", function(exports, require, module) {
+  var PopupSiteView, View, template, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   View = require('views/base/view');
 
-  template = require('views/templates/site');
+  template = require('views/templates/popup-site');
 
-  module.exports = SiteView = (function(_super) {
-    __extends(SiteView, _super);
+  module.exports = PopupSiteView = (function(_super) {
+    __extends(PopupSiteView, _super);
 
-    function SiteView() {
-      _ref = SiteView.__super__.constructor.apply(this, arguments);
+    function PopupSiteView() {
+      _ref = PopupSiteView.__super__.constructor.apply(this, arguments);
       return _ref;
     }
 
-    SiteView.prototype.container = 'body';
+    PopupSiteView.prototype.container = 'body';
 
-    SiteView.prototype.id = 'site-container';
+    PopupSiteView.prototype.id = 'popup-site-container';
 
-    SiteView.prototype.regions = {
-      '#header-container': 'header',
-      '#page-container': 'main'
+    PopupSiteView.prototype.regions = {
+      '#popup-header-container': 'popup-header',
+      '#popup-main-container': 'popup-main',
+      '#popup-footer-container': 'popup-footer'
     };
 
-    SiteView.prototype.template = template;
+    PopupSiteView.prototype.template = template;
 
-    return SiteView;
+    return PopupSiteView;
 
   })(View);
   
 });
-window.require.register("views/templates/goals", function(exports, require, module) {
+window.require.register("views/templates/popup-activity", function(exports, require, module) {
+  module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+    this.compilerInfo = [2,'>= 1.0.0-rc.3'];
+  helpers = helpers || Handlebars.helpers; data = data || {};
+    
+
+
+    return "<h1>activity view</h1>";
+    });
+});
+window.require.register("views/templates/popup-footer", function(exports, require, module) {
+  module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+    this.compilerInfo = [2,'>= 1.0.0-rc.3'];
+  helpers = helpers || Handlebars.helpers; data = data || {};
+    
+
+
+    return "<h3>\n  popup footer\n</h3>";
+    });
+});
+window.require.register("views/templates/popup-goals", function(exports, require, module) {
   module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
     this.compilerInfo = [2,'>= 1.0.0-rc.3'];
   helpers = helpers || Handlebars.helpers; data = data || {};
@@ -1129,37 +1212,17 @@ window.require.register("views/templates/goals", function(exports, require, modu
     return "<h1>GOALS</h1>\n";
     });
 });
-window.require.register("views/templates/header", function(exports, require, module) {
+window.require.register("views/templates/popup-header", function(exports, require, module) {
   module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
     this.compilerInfo = [2,'>= 1.0.0-rc.3'];
   helpers = helpers || Handlebars.helpers; data = data || {};
     
 
 
-    return "<div class=\"navbar\">\n  <div class=\"navbar-inner\">\n    <a class=\"brand\"></a>\n    <ul class=\"nav\">\n      <li class=\"activity selected\"><a href=\"#\">Activity</a></li>\n      <li class=\"goals\"><a href=\"#\">Goals</a></li>\n      <li class=\"prescription\"><a href=\"#\">Prescription</a></li>\n    </ul>\n  </div>\n</div>\n";
+    return "<div class=\"navbar\">\n  <div class=\"navbar-inner\">\n    <a class=\"brand\"></a>\n    <ul class=\"nav\">\n      <li class=\"activity\"><a href=\"#\">Activity</a></li>\n      <li class=\"goals\"><a href=\"#\">Goals</a></li>\n      <li class=\"prescription\"><a href=\"#\">Prescription</a></li>\n    </ul>\n  </div>\n</div>\n";
     });
 });
-window.require.register("views/templates/home", function(exports, require, module) {
-  module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-    this.compilerInfo = [2,'>= 1.0.0-rc.3'];
-  helpers = helpers || Handlebars.helpers; data = data || {};
-    
-
-
-    return "<a href=\"http://brunch.io/\">\n  <img src=\"http://brunch.io/images/brunch.png\" alt=\"Brunch\" />\n</a>\n";
-    });
-});
-window.require.register("views/templates/popup", function(exports, require, module) {
-  module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-    this.compilerInfo = [2,'>= 1.0.0-rc.3'];
-  helpers = helpers || Handlebars.helpers; data = data || {};
-    
-
-
-    return "<h1>This is a Popup!</h1>";
-    });
-});
-window.require.register("views/templates/prescription", function(exports, require, module) {
+window.require.register("views/templates/popup-prescription", function(exports, require, module) {
   module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
     this.compilerInfo = [2,'>= 1.0.0-rc.3'];
   helpers = helpers || Handlebars.helpers; data = data || {};
@@ -1169,13 +1232,13 @@ window.require.register("views/templates/prescription", function(exports, requir
     return "<h1>PRESCRIPTION</h1>\n";
     });
 });
-window.require.register("views/templates/site", function(exports, require, module) {
+window.require.register("views/templates/popup-site", function(exports, require, module) {
   module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
     this.compilerInfo = [2,'>= 1.0.0-rc.3'];
   helpers = helpers || Handlebars.helpers; data = data || {};
     
 
 
-    return "<header id=\"header-container\" class=\"header-container\"></header>\n\n<div class=\"container outer-container\">\n  <div id=\"page-container\" class=\"container\" >\n  </div>\n</div>\n";
+    return "<header id=\"popup-header-container\" class=\"popup-header-container\"></header>\n\n<div class=\"container outer-container\">\n  <div id=\"popup-main-container\" class=\"container\" >\n  </div>\n</div>\n\n<footer id=\"popup-footer-container\" class=\"popup-footer-container\"></footer>";
     });
 });
