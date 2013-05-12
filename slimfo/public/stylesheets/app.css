@@ -7274,6 +7274,9 @@ a.badge:focus {
   color: #fff;
   background-color: #4276b6;
 }
+body {
+  width: 300px;
+}
 .navbar .navbar-inner {
   padding-bottom: 10px;
 }

@@ -9,8 +9,8 @@ module.exports = (match) ->
   match 'public/background.html', 'home#index'
 
   #match 'popup.html', 'popup#index'
-  match 'public/popup.html', 'popup#activity'
+  match 'public/popup.html', 'popup-activity#show'
 
-  match '#activity', 'popup#activity'
-  match '#goals', 'popup#goals'
-  match '#prescription', 'popup#prescription'
+  match '#activity', 'popup-activity#show'
+  match '#goals', 'popup-goals#show'
+  match '#prescription', 'popup-prescription#show'
