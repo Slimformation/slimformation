@@ -1,5 +1,5 @@
 Controller = require 'controllers/base/controller'
-HomePageView = require 'views/home-page-view'
+BackgroundIndexView = require 'views/background-index-view'
 ChromeService = require 'services/chrome-service'
 CategorizerService = require 'services/categorizer-service'
 ReadabilityService = require 'services/readability-service'
@@ -20,6 +20,5 @@ module.exports = class HomeController extends Controller
     # listen to activity updates from content scripts
     @publishEvent 'listen:activityPort'
 
-
   index: ->
-    @view = new HomePageView region: 'main'
+    @view = new BackgroundIndexView

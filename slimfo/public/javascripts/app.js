@@ -152,13 +152,13 @@ window.require.register("controllers/base/controller", function(exports, require
   
 });
 window.require.register("controllers/home-controller", function(exports, require, module) {
-  var CategorizerService, ChromeService, Controller, HomeController, HomePageView, ReadabilityService, ReadingScore, _ref,
+  var BackgroundIndexView, CategorizerService, ChromeService, Controller, HomeController, ReadabilityService, ReadingScore, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Controller = require('controllers/base/controller');
 
-  HomePageView = require('views/home-page-view');
+  BackgroundIndexView = require('views/background-index-view');
 
   ChromeService = require('services/chrome-service');
 
@@ -188,9 +188,7 @@ window.require.register("controllers/home-controller", function(exports, require
     };
 
     HomeController.prototype.index = function() {
-      return this.view = new HomePageView({
-        region: 'main'
-      });
+      return this.view = new BackgroundIndexView;
     };
 
     return HomeController;
@@ -933,6 +931,32 @@ window.require.register("services/readability-service", function(exports, requir
   })(Service);
   
 });
+window.require.register("views/background-index-view", function(exports, require, module) {
+  var BackgroundIndexView, View, template, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  View = require('views/base/view');
+
+  template = require('views/templates/background-index');
+
+  module.exports = BackgroundIndexView = (function(_super) {
+    __extends(BackgroundIndexView, _super);
+
+    function BackgroundIndexView() {
+      _ref = BackgroundIndexView.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    BackgroundIndexView.prototype.template = template;
+
+    BackgroundIndexView.prototype.autoRender = true;
+
+    return BackgroundIndexView;
+
+  })(View);
+  
+});
 window.require.register("views/base/collection-view", function(exports, require, module) {
   var Chaplin, CollectionView, View, _ref,
     __hasProp = {}.hasOwnProperty,
@@ -1181,6 +1205,16 @@ window.require.register("views/popup-site-view", function(exports, require, modu
 
   })(View);
   
+});
+window.require.register("views/templates/background-index", function(exports, require, module) {
+  module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+    this.compilerInfo = [2,'>= 1.0.0-rc.3'];
+  helpers = helpers || Handlebars.helpers; data = data || {};
+    
+
+
+    return "<p>Slimformation - Background Page</p>";
+    });
 });
 window.require.register("views/templates/popup-activity", function(exports, require, module) {
   module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
