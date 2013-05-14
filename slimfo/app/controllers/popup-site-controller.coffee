@@ -2,11 +2,6 @@ Controller = require 'controllers/base/controller'
 PopupSiteView = require 'views/popup/site-view'
 PopupHeaderView = require 'views/popup/header-view'
 PopupFooterView = require 'views/popup/footer-view'
-# ActivityView = require 'views/activity-view'
-
-# PopupView = require 'views/popup-view'
-# GoalsView = require 'views/goals-view'
-# PrescriptionView = require 'views/prescription-view'
 
 module.exports = class PopupSiteController extends Controller
   # compose the views
@@ -18,16 +13,9 @@ module.exports = class PopupSiteController extends Controller
 
   initialize: ->
     super
+    # tab click events
     @subscribeEvent 'activity_tab', (-> @redirectTo '#activity')
     @subscribeEvent 'goals_tab', (-> @redirectTo '#goals')
     @subscribeEvent 'prescription_tab', (-> @redirectTo '#prescription')
-
-  # activity: ->
-  #   @view = new ActivityView region: 'popup-main'
-
-  # goals: ->
-  #   @view = new GoalsView region: 'main'
-
-  # prescription: ->
-  #   console.log 'yo'
-  #   @view = new PrescriptionView region: 'main'
+    # handle events for view display
+    @subscribeEvent 'display:NewPageVisits', (-> @redirectTo '#NewPageVisits')

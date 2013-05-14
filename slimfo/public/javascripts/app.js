@@ -197,13 +197,17 @@ window.require.register("controllers/home-controller", function(exports, require
   
 });
 window.require.register("controllers/popup-activity-controller", function(exports, require, module) {
-  var PopupActivityController, PopupActivityView, PopupSiteController, _ref,
+  var NewPageVisits, NewPageVisitsView, PopupActivityController, PopupActivityView, PopupSiteController, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   PopupSiteController = require('controllers/popup-site-controller');
 
   PopupActivityView = require('views/popup/activity-view');
+
+  NewPageVisitsView = require('views/collections/new-page-visits-view');
+
+  NewPageVisits = require('models/NewPageVisits');
 
   module.exports = PopupActivityController = (function(_super) {
     __extends(PopupActivityController, _super);
@@ -215,6 +219,17 @@ window.require.register("controllers/popup-activity-controller", function(export
 
     PopupActivityController.prototype.show = function() {
       return this.view = new PopupActivityView({
+        region: 'popup-main'
+      });
+    };
+
+    PopupActivityController.prototype.newPageVisits = function() {
+      var npv;
+
+      npv = new NewPageVisits;
+      npv.fetch();
+      return this.view = new NewPageVisitsView({
+        collection: npv,
         region: 'popup-main'
       });
     };
@@ -321,8 +336,11 @@ window.require.register("controllers/popup-site-controller", function(exports, r
       this.subscribeEvent('goals_tab', (function() {
         return this.redirectTo('#goals');
       }));
-      return this.subscribeEvent('prescription_tab', (function() {
+      this.subscribeEvent('prescription_tab', (function() {
         return this.redirectTo('#prescription');
+      }));
+      return this.subscribeEvent('display:NewPageVisits', (function() {
+        return this.redirectTo('#NewPageVisits');
       }));
     };
 
@@ -726,10 +744,11 @@ window.require.register("routes", function(exports, require, module) {
     match('public', 'home#index');
     match('public/index.html', 'home#index');
     match('public/background.html', 'home#index');
-    match('public/popup.html', 'popup-activity#show');
+    match('public/popup.html', 'popup-activity#newPageVisits');
     match('#activity', 'popup-activity#show');
     match('#goals', 'popup-goals#show');
-    return match('#prescription', 'popup-prescription#show');
+    match('#prescription', 'popup-prescription#show');
+    return match('#NewPageVisits', 'popup-activity#newPageVisits');
   };
   
 });
@@ -1007,10 +1026,80 @@ window.require.register("views/base/view", function(exports, require, module) {
   })(Chaplin.View);
   
 });
-window.require.register("views/popup/activity-view", function(exports, require, module) {
-  var ActivityView, View, template, _ref,
+window.require.register("views/collections/new-page-visits-view", function(exports, require, module) {
+  var CollectionView, NewPageVisitsView, PageVisitView, View, template, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  View = require('views/base/collection-view');
+
+  CollectionView = require('views/base/collection-view');
+
+  template = require('views/templates/collections/new-page-visits');
+
+  PageVisitView = require('views/models/page-visit-view');
+
+  module.exports = NewPageVisitsView = (function(_super) {
+    __extends(NewPageVisitsView, _super);
+
+    function NewPageVisitsView() {
+      _ref = NewPageVisitsView.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    NewPageVisitsView.prototype.autoRender = true;
+
+    NewPageVisitsView.prototype.autoAttach = true;
+
+    NewPageVisitsView.prototype.template = template;
+
+    NewPageVisitsView.prototype.itemView = PageVisitView;
+
+    NewPageVisitsView.prototype.listSelector = '#new-page-visits-list';
+
+    return NewPageVisitsView;
+
+  })(CollectionView);
+  
+});
+window.require.register("views/models/page-visit-view", function(exports, require, module) {
+  var PageVisitView, View, template, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  View = require('views/base/view');
+
+  template = require('views/templates/models/page-visit');
+
+  module.exports = PageVisitView = (function(_super) {
+    __extends(PageVisitView, _super);
+
+    function PageVisitView() {
+      _ref = PageVisitView.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    PageVisitView.prototype.autoRender = true;
+
+    PageVisitView.prototype.template = template;
+
+    PageVisitView.prototype.tagname = 'div';
+
+    PageVisitView.prototype.render = function() {
+      return PageVisitView.__super__.render.apply(this, arguments);
+    };
+
+    return PageVisitView;
+
+  })(View);
+  
+});
+window.require.register("views/popup/activity-view", function(exports, require, module) {
+  var ActivityView, Chaplin, View, template, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Chaplin = require('chaplin');
 
   View = require('views/base/view');
 
@@ -1029,6 +1118,14 @@ window.require.register("views/popup/activity-view", function(exports, require, 
     ActivityView.prototype.autoRender = true;
 
     ActivityView.prototype.template = template;
+
+    ActivityView.prototype.initialize = function() {
+      return ActivityView.__super__.initialize.apply(this, arguments);
+    };
+
+    ActivityView.prototype.renderNewPageVisits = function() {
+      return Chaplin.mediator.publish('display:NewPageVisits');
+    };
 
     return ActivityView;
 
@@ -1216,6 +1313,35 @@ window.require.register("views/templates/background/index", function(exports, re
     return "<p>Slimformation - Background Page</p>";
     });
 });
+window.require.register("views/templates/collections/new-page-visits", function(exports, require, module) {
+  module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+    this.compilerInfo = [2,'>= 1.0.0-rc.3'];
+  helpers = helpers || Handlebars.helpers; data = data || {};
+    
+
+
+    return "<div class=\"span12\">\n  <table id=\"recent-page-visits\" class=\"table table-striped table-condensed table-hover\">\n    <caption>Recent Page Visits</caption>\n    <tbody id=\"new-page-visits-list\"></tbody>\n  </table>\n</div>";
+    });
+});
+window.require.register("views/templates/models/page-visit", function(exports, require, module) {
+  module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+    this.compilerInfo = [2,'>= 1.0.0-rc.3'];
+  helpers = helpers || Handlebars.helpers; data = data || {};
+    var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
+
+
+    buffer += "\n<tr>\n  <td>\"";
+    if (stack1 = helpers.title) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+    else { stack1 = depth0.title; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+    buffer += escapeExpression(stack1)
+      + "\"</td>\n  <td>";
+    if (stack1 = helpers.category) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+    else { stack1 = depth0.category; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+    buffer += escapeExpression(stack1)
+      + "</td>\n</tr>";
+    return buffer;
+    });
+});
 window.require.register("views/templates/popup/activity", function(exports, require, module) {
   module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
     this.compilerInfo = [2,'>= 1.0.0-rc.3'];
@@ -1233,7 +1359,7 @@ window.require.register("views/templates/popup/footer", function(exports, requir
     
 
 
-    return "<h3>\n  popup footer\n</h3>";
+    return "<a class=\"btn btn-large span12\">\n  View My Dashboard\n</a>";
     });
 });
 window.require.register("views/templates/popup/goals", function(exports, require, module) {
