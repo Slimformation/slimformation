@@ -1,7 +1,7 @@
 Controller = require 'controllers/base/controller'
-PopupSiteView = require 'views/popup-site-view'
-PopupHeaderView = require 'views/popup-header-view'
-PopupFooterView = require 'views/popup-footer-view'
+PopupSiteView = require 'views/popup/site-view'
+PopupHeaderView = require 'views/popup/header-view'
+PopupFooterView = require 'views/popup/footer-view'
 # ActivityView = require 'views/activity-view'
 
 # PopupView = require 'views/popup-view'

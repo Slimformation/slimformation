@@ -1,5 +1,5 @@
 View = require 'views/base/view'
-template = require 'views/templates/popup-goals'
+template = require 'views/templates/popup/goals'
 
 module.exports = class GoalsView extends View
   className: 'popup-goals'

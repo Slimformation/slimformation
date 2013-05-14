@@ -1,5 +1,5 @@
 PopupSiteController = require 'controllers/popup-site-controller'
-PopupGoalsView = require 'views/popup-goals-view'
+PopupGoalsView = require 'views/popup/goals-view'
 
 module.exports = class PopupGoalsController extends PopupSiteController
 

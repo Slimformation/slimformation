@@ -158,7 +158,7 @@ window.require.register("controllers/home-controller", function(exports, require
 
   Controller = require('controllers/base/controller');
 
-  BackgroundIndexView = require('views/background-index-view');
+  BackgroundIndexView = require('views/background/index-view');
 
   ChromeService = require('services/chrome-service');
 
@@ -203,7 +203,7 @@ window.require.register("controllers/popup-activity-controller", function(export
 
   PopupSiteController = require('controllers/popup-site-controller');
 
-  PopupActivityView = require('views/popup-activity-view');
+  PopupActivityView = require('views/popup/activity-view');
 
   module.exports = PopupActivityController = (function(_super) {
     __extends(PopupActivityController, _super);
@@ -231,7 +231,7 @@ window.require.register("controllers/popup-goals-controller", function(exports, 
 
   PopupSiteController = require('controllers/popup-site-controller');
 
-  PopupGoalsView = require('views/popup-goals-view');
+  PopupGoalsView = require('views/popup/goals-view');
 
   module.exports = PopupGoalsController = (function(_super) {
     __extends(PopupGoalsController, _super);
@@ -259,7 +259,7 @@ window.require.register("controllers/popup-prescription-controller", function(ex
 
   PopupSiteController = require('controllers/popup-site-controller');
 
-  PopupPrescriptionView = require('views/popup-prescription-view');
+  PopupPrescriptionView = require('views/popup/prescription-view');
 
   module.exports = PopupPrescriptionController = (function(_super) {
     __extends(PopupPrescriptionController, _super);
@@ -287,11 +287,11 @@ window.require.register("controllers/popup-site-controller", function(exports, r
 
   Controller = require('controllers/base/controller');
 
-  PopupSiteView = require('views/popup-site-view');
+  PopupSiteView = require('views/popup/site-view');
 
-  PopupHeaderView = require('views/popup-header-view');
+  PopupHeaderView = require('views/popup/header-view');
 
-  PopupFooterView = require('views/popup-footer-view');
+  PopupFooterView = require('views/popup/footer-view');
 
   module.exports = PopupSiteController = (function(_super) {
     __extends(PopupSiteController, _super);
@@ -931,14 +931,14 @@ window.require.register("services/readability-service", function(exports, requir
   })(Service);
   
 });
-window.require.register("views/background-index-view", function(exports, require, module) {
+window.require.register("views/background/index-view", function(exports, require, module) {
   var BackgroundIndexView, View, template, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   View = require('views/base/view');
 
-  template = require('views/templates/background-index');
+  template = require('views/templates/background/index');
 
   module.exports = BackgroundIndexView = (function(_super) {
     __extends(BackgroundIndexView, _super);
@@ -1007,14 +1007,14 @@ window.require.register("views/base/view", function(exports, require, module) {
   })(Chaplin.View);
   
 });
-window.require.register("views/popup-activity-view", function(exports, require, module) {
+window.require.register("views/popup/activity-view", function(exports, require, module) {
   var ActivityView, View, template, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   View = require('views/base/view');
 
-  template = require('views/templates/popup-activity');
+  template = require('views/templates/popup/activity');
 
   module.exports = ActivityView = (function(_super) {
     __extends(ActivityView, _super);
@@ -1035,14 +1035,14 @@ window.require.register("views/popup-activity-view", function(exports, require, 
   })(View);
   
 });
-window.require.register("views/popup-footer-view", function(exports, require, module) {
+window.require.register("views/popup/footer-view", function(exports, require, module) {
   var PopupFooterView, View, template, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   View = require('views/base/view');
 
-  template = require('views/templates/popup-footer');
+  template = require('views/templates/popup/footer');
 
   module.exports = PopupFooterView = (function(_super) {
     __extends(PopupFooterView, _super);
@@ -1065,14 +1065,14 @@ window.require.register("views/popup-footer-view", function(exports, require, mo
   })(View);
   
 });
-window.require.register("views/popup-goals-view", function(exports, require, module) {
+window.require.register("views/popup/goals-view", function(exports, require, module) {
   var GoalsView, View, template, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   View = require('views/base/view');
 
-  template = require('views/templates/popup-goals');
+  template = require('views/templates/popup/goals');
 
   module.exports = GoalsView = (function(_super) {
     __extends(GoalsView, _super);
@@ -1093,7 +1093,7 @@ window.require.register("views/popup-goals-view", function(exports, require, mod
   })(View);
   
 });
-window.require.register("views/popup-header-view", function(exports, require, module) {
+window.require.register("views/popup/header-view", function(exports, require, module) {
   var Chaplin, HeaderView, View, template, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -1102,7 +1102,7 @@ window.require.register("views/popup-header-view", function(exports, require, mo
 
   Chaplin = require('chaplin');
 
-  template = require('views/templates/popup-header');
+  template = require('views/templates/popup/header');
 
   module.exports = HeaderView = (function(_super) {
     __extends(HeaderView, _super);
@@ -1144,14 +1144,14 @@ window.require.register("views/popup-header-view", function(exports, require, mo
   })(View);
   
 });
-window.require.register("views/popup-prescription-view", function(exports, require, module) {
+window.require.register("views/popup/prescription-view", function(exports, require, module) {
   var PrescriptionView, View, template, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   View = require('views/base/view');
 
-  template = require('views/templates/popup-prescription');
+  template = require('views/templates/popup/prescription');
 
   module.exports = PrescriptionView = (function(_super) {
     __extends(PrescriptionView, _super);
@@ -1172,14 +1172,14 @@ window.require.register("views/popup-prescription-view", function(exports, requi
   })(View);
   
 });
-window.require.register("views/popup-site-view", function(exports, require, module) {
+window.require.register("views/popup/site-view", function(exports, require, module) {
   var PopupSiteView, View, template, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   View = require('views/base/view');
 
-  template = require('views/templates/popup-site');
+  template = require('views/templates/popup/site');
 
   module.exports = PopupSiteView = (function(_super) {
     __extends(PopupSiteView, _super);
@@ -1206,7 +1206,7 @@ window.require.register("views/popup-site-view", function(exports, require, modu
   })(View);
   
 });
-window.require.register("views/templates/background-index", function(exports, require, module) {
+window.require.register("views/templates/background/index", function(exports, require, module) {
   module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
     this.compilerInfo = [2,'>= 1.0.0-rc.3'];
   helpers = helpers || Handlebars.helpers; data = data || {};
@@ -1216,7 +1216,7 @@ window.require.register("views/templates/background-index", function(exports, re
     return "<p>Slimformation - Background Page</p>";
     });
 });
-window.require.register("views/templates/popup-activity", function(exports, require, module) {
+window.require.register("views/templates/popup/activity", function(exports, require, module) {
   module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
     this.compilerInfo = [2,'>= 1.0.0-rc.3'];
   helpers = helpers || Handlebars.helpers; data = data || {};
@@ -1226,7 +1226,7 @@ window.require.register("views/templates/popup-activity", function(exports, requ
     return "<h1>activity view</h1>";
     });
 });
-window.require.register("views/templates/popup-footer", function(exports, require, module) {
+window.require.register("views/templates/popup/footer", function(exports, require, module) {
   module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
     this.compilerInfo = [2,'>= 1.0.0-rc.3'];
   helpers = helpers || Handlebars.helpers; data = data || {};
@@ -1236,7 +1236,7 @@ window.require.register("views/templates/popup-footer", function(exports, requir
     return "<h3>\n  popup footer\n</h3>";
     });
 });
-window.require.register("views/templates/popup-goals", function(exports, require, module) {
+window.require.register("views/templates/popup/goals", function(exports, require, module) {
   module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
     this.compilerInfo = [2,'>= 1.0.0-rc.3'];
   helpers = helpers || Handlebars.helpers; data = data || {};
@@ -1246,7 +1246,7 @@ window.require.register("views/templates/popup-goals", function(exports, require
     return "<h1>GOALS</h1>\n";
     });
 });
-window.require.register("views/templates/popup-header", function(exports, require, module) {
+window.require.register("views/templates/popup/header", function(exports, require, module) {
   module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
     this.compilerInfo = [2,'>= 1.0.0-rc.3'];
   helpers = helpers || Handlebars.helpers; data = data || {};
@@ -1256,7 +1256,7 @@ window.require.register("views/templates/popup-header", function(exports, requir
     return "<div class=\"navbar\">\n  <div class=\"navbar-inner\">\n    <a class=\"brand\"></a>\n    <ul class=\"nav\">\n      <li class=\"activity\"><a href=\"#\">Activity</a></li>\n      <li class=\"goals\"><a href=\"#\">Goals</a></li>\n      <li class=\"prescription\"><a href=\"#\">Prescription</a></li>\n    </ul>\n  </div>\n</div>\n";
     });
 });
-window.require.register("views/templates/popup-prescription", function(exports, require, module) {
+window.require.register("views/templates/popup/prescription", function(exports, require, module) {
   module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
     this.compilerInfo = [2,'>= 1.0.0-rc.3'];
   helpers = helpers || Handlebars.helpers; data = data || {};
@@ -1266,7 +1266,7 @@ window.require.register("views/templates/popup-prescription", function(exports, 
     return "<h1>PRESCRIPTION</h1>\n";
     });
 });
-window.require.register("views/templates/popup-site", function(exports, require, module) {
+window.require.register("views/templates/popup/site", function(exports, require, module) {
   module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
     this.compilerInfo = [2,'>= 1.0.0-rc.3'];
   helpers = helpers || Handlebars.helpers; data = data || {};

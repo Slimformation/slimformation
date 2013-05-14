@@ -1,7 +1,7 @@
 View = require 'views/base/view'
 Chaplin = require 'chaplin'
 
-template = require 'views/templates/popup-header'
+template = require 'views/templates/popup/header'
 
 module.exports = class HeaderView extends View
   autoRender: yes

@@ -1,5 +1,5 @@
 View = require 'views/base/view'
-template = require 'views/templates/popup-footer'
+template = require 'views/templates/popup/footer'
 
 module.exports = class PopupFooterView extends View
   template: template
