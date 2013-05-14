@@ -1,5 +1,5 @@
 PopupSiteController = require 'controllers/popup-site-controller'
-PopupPrescriptionView = require 'views/popup-prescription-view'
+PopupPrescriptionView = require 'views/popup/prescription-view'
 
 module.exports = class PopupPrescriptionController extends PopupSiteController
 

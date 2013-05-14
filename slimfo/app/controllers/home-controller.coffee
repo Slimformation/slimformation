@@ -1,5 +1,5 @@
 Controller = require 'controllers/base/controller'
-BackgroundIndexView = require 'views/background-index-view'
+BackgroundIndexView = require 'views/background/index-view'
 ChromeService = require 'services/chrome-service'
 CategorizerService = require 'services/categorizer-service'
 ReadabilityService = require 'services/readability-service'
