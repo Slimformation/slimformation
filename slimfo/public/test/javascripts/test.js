@@ -91,18 +91,6 @@ window.require.register("test/controllers/popup-activity-controller-test", funct
   });
   
 });
-window.require.register("test/controllers/popup-controller-test", function(exports, require, module) {
-  var Popup;
-
-  Popup = require('controllers/popup-controller');
-
-  describe('Popup', function() {
-    return beforeEach(function() {
-      return this.controller = new Popup();
-    });
-  });
-  
-});
 window.require.register("test/controllers/popup-goals-controller-test", function(exports, require, module) {
   var PopupGoals;
 
@@ -171,53 +159,14 @@ window.require.register("test/models/PageVisit-test", function(exports, require,
   });
   
 });
-window.require.register("test/views/activity-view-test", function(exports, require, module) {
-  var ActivityView;
+window.require.register("test/views/background-index-view-test", function(exports, require, module) {
+  var BackgroundIndexView;
 
-  ActivityView = require('views/activity-view');
+  BackgroundIndexView = require('views/background-index-view');
 
-  describe('ActivityView', function() {
+  describe('BackgroundIndexView', function() {
     return beforeEach(function() {
-      return this.view = new ActivityView();
-    });
-  });
-  
-});
-window.require.register("test/views/header-view-test", function(exports, require, module) {
-  var HeaderView, HeaderViewTest, _ref,
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  HeaderView = require('views/header-view');
-
-  HeaderViewTest = (function(_super) {
-    __extends(HeaderViewTest, _super);
-
-    function HeaderViewTest() {
-      _ref = HeaderViewTest.__super__.constructor.apply(this, arguments);
-      return _ref;
-    }
-
-    HeaderViewTest.prototype.renderTimes = 0;
-
-    HeaderViewTest.prototype.render = function() {
-      HeaderViewTest.__super__.render.apply(this, arguments);
-      return this.renderTimes += 1;
-    };
-
-    return HeaderViewTest;
-
-  })(HeaderView);
-
-  describe('HeaderView', function() {
-    beforeEach(function() {
-      return this.view = new HeaderViewTest;
-    });
-    afterEach(function() {
-      return this.view.dispose();
-    });
-    return it('should display 4 links', function() {
-      return expect(this.view.$el.find('a')).to.have.length(4);
+      return this.view = new BackgroundIndexView();
     });
   });
   
@@ -228,50 +177,8 @@ window.require.register("test/views/home-page-view-test", function(exports, requ
   HomePageView = require('views/home-page-view');
 
   describe('HomePageView', function() {
-    beforeEach(function() {
-      return this.view = new HomePageView;
-    });
-    afterEach(function() {
-      return this.view.dispose();
-    });
-    return it('should auto-render', function() {
-      return expect(this.view.$el.find('img')).to.have.length(1);
-    });
-  });
-  
-});
-window.require.register("test/views/popup-footer-view-test", function(exports, require, module) {
-  var PopupFooterView;
-
-  PopupFooterView = require('views/popup-footer-view');
-
-  describe('PopupFooterView', function() {
     return beforeEach(function() {
-      return this.view = new PopupFooterView();
-    });
-  });
-  
-});
-window.require.register("test/views/popup-view-test", function(exports, require, module) {
-  var PopupView;
-
-  PopupView = require('views/popup-view');
-
-  describe('PopupView', function() {
-    return beforeEach(function() {
-      return this.view = new PopupView();
-    });
-  });
-  
-});
-window.require.register("test/views/site-view-test", function(exports, require, module) {
-  var SiteView;
-
-  SiteView = require('views/site-view');
-
-  describe('SiteView', function() {
-    return beforeEach(function() {
-      return this.view = new SiteView();
+      return this.view = new HomePageView();
     });
   });
   

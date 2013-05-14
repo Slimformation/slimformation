@@ -7275,7 +7275,16 @@ a.badge:focus {
   background-color: #4276b6;
 }
 body {
-  width: 300px;
+  width: 420px;
+}
+#recent-page-visits {
+  width: 400px;
+  height: 300px;
+  overflow: scroll;
+  display: block;
+}
+#recent-page-visits td {
+  width: 200px;
 }
 .navbar .navbar-inner {
   padding-bottom: 10px;
