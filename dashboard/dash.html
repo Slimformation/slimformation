@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>Slimformation | Your Dashboard</title>
+	<link rel="stylesheet" type="text/css" href="styles/example.css" media="screen" /> 
+	<link rel="stylesheet" type="text/css" href="styles/report.css" media="screen" /> 
+	<link rel="stylesheet" type="text/css" href="styles/interactive.css" media="screen" /> 
+</head>
+<body>
+	<h2>Your Dashboard</h2>
+	<h3>Here's your reading category breakdown over the past year</h3>
+
+  <div class="container"></div>
+  
+	<script type="text/javascript" src="js/libs/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="js/libs/miso.ds.deps.ie.0.4.1.js"></script>
+	<script type="text/javascript" src="js/libs/d3.min.js"></script>
+	<script type="text/javascript" src="js/libs/backbone-min.js"></script>
+  
+	<script type="text/javascript" src="js/models/CategoryCount.js"></script>
+
+	<script type="text/javascript" src="js/views/Barchart.js"></script>
+	<script type="text/javascript" src="js/views/BarKey.js"></script>
+	<script type="text/javascript" src="js/views/CategoryCountChart.js"></script>
+	<script type="text/javascript" src="js/views/CategoryCountReport.js"></script>
+	<script type="text/javascript" src="js/views/InteractiveReport.js"></script>
+
+	<script>
+		var dataset = new Miso.Dataset({
+		  url : "data/dummy_dump.csv",
+		  delimiter : ",",
+		  columns : [
+		    { name : "Date", type : "time", format : "YYYY-MM-DDTHH:mm:ss Z" },
+		    { name : "Category", type : "string" },
+		    { name : "Count", type : "number" },
+		  ]
+		});
+
+		dataset.fetch({
+                        success: function(){
+				var model = new CategoryCount({ data: dataset, months: moment.months });
+
+				var report = new InteractiveReport({	model: model });
+
+				report.$el.appendTo($(".container"));
+				report.render();
+
+			  report.reveal();
+
+				$(window).resize(_.debounce(report.render, 10));
+			},
+			error: function(e){
+				alert(e);
+			}
+		});
+	</script>
+</body>
+</html>
