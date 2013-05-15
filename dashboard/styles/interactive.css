@@ -1,0 +1,19 @@
+.category-count-report .key-item .square,
+.category-count-report .barchart .bar {
+  cursor: pointer;
+  fill-opacity: 0.25;
+}
+
+.category-count-report .key-item:hover .square,
+.category-count-report .barchart .bar:hover {
+  fill-opacity: 0.75;
+}
+
+.category-count-report .key-item.selected .square,
+.category-count-report .barchart .bar.selected {
+  fill-opacity: 1.0;
+}
+
+.category-count-report .key-item .label {
+	pointer-events: none;
+}
