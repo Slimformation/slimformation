@@ -7277,9 +7277,12 @@ a.badge:focus {
 body {
   width: 420px;
 }
+#activity-chart-container {
+  text-align: center;
+}
 #recent-page-visits {
   width: 400px;
-  height: 300px;
+  height: 200px;
   overflow: scroll;
   display: block;
 }
