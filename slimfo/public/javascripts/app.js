@@ -197,7 +197,7 @@ window.require.register("controllers/home-controller", function(exports, require
   
 });
 window.require.register("controllers/popup-activity-controller", function(exports, require, module) {
-  var NewPageVisits, NewPageVisitsView, PopupActivityController, PopupActivityView, PopupSiteController, _ref,
+  var ActivityChartView, NewPageVisits, NewPageVisitsView, PopupActivityController, PopupActivityView, PopupSiteController, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -206,6 +206,8 @@ window.require.register("controllers/popup-activity-controller", function(export
   PopupActivityView = require('views/popup/activity-view');
 
   NewPageVisitsView = require('views/collections/new-page-visits-view');
+
+  ActivityChartView = require('views/charts/activity-chart-view');
 
   NewPageVisits = require('models/NewPageVisits');
 
@@ -218,19 +220,22 @@ window.require.register("controllers/popup-activity-controller", function(export
     }
 
     PopupActivityController.prototype.show = function() {
-      return this.view = new PopupActivityView({
+      var activityChartView, newPageVisitsView, npv;
+
+      this.view = new PopupActivityView({
         region: 'popup-main'
       });
-    };
-
-    PopupActivityController.prototype.newPageVisits = function() {
-      var npv;
-
+      activityChartView = new ActivityChartView({
+        autoRender: true,
+        container: this.el,
+        region: 'activity-chart'
+      });
+      activityChartView.initChart();
       npv = new NewPageVisits;
       npv.fetch();
-      return this.view = new NewPageVisitsView({
+      return newPageVisitsView = new NewPageVisitsView({
         collection: npv,
-        region: 'popup-main'
+        region: 'recent-page-visits'
       });
     };
 
@@ -614,6 +619,35 @@ window.require.register("lib/view-helper", function(exports, require, module) {
   });
   
 });
+window.require.register("models/Category", function(exports, require, module) {
+  var Category, Model, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Model = require('models/base/model');
+
+  module.exports = Category = (function(_super) {
+    __extends(Category, _super);
+
+    function Category() {
+      _ref = Category.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    Category.prototype.defaults = {
+      name: "",
+      count: 0
+    };
+
+    Category.prototype.name = void 0;
+
+    Category.prototype.count = void 0;
+
+    return Category;
+
+  })(Model);
+  
+});
 window.require.register("models/NewPageVisits", function(exports, require, module) {
   var Collection, NewPageVisits, PageVisit, _ref,
     __hasProp = {}.hasOwnProperty,
@@ -744,7 +778,7 @@ window.require.register("routes", function(exports, require, module) {
     match('public', 'home#index');
     match('public/index.html', 'home#index');
     match('public/background.html', 'home#index');
-    match('public/popup.html', 'popup-activity#newPageVisits');
+    match('public/popup.html', 'popup-activity#show');
     match('#activity', 'popup-activity#show');
     match('#goals', 'popup-goals#show');
     match('#prescription', 'popup-prescription#show');
@@ -1026,6 +1060,58 @@ window.require.register("views/base/view", function(exports, require, module) {
   })(Chaplin.View);
   
 });
+window.require.register("views/charts/activity-chart-view", function(exports, require, module) {
+  var ActivityChartView, Chaplin, View, template, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Chaplin = require('chaplin');
+
+  View = require('views/base/view');
+
+  template = require('views/templates/charts/activity-chart');
+
+  module.exports = ActivityChartView = (function(_super) {
+    __extends(ActivityChartView, _super);
+
+    function ActivityChartView() {
+      _ref = ActivityChartView.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    ActivityChartView.prototype.el = $('#activity-chart-container');
+
+    ActivityChartView.prototype.autoRender = true;
+
+    ActivityChartView.prototype.autoAttach = true;
+
+    ActivityChartView.prototype.template = template;
+
+    ActivityChartView.prototype.initChart = function() {
+      var activityChart, ctx, data;
+
+      ctx = document.getElementById('activity-chart').getContext("2d");
+      data = [
+        {
+          value: 30,
+          color: "#F7464A"
+        }, {
+          value: 50,
+          color: "#E2EAE9"
+        }, {
+          value: 100,
+          color: "#D4CCC5"
+        }
+      ];
+      console.log(ctx);
+      return activityChart = new Chart(ctx).Doughnut(data);
+    };
+
+    return ActivityChartView;
+
+  })(View);
+  
+});
 window.require.register("views/collections/new-page-visits-view", function(exports, require, module) {
   var CollectionView, NewPageVisitsView, PageVisitView, View, template, _ref,
     __hasProp = {}.hasOwnProperty,
@@ -1117,14 +1203,13 @@ window.require.register("views/popup/activity-view", function(exports, require, 
 
     ActivityView.prototype.autoRender = true;
 
+    ActivityView.prototype.autoAttach = true;
+
     ActivityView.prototype.template = template;
 
-    ActivityView.prototype.initialize = function() {
-      return ActivityView.__super__.initialize.apply(this, arguments);
-    };
-
-    ActivityView.prototype.renderNewPageVisits = function() {
-      return Chaplin.mediator.publish('display:NewPageVisits');
+    ActivityView.prototype.regions = {
+      '#activity-chart-container': 'activity-chart',
+      '#recent-page-visits': 'recent-page-visits'
     };
 
     return ActivityView;
@@ -1313,6 +1398,16 @@ window.require.register("views/templates/background/index", function(exports, re
     return "<p>Slimformation - Background Page</p>";
     });
 });
+window.require.register("views/templates/charts/activity-chart", function(exports, require, module) {
+  module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+    this.compilerInfo = [2,'>= 1.0.0-rc.3'];
+  helpers = helpers || Handlebars.helpers; data = data || {};
+    
+
+
+    return "poop";
+    });
+});
 window.require.register("views/templates/collections/new-page-visits", function(exports, require, module) {
   module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
     this.compilerInfo = [2,'>= 1.0.0-rc.3'];
@@ -1349,7 +1444,7 @@ window.require.register("views/templates/popup/activity", function(exports, requ
     
 
 
-    return "<h1>activity view</h1>";
+    return "<div id=\"activity-chart-container\" class=\"container\">\n  <canvas id=\"activity-chart\" width=\"250\" height=\"250\"></canvas>\n</div>\n<div id=\"recent-page-visits\"></div>";
     });
 });
 window.require.register("views/templates/popup/footer", function(exports, require, module) {
@@ -1396,9 +1491,11 @@ window.require.register("views/templates/popup/site", function(exports, require,
   module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
     this.compilerInfo = [2,'>= 1.0.0-rc.3'];
   helpers = helpers || Handlebars.helpers; data = data || {};
-    
+    var buffer = "";
 
 
-    return "<header id=\"popup-header-container\" class=\"popup-header-container\"></header>\n\n<div class=\"container outer-container\">\n  <div id=\"popup-main-container\" class=\"container\" >\n  </div>\n</div>\n\n<footer id=\"popup-footer-container\" class=\"popup-footer-container\"></footer>";
+    buffer += "<header id=\"popup-header-container\" class=\"popup-header-container\"></header>\n\n<div class=\"container outer-container\">\n"
+      + "\n  <div id=\"popup-main-container\" class=\"container\" >\n  </div>\n</div>\n\n<footer id=\"popup-footer-container\" class=\"popup-footer-container\"></footer>";
+    return buffer;
     });
 });

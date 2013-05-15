@@ -126,6 +126,18 @@ window.require.register("test/initialize", function(exports, require, module) {
   }
   
 });
+window.require.register("test/models/Category-test", function(exports, require, module) {
+  var Category;
+
+  Category = require('models/Category');
+
+  describe('Category', function() {
+    return beforeEach(function() {
+      return this.model = new Category();
+    });
+  });
+  
+});
 window.require.register("test/models/NewPageVisits-test", function(exports, require, module) {
   var Collection, NewPageVisits;
 
