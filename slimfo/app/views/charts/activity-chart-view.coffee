@@ -31,5 +31,4 @@ module.exports = class ActivityChartView extends View
         color : "#D4CCC5"
     ]
     console.log ctx
-    activityChart = new Chart(ctx).Doughnut(data) 
-
+    activityChart = new Chart(ctx).Doughnut(data)

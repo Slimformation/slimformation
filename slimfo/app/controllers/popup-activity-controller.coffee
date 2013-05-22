@@ -13,7 +13,6 @@ module.exports = class PopupActivityController extends PopupSiteController
     npv = new NewPageVisits
     npv.fetch()
     newPageVisitsView = new NewPageVisitsView(collection: npv, region: 'recent-page-visits')
-    
 
   # newPageVisits: ->
   #   npv = new NewPageVisits
@@ -21,5 +20,3 @@ module.exports = class PopupActivityController extends PopupSiteController
   #   # console.log npv
 
   #   @view = new NewPageVisitsView(collection: npv, region: 'popup-main')
-
-    
