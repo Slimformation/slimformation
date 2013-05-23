@@ -7282,8 +7282,9 @@ body {
 }
 #recent-page-visits {
   width: 400px;
-  height: 200px;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 25px;
   display: block;
 }
 #recent-page-visits td {
@@ -7322,6 +7323,20 @@ body {
 .navbar li.prescription a {
   position: relative;
   top: 30px;
+}
+#goals-chart-container {
+  padding: 25px;
+}
+.chart {
+  height: 300px;
+}
+.chart div {
+  font: 10px sans-serif;
+  background-color: tomato;
+  text-align: right;
+  padding: 3px;
+  margin: 1px;
+  color: white;
 }
 .navbar .nav > li > a {
   padding: 8px 10px 10px;
