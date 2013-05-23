@@ -245,13 +245,15 @@ window.require.register("controllers/popup-activity-controller", function(export
   
 });
 window.require.register("controllers/popup-goals-controller", function(exports, require, module) {
-  var PopupGoalsController, PopupGoalsView, PopupSiteController, _ref,
+  var GoalsChartView, PopupGoalsController, PopupGoalsView, PopupSiteController, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   PopupSiteController = require('controllers/popup-site-controller');
 
   PopupGoalsView = require('views/popup/goals-view');
+
+  GoalsChartView = require('views/charts/goals-chart-view');
 
   module.exports = PopupGoalsController = (function(_super) {
     __extends(PopupGoalsController, _super);
@@ -262,9 +264,17 @@ window.require.register("controllers/popup-goals-controller", function(exports, 
     }
 
     PopupGoalsController.prototype.show = function() {
-      return this.view = new PopupGoalsView({
+      var goalsChartView;
+
+      this.view = new PopupGoalsView({
         region: 'popup-main'
       });
+      goalsChartView = new GoalsChartView({
+        autoRender: true,
+        container: this.el,
+        region: 'goals-chart'
+      });
+      return goalsChartView.initChart();
     };
 
     return PopupGoalsController;
@@ -1112,6 +1122,58 @@ window.require.register("views/charts/activity-chart-view", function(exports, re
   })(View);
   
 });
+window.require.register("views/charts/goals-chart-view", function(exports, require, module) {
+  var Chaplin, GoalsChartView, View, template, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Chaplin = require('chaplin');
+
+  View = require('views/base/view');
+
+  template = require('views/templates/charts/goals-chart');
+
+  module.exports = GoalsChartView = (function(_super) {
+    __extends(GoalsChartView, _super);
+
+    function GoalsChartView() {
+      _ref = GoalsChartView.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    GoalsChartView.prototype.el = $('#goals-chart-container');
+
+    GoalsChartView.prototype.autoRender = true;
+
+    GoalsChartView.prototype.autoAttach = true;
+
+    GoalsChartView.prototype.template = template;
+
+    GoalsChartView.prototype.initChart = function() {
+      var chart, data, labels;
+
+      data = [4, 8, 15, 16, 23, 32];
+      labels = {
+        4: 'Food',
+        8: 'Politics',
+        15: 'Science',
+        16: 'Tech',
+        23: 'Business',
+        32: 'Sports'
+      };
+      chart = d3.select('#goals-chart-container').append('div').attr('class', 'chart');
+      return chart.selectAll("div").data(data).enter().append("div").style("width", function(d) {
+        return d * 10 + "px";
+      }).text(function(d) {
+        return labels[d];
+      });
+    };
+
+    return GoalsChartView;
+
+  })(View);
+  
+});
 window.require.register("views/collections/new-page-visits-view", function(exports, require, module) {
   var CollectionView, NewPageVisitsView, PageVisitView, View, template, _ref,
     __hasProp = {}.hasOwnProperty,
@@ -1270,6 +1332,10 @@ window.require.register("views/popup/goals-view", function(exports, require, mod
 
     GoalsView.prototype.template = template;
 
+    GoalsView.prototype.regions = {
+      '#goals-chart-container': 'goals-chart'
+    };
+
     return GoalsView;
 
   })(View);
@@ -1347,7 +1413,15 @@ window.require.register("views/popup/prescription-view", function(exports, requi
 
     PrescriptionView.prototype.autoRender = true;
 
+    PrescriptionView.prototype.autoAttach = true;
+
     PrescriptionView.prototype.template = template;
+
+    PrescriptionView.prototype.regions = {
+      '#greeting': 'greeting',
+      '#doctor-prescription': 'doctor-prescription',
+      '#prescription-list': 'prescription-list'
+    };
 
     return PrescriptionView;
 
@@ -1405,7 +1479,17 @@ window.require.register("views/templates/charts/activity-chart", function(export
     
 
 
-    return "poop";
+    return "test\n";
+    });
+});
+window.require.register("views/templates/charts/goals-chart", function(exports, require, module) {
+  module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+    this.compilerInfo = [2,'>= 1.0.0-rc.3'];
+  helpers = helpers || Handlebars.helpers; data = data || {};
+    
+
+
+    return "test\n";
     });
 });
 window.require.register("views/templates/collections/new-page-visits", function(exports, require, module) {
@@ -1415,7 +1499,7 @@ window.require.register("views/templates/collections/new-page-visits", function(
     
 
 
-    return "<div class=\"span12\">\n  <table id=\"recent-page-visits\" class=\"table table-striped table-condensed table-hover\">\n    <caption>Recent Page Visits</caption>\n    <tbody id=\"new-page-visits-list\"></tbody>\n  </table>\n</div>";
+    return "<div class=\"span12\">\n  <table id=\"recent-page-visits\" class=\"table table-striped table-condensed table-hover\">\n    <h2>Your recently visited pages</h2>\n    <tbody id=\"new-page-visits-list\"></tbody>\n  </table>\n</div>\n";
     });
 });
 window.require.register("views/templates/models/page-visit", function(exports, require, module) {
@@ -1444,7 +1528,7 @@ window.require.register("views/templates/popup/activity", function(exports, requ
     
 
 
-    return "<div id=\"activity-chart-container\" class=\"container\">\n  <canvas id=\"activity-chart\" width=\"250\" height=\"250\"></canvas>\n</div>\n<div id=\"recent-page-visits\"></div>";
+    return "<div id=\"activity-chart-container\" class=\"container\">\n  <canvas id=\"activity-chart\" width=\"250\" height=\"250\"></canvas>\n</div>\n<div id=\"recent-page-visits\"></div>\n";
     });
 });
 window.require.register("views/templates/popup/footer", function(exports, require, module) {
@@ -1464,7 +1548,7 @@ window.require.register("views/templates/popup/goals", function(exports, require
     
 
 
-    return "<h1>GOALS</h1>\n";
+    return "<div id=\"goals-chart-container\" class=\"container\">\n  <h1>Your Goals</h1>\n</div>\n";
     });
 });
 window.require.register("views/templates/popup/header", function(exports, require, module) {
@@ -1484,7 +1568,7 @@ window.require.register("views/templates/popup/prescription", function(exports, 
     
 
 
-    return "<h1>PRESCRIPTION</h1>\n";
+    return "<div id=\"greeting\">Hello!</div></br>\n<div id=\"doctor-prescription\">The doctor is in! You met <strong>60%</strong> of your goals! There's still room for improvement!</div></br>\n<div id=\"prescription-list\">Here are some suggestions to improve your content diet:</br>\n<strong>1.</strong> You did not meet your set goal of <strong>6 hours</strong> for <strong>politics</strong>, so read more <a target=\"_blank\" href=\"http://www.usatoday.com/news/politics/\">politics<a/>.</br></br>\n<strong>2.</strong> You did not meet your set goal of <strong>4 hours</strong> for <strong>technology</strong>, so read more <a target=\"_blank\" href=\"http://www.nytimes.com/pages/technology/index.html‎\">technology<a/>.</br></br>\n<strong>3.</strong> You exceeded your set goal of <strong>3 hours</strong> for <strong>entertainment</strong>, so try cutting back.</br>\n</div>\n";
     });
 });
 window.require.register("views/templates/popup/site", function(exports, require, module) {
