@@ -1,0 +1,73 @@
+<mockup version="1.0" skin="sketch" measuredW="860" measuredH="436" mockupW="687" mockupH="390">
+  <controls>
+    <control controlID="6" controlTypeID="__group__" x="173" y="47" w="295" h="389" measuredW="295" measuredH="389" zOrder="0" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::Canvas" x="0" y="0" w="295" h="389" measuredW="100" measuredH="70" zOrder="0" locked="false" isInGroup="6"/>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::IconLabel" x="27" y="18" w="-1" h="-1" measuredW="48" measuredH="69" zOrder="1" locked="false" isInGroup="6">
+          <controlProperties>
+            <text>Activity</text>
+          </controlProperties>
+        </control>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::IconLabel" x="115" y="17" w="-1" h="-1" measuredW="48" measuredH="69" zOrder="2" locked="false" isInGroup="6">
+          <controlProperties>
+            <text>Goals</text>
+          </controlProperties>
+        </control>
+        <control controlID="3" controlTypeID="com.balsamiq.mockups::IconLabel" x="191" y="17" w="-1" h="-1" measuredW="73" measuredH="69" zOrder="3" locked="false" isInGroup="6">
+          <controlProperties>
+            <text>Prescription</text>
+          </controlProperties>
+        </control>
+        <control controlID="4" controlTypeID="com.balsamiq.mockups::HRule" x="0" y="97" w="295" h="-1" measuredW="100" measuredH="5" zOrder="4" locked="false" isInGroup="6"/>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="7" controlTypeID="com.balsamiq.mockups::Button" x="373" y="168" w="-1" h="-1" measuredW="81" measuredH="27" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Edit%20Goals</text>
+      </controlProperties>
+    </control>
+    <control controlID="8" controlTypeID="com.balsamiq.mockups::Label" x="194" y="168" w="-1" h="-1" measuredW="164" measuredH="24" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>16</size>
+        <text>Weekly%20Reading%20Goals</text>
+      </controlProperties>
+    </control>
+    <control controlID="9" controlTypeID="com.balsamiq.mockups::BarChart" x="216" y="215" w="-1" h="-1" measuredW="187" measuredH="175" zOrder="3" locked="false" isInGroup="-1"/>
+    <control controlID="10" controlTypeID="__group__" x="565" y="46" w="295" h="389" measuredW="295" measuredH="389" zOrder="4" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::Canvas" x="0" y="0" w="295" h="389" measuredW="100" measuredH="70" zOrder="0" locked="false" isInGroup="10"/>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::IconLabel" x="27" y="18" w="-1" h="-1" measuredW="48" measuredH="69" zOrder="1" locked="false" isInGroup="10">
+          <controlProperties>
+            <text>Activity</text>
+          </controlProperties>
+        </control>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::IconLabel" x="115" y="17" w="-1" h="-1" measuredW="48" measuredH="69" zOrder="2" locked="false" isInGroup="10">
+          <controlProperties>
+            <text>Goals</text>
+          </controlProperties>
+        </control>
+        <control controlID="3" controlTypeID="com.balsamiq.mockups::IconLabel" x="191" y="17" w="-1" h="-1" measuredW="73" measuredH="69" zOrder="3" locked="false" isInGroup="10">
+          <controlProperties>
+            <text>Prescription</text>
+          </controlProperties>
+        </control>
+        <control controlID="4" controlTypeID="com.balsamiq.mockups::HRule" x="0" y="97" w="295" h="-1" measuredW="100" measuredH="5" zOrder="4" locked="false" isInGroup="10"/>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="17" controlTypeID="__group__" x="623" y="215" w="151" h="126" measuredW="151" measuredH="126" zOrder="5" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::HSlider" x="0" y="0" w="151" h="-1" measuredW="33" measuredH="11" zOrder="0" locked="false" isInGroup="17"/>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::HSlider" x="0" y="20" w="151" h="-1" measuredW="33" measuredH="11" zOrder="1" locked="false" isInGroup="17"/>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::HSlider" x="0" y="40" w="151" h="-1" measuredW="33" measuredH="11" zOrder="2" locked="false" isInGroup="17"/>
+        <control controlID="3" controlTypeID="com.balsamiq.mockups::HSlider" x="0" y="65" w="151" h="-1" measuredW="33" measuredH="11" zOrder="3" locked="false" isInGroup="17"/>
+        <control controlID="4" controlTypeID="com.balsamiq.mockups::HSlider" x="0" y="89" w="151" h="-1" measuredW="33" measuredH="11" zOrder="4" locked="false" isInGroup="17"/>
+        <control controlID="5" controlTypeID="com.balsamiq.mockups::HSlider" x="0" y="115" w="151" h="-1" measuredW="33" measuredH="11" zOrder="5" locked="false" isInGroup="17"/>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="18" controlTypeID="com.balsamiq.mockups::Button" x="658" y="369" w="-1" h="-1" measuredW="108" measuredH="27" zOrder="6" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Save%20Changes</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>
