@@ -125,7 +125,8 @@ window.require.register("config", function(exports, require, module) {
 
   Config = {
     categorizerEndpoint: "http://gentle-mesa-7611.herokuapp.com/categorize.json",
-    simplifierEndpoint: "http://gentle-mesa-7611.herokuapp.com/simplify.json"
+    simplifierEndpoint: "http://gentle-mesa-7611.herokuapp.com/simplify.json",
+    newscatEndpoint: "http://calm-thicket-4369.herokuapp.com/categorize.json"
   };
 
   module.exports = Config;
@@ -152,7 +153,7 @@ window.require.register("controllers/base/controller", function(exports, require
   
 });
 window.require.register("controllers/home-controller", function(exports, require, module) {
-  var BackgroundIndexView, CategorizerService, ChromeService, Controller, HomeController, ReadabilityService, ReadingScore, _ref,
+  var BackgroundIndexView, CategorizerService, ChromeService, Controller, HomeController, NewscatService, ReadabilityService, ReadingScore, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -166,6 +167,8 @@ window.require.register("controllers/home-controller", function(exports, require
 
   ReadabilityService = require('services/readability-service');
 
+  NewscatService = require('services/newscat-service');
+
   ReadingScore = require('lib/reading-score');
 
   module.exports = HomeController = (function(_super) {
@@ -178,8 +181,7 @@ window.require.register("controllers/home-controller", function(exports, require
 
     HomeController.services = {
       chromeService: new ChromeService,
-      categorizerService: new CategorizerService,
-      readabilityService: new ReadabilityService
+      newscatService: new NewscatService
     };
 
     HomeController.prototype.initialize = function() {
@@ -941,6 +943,56 @@ window.require.register("services/chrome-service", function(exports, require, mo
     };
 
     return ChromeService;
+
+  })(Service);
+  
+});
+window.require.register("services/newscat-service", function(exports, require, module) {
+  var Config, NewscatService, ReadingScore, Service, utils,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  utils = require('lib/utils');
+
+  Config = require('config');
+
+  Service = require('services/base/service');
+
+  ReadingScore = require('lib/reading-score');
+
+  module.exports = NewscatService = (function(_super) {
+    __extends(NewscatService, _super);
+
+    function NewscatService() {
+      NewscatService.__super__.constructor.apply(this, arguments);
+      this.subscribeEvent('add:PageVisit', this.categorize);
+    }
+
+    NewscatService.prototype.categorize = function(pageVisit) {
+      var pageUrl;
+
+      pageUrl = pageVisit.attributes.url;
+      if (pageUrl === null) {
+        return;
+      }
+      console.log("sending " + pageUrl + " to newscat for nomz");
+      return $.ajax({
+        url: Config.newscatEndpoint + ("?url=" + pageUrl)
+      }).done(function(data) {
+        return pageVisit.save({
+          category: data['best-category'],
+          title: data.title,
+          content: data.content,
+          wordCount: data.word_count,
+          readingScore: (new ReadingScore($(data.content).text())).fleschKincaid()
+        });
+      }).fail(function(data) {
+        console.log("Ajax request failed");
+        return console.log(data);
+      });
+    };
+
+    return NewscatService;
 
   })(Service);
   

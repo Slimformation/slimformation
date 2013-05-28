@@ -3,14 +3,16 @@ BackgroundIndexView = require 'views/background/index-view'
 ChromeService = require 'services/chrome-service'
 CategorizerService = require 'services/categorizer-service'
 ReadabilityService = require 'services/readability-service'
+NewscatService = require 'services/newscat-service'
 ReadingScore = require 'lib/reading-score'
 
 module.exports = class HomeController extends Controller
   # hardcoded loading of services; maybe there's a better way
   @services =
     chromeService: new ChromeService
-    categorizerService: new CategorizerService
-    readabilityService: new ReadabilityService
+    #categorizerService: new CategorizerService
+    #readabilityService: new ReadabilityService
+    newscatService: new NewscatService
 
   initialize: ->
     # publish a new event, to register a listener for the chrome event
