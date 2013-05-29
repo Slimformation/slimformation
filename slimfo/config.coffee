@@ -3,8 +3,8 @@ exports.config =
   files:
     javascripts:
       joinTo:
-        'javascripts/content-script.js': /^app[\\/](?=content_scripts)/
-        'javascripts/app.js': /^app/
+        'javascripts/content-scripts.js': /^app(\/|\\)content-scripts/
+        'javascripts/app.js': /^app(\/|\\)(?!content-scripts)/
         'javascripts/vendor.js': /^vendor/
         'test/javascripts/test.js': /^test[\\/](?!vendor)/
         'test/javascripts/test-vendor.js': /^test[\\/](?=vendor)/

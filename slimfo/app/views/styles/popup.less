@@ -1,0 +1,119 @@
+body {
+  width: 420px;
+}
+
+#activity-chart-container {
+  text-align: center;
+}
+
+#popup-main-container {
+  height: 450px;
+}
+
+#chart svg {
+  height: 400px;
+}
+
+#chart-goals svg {
+  height: 80px;
+}
+
+#recent-page-visits {
+ width: 400px;
+ overflow-y: scroll;
+ overflow-x: hidden;
+ padding: 25px;
+ display: block;
+
+ td {
+  width: 200px;
+ }
+}
+
+.navbar {
+  .navbar-inner { padding-bottom: 10px; }
+
+  .nav{ padding-left: 50px; }
+  li {
+    display: inline-block;
+    line-height: 50px;
+
+    &.activity {
+      background: url('/public/images/activity.png') center no-repeat;
+      background-position: 25px 25px;
+      background-size: 25px 25px;
+      padding-right: 45px;
+
+      a {
+        position: relative;
+        top: 30px;
+      }
+    }
+
+    &.goals {
+      background: url('/public/images/goals.png') center no-repeat;
+      background-position: 20px 25px;
+      background-size: 25px 25px;
+      padding-right: 45px;
+
+      a {
+        position: relative;
+        top: 30px;
+      }
+    }
+
+    &.prescription {
+      background: url('/public/images/prescription.png') center no-repeat;
+      background-position: 40px 25px;
+      background-size: 25px 25px;
+      padding-right: 20px;
+
+      a {
+        position: relative;
+        top: 30px;
+      }
+    }
+  }
+}
+
+#goals-chart-container {
+  padding: 25px;
+}
+
+.chart { height: 300px; }
+
+.chart div {
+  font: 10px sans-serif;
+  background-color: tomato;
+  text-align: right;
+  padding: 3px;
+  margin: 1px;
+  color: white;
+}
+
+.navbar .nav > li > a { padding: 8px 10px 10px; }
+
+.span12 {color: black;}
+
+
+.slider-selection {
+  background: #bbb;
+}
+
+.slider-handle {
+  opacity: 1;
+}
+
+
+.cat-cell {
+  width: 50px;
+}
+
+.slider-cell {
+  width: 100px;
+}
+
+.goals-slider {
+}
+
+

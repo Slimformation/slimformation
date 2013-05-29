@@ -1,6 +1,11 @@
+# Public folder is all compiled
 slimfo/public/
-slimfo/tmp/
+
+# NPM packages folder.
 slimfo/node_modules/
+
+# Brunch folder for temporary files.
+slimfo/tmp/
 
 *.sw[op]
 **/*.sw[op]

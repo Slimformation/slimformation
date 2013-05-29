@@ -3,7 +3,7 @@
   "description": "This extension helps you be more conscious about your information consumption.",
   "version": "0.0.1",
   "manifest_version": 2,
-  
+
   "background" : {
     "page" : "public/background.html"
   },
@@ -20,8 +20,13 @@
   "content_scripts": [
   {
     "matches": ["http://*/*"],
-    "js": ["public/javascripts/content-script.js"],
-    "run_at": "document_idle"
+    "js": ["public/javascripts/content-scripts.js","public/javascripts/inject.js"],
+    "run_at": "document_start"
+  },
+  {
+    "matches": ["https://*/*"],
+    "js": ["public/javascripts/content-scripts.js","public/javascripts/inject.js"],
+    "run_at": "document_start"
   }
   ],
 
@@ -32,6 +37,8 @@
   },
 
   "permissions": [
-    "tabs"
+    "tabs",
+    "http://*/*",
+    "https://*/*"
   ]
 }
