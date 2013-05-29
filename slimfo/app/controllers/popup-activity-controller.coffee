@@ -14,7 +14,7 @@ module.exports = class PopupActivityController extends PopupSiteController
     activityChartView = new ActivityChartView(collection: npv, autoRender: true, container: @el, region: 'activity-chart')
     activityChartView.initChart()
 
-  #  newPageVisitsView = new NewPageVisitsView(collection: npv, region: 'recent-page-visits')
+    newPageVisitsView = new NewPageVisitsView(collection: npv, region: 'recent-page-visits')
 
   # newPageVisits: ->
   #   npv = new NewPageVisits
