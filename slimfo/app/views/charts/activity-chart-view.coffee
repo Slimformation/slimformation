@@ -8,14 +8,6 @@ module.exports = class ActivityChartView extends View
   autoAttach: true
   template: template
 
-  politics_color = "#F7464A"
-  business_color = "#E2EAE9"
-  technology_color = "#D4CCC5"
-  sports_color = "#ccc"
-  science_color = "#9c9c9c"
-  entertainment_color = "#000"
-  other_color = "#c30000"
-
   parsePageVisits: ->
     page_visit_count = @collection.length
     page_visits = @collection.models

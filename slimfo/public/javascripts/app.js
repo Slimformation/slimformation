@@ -1135,8 +1135,6 @@ window.require.register("views/charts/activity-chart-view", function(exports, re
   template = require('views/templates/charts/activity-chart');
 
   module.exports = ActivityChartView = (function(_super) {
-    var business_color, entertainment_color, other_color, politics_color, science_color, sports_color, technology_color;
-
     __extends(ActivityChartView, _super);
 
     function ActivityChartView() {
@@ -1151,20 +1149,6 @@ window.require.register("views/charts/activity-chart-view", function(exports, re
     ActivityChartView.prototype.autoAttach = true;
 
     ActivityChartView.prototype.template = template;
-
-    politics_color = "#F7464A";
-
-    business_color = "#E2EAE9";
-
-    technology_color = "#D4CCC5";
-
-    sports_color = "#ccc";
-
-    science_color = "#9c9c9c";
-
-    entertainment_color = "#000";
-
-    other_color = "#c30000";
 
     ActivityChartView.prototype.parsePageVisits = function() {
       var counter, page_visit, page_visit_count, page_visits, page_visits_dict, _i, _len;
