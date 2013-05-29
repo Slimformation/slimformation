@@ -1,3 +1,7 @@
+slimfo/public/
+slimfo/tmp/
+slimfo/node_modules/
+
 *.sw[op]
 **/*.sw[op]
 .DS_store
