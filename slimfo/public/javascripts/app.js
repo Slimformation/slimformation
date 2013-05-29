@@ -1422,9 +1422,12 @@ window.require.register("views/popup/goals-view", function(exports, require, mod
 
     GoalsView.prototype.autoRender = true;
 
+    GoalsView.prototype.autoAttach = true;
+
     GoalsView.prototype.template = template;
 
     GoalsView.prototype.regions = {
+      '#goals-header-container': 'goals-header',
       '#goals-chart-container': 'goals-chart'
     };
 
@@ -1640,7 +1643,7 @@ window.require.register("views/templates/popup/goals", function(exports, require
     
 
 
-    return "<div id=\"goals-chart-container\" class=\"container\">\n  <h1>Your Goals</h1>\n</div>\n";
+    return "<div id=\"goals-header-container\" class=\"container\" style=\"margin:3%;\">\n  <button class=\"btn btn-small btn-inverse\" href=\"#\" id=\"edit-goals\" style=\"float:right\">\n    Edit Goals\n  </button>\n  <b style=\"font-size:24px\">Weekly Reading Goals</b>\n</div>\n\n<div id=\"goals-chart-container\" class=\"container\">\n</div>\n";
     });
 });
 window.require.register("views/templates/popup/header", function(exports, require, module) {
