@@ -1447,15 +1447,19 @@ window.require.register("views/popup/goals-view", function(exports, require, mod
       $('#goals-form-container').toggle();
       if ($('#goals-form-container').css('display') === "block") {
         $('#edit-goals').text('Save Goals');
+        $('.slider-inner').slider({
+          min: 0,
+          max: 100,
+          step: 1,
+          orientation: 'horizontal',
+          value: 40,
+          handle: 'round',
+          tooltip: 'hide'
+        });
       }
       if ($('#goals-form-container').css('display') === "none") {
         return $('#edit-goals').text('Edit Goals');
       }
-    };
-
-    GoalsView.prototype.showChart = function() {
-      $('#goals-chart-container').toggle();
-      return $('#goals-form-contrainer').toggle();
     };
 
     GoalsView.prototype.regions = {
@@ -1675,7 +1679,7 @@ window.require.register("views/templates/popup/goals", function(exports, require
     
 
 
-    return "<div id=\"goals-header-container\" class=\"container\" style=\"margin:3%;\">\n  <button class=\"btn btn-mini btn-inverse\" href=\"#\" id=\"edit-goals\" style=\"float:right\">\n    Edit Goals\n  </button>\n  <b style=\"font-size:24px\">Weekly Reading Goals</b>\n</div>\n\n<div id=\"goals-chart-container\" class=\"container\">\n</div>\n\n<div id=\"goals-form-container\" class=\"container\" style=\"display:none;margin:3%;\">\n  <div id=\"all-sliders\" style=\"margin:10%\">\n    <div class=\"progress\">\n      <div class=\"bar\" style=\"width:30%;\"></div>\n      <div class=\"bar bar-warning\" style=\"width:20%;\"></div>\n    </div>\n  </div>\n  \n</div>\n";
+    return "<div id=\"goals-header-container\" class=\"container\" style=\"margin:3%;\">\n  <button class=\"btn btn-mini btn-inverse\" href=\"#\" id=\"edit-goals\" style=\"float:right\">\n    Edit Goals\n  </button>\n  <b style=\"font-size:24px\">Weekly Reading Goals</b>\n</div>\n\n<div id=\"goals-chart-container\" class=\"container\">\n</div>\n\n<div id=\"goals-form-container\" class=\"container\" style=\"display:none;margin:3%;\">\n\n  <div id=\"all-sliders\" style=\"margin:10%\">\n    <div class=\"progress\">\n      <div class=\"bar\" style=\"width:30%;\"></div>\n      <div class=\"bar bar-warning\" style=\"width:20%;\"></div>\n      <div class=\"bar bar-error\" style=\"width:10%;\"></div>\n      <div class=\"bar bar-info\" style=\"width:15%;\"></div>\n      <div class=\"bar bar-inverse\" style=\"width:5%;\"></div>\n    </div>\n    <table class=\"table\" id=\"sliders-table\">\n      <thead>\n        <tr>\n          <th></th>\n          <th></th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr>\n          <td class=\"cat-cell\">\n            Politics\n          </td>\n          <td class=\"slider-cell\">\n            <div id=\"slider-1\" class=\"goals-slider\">\n              <div class=\"slider-inner\"></div>\n            </div>\n          </td>\n        </tr>\n        <tr>\n          <td class=\"cat-cell\">\n            Business\n          </td>\n          <td class=\"slider-cell\">\n            <div id=\"slider-1\" class=\"goals-slider\">\n              <div class=\"slider-inner\"></div>\n            </div>\n          </td>\n        </tr>\n        <tr>\n          <td class=\"cat-cell\">\n            Technology\n          </td>\n          <td class=\"slider-cell\">\n            <div id=\"slider-1\" class=\"goals-slider\">\n              <div class=\"slider-inner\"></div>\n            </div>\n          </td>\n        </tr>\n        <tr>\n          <td class=\"cat-cell\">\n            Sports\n          </td>\n          <td class=\"slider-cell\">\n            <div id=\"slider-1\" class=\"goals-slider\">\n              <div class=\"slider-inner\"></div>\n            </div>\n          </td>\n        </tr>\n        <tr>\n          <td class=\"cat-cell\">\n            Science\n          </td>\n          <td class=\"slider-cell\">\n            <div id=\"slider-1\" class=\"goals-slider\">\n              <div class=\"slider-inner\"></div>\n            </div>\n          </td>\n        </tr>\n        <tr>\n          <td class=\"cat-cell\">\n            Entertainment\n          </td>\n          <td class=\"slider-cell\">\n            <div id=\"slider-1\" class=\"goals-slider\">\n              <div class=\"slider-inner\"></div>\n            </div>\n          </td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n  \n</div>\n";
     });
 });
 window.require.register("views/templates/popup/header", function(exports, require, module) {
