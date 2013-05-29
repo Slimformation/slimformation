@@ -1,9 +1,0 @@
-.navbar li {
-  display: inline-block;
-}
-
-.navbar li.activity {
-  background: url('../../assets/images/activity.png');
-  background-size: 30px 30px;
-  background-position: center;
-}
