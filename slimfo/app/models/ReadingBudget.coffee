@@ -1,6 +1,6 @@
 Model = require 'models/base/model'
 
-modules.exports = class ReadingBudget extends Model
+module.exports = class ReadingBudget extends Model
   created_at: null
   updated_at: null
 
