@@ -14,7 +14,8 @@ module.exports = class ActivityChartView extends View
     page_visits_dict = { 'politics': 0, 'business': 0, 'technology': 0, 'sports': 0, 'science': 0, 'entertainment': 0, 'other': 0 }
 
     for page_visit in page_visits
-      counter = (page_visit.attributes.updated_at - page_visit.attributes.created_at)/1000
+      console.log page_visit.attributes
+      counter = (page_visit.attributes.updated_at - page_visit.attributes.created_at)/60000
       page_visits_dict[page_visit.attributes.category] += counter
 
     return page_visits_dict
