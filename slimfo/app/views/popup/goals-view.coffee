@@ -1,5 +1,6 @@
 View = require 'views/base/view'
 template = require 'views/templates/popup/goals'
+Chaplin = require 'chaplin'
 
 module.exports = class GoalsView extends View
   className: 'popup-goals'
@@ -9,6 +10,7 @@ module.exports = class GoalsView extends View
 
   initialize: ->
     @delegate 'click', '#edit-goals', @showForm
+    Chaplin.mediator.subscribe 'user-reading-goals-empty', @showForm
 
   showForm: ->
     $('#goals-chart-container').toggle()
