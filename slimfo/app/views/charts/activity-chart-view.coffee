@@ -8,27 +8,47 @@ module.exports = class ActivityChartView extends View
   autoAttach: true
   template: template
 
-  # initialize: ->
-  #   super
-    # '!region:show' is fired on this view after @attach is executed
-    # Chaplin.mediator.subscribe '!region:show', @initChart, @
+  parsePageVisits: ->
+    page_visit_count = @collection.length
+    page_visits = @collection.models
+    page_visits_dict = { 'politics': [], 'business': [], 'technology': [], 'sports': [], 'science': [], 'entertainment': [], 'other': [] }
 
-  # render: ->
-  #   super
-  #   @initChart()
-  #   @
+    for page_visit in page_visits
+      console.log page_visit.attributes.category
+      page_visits_dict[page_visit.attributes.category].push(page_visit.attributes)
+
+    console.log page_visits_dict
+    return page_visits_dict
 
   initChart: ->
+    console.log 'init chart'
+    window.npv = @collection
+    page_visits_by_category = @parsePageVisits()
+
+    console.log page_visits_by_category
     ctx = document.getElementById('activity-chart').getContext("2d")
+
     data = [
-        value: 30
+        value: page_visits_by_category['politics'].length
         color:"#F7464A"
       ,
-        value : 50
+        value: page_visits_by_category['business'].length
         color : "#E2EAE9"
       ,
-        value : 100
+        value : page_visits_by_category['technology'].length
         color : "#D4CCC5"
+      ,
+        value : page_visits_by_category['sports'].length
+        color : "#ccc"
+      ,
+        value : page_visits_by_category['science'].length
+        color : "#9c9c9c"
+      ,
+        value : page_visits_by_category['entertainment'].length
+        color : "#000"
+      ,
+        value : page_visits_by_category['other'].length
+        color : "#c30000"
     ]
     console.log ctx
     activityChart = new Chart(ctx).Doughnut(data)

@@ -8,7 +8,7 @@ module.exports = class NewscatService extends Service
     super
     # listen to PageVisit add event
     @subscribeEvent 'add:PageVisit', @categorize
- 
+
   categorize: (pageVisit) ->
     pageUrl = pageVisit.attributes.url
     return if pageUrl == null
@@ -21,8 +21,8 @@ module.exports = class NewscatService extends Service
         title: data.title
         content: data.content
         wordCount: data.word_count
-        readingScore: (new ReadingScore($(data.content).text())).fleschKincaid()        
+        readingScore: (new ReadingScore($(data.content).text())).fleschKincaid()
     ).fail((data) ->
       console.log "Ajax request failed"
       console.log data
-    )   
+    )

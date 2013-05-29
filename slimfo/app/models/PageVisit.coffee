@@ -27,7 +27,7 @@ module.exports = class PageVisit extends Model
   defaults:
     created_at: (new Date()).getTime()
     updated_at: (new Date()).getTime()
-    category: "Other"
+    category: "other"
 
   validate: (attrs, options) ->
     isChromeUrl = /^chrome/i.test attrs.url

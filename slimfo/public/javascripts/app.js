@@ -227,14 +227,15 @@ window.require.register("controllers/popup-activity-controller", function(export
       this.view = new PopupActivityView({
         region: 'popup-main'
       });
+      npv = new NewPageVisits;
+      npv.fetch();
       activityChartView = new ActivityChartView({
+        collection: npv,
         autoRender: true,
         container: this.el,
         region: 'activity-chart'
       });
       activityChartView.initChart();
-      npv = new NewPageVisits;
-      npv.fetch();
       return newPageVisitsView = new NewPageVisitsView({
         collection: npv,
         region: 'recent-page-visits'
@@ -724,7 +725,7 @@ window.require.register("models/PageVisit", function(exports, require, module) {
     PageVisit.prototype.defaults = {
       created_at: (new Date()).getTime(),
       updated_at: (new Date()).getTime(),
-      category: "Other"
+      category: "other"
     };
 
     PageVisit.prototype.validate = function(attrs, options) {
@@ -1149,20 +1150,59 @@ window.require.register("views/charts/activity-chart-view", function(exports, re
 
     ActivityChartView.prototype.template = template;
 
-    ActivityChartView.prototype.initChart = function() {
-      var activityChart, ctx, data;
+    ActivityChartView.prototype.parsePageVisits = function() {
+      var page_visit, page_visit_count, page_visits, page_visits_dict, _i, _len;
 
+      page_visit_count = this.collection.length;
+      page_visits = this.collection.models;
+      page_visits_dict = {
+        'politics': [],
+        'business': [],
+        'technology': [],
+        'sports': [],
+        'science': [],
+        'entertainment': [],
+        'other': []
+      };
+      for (_i = 0, _len = page_visits.length; _i < _len; _i++) {
+        page_visit = page_visits[_i];
+        console.log(page_visit.attributes.category);
+        page_visits_dict[page_visit.attributes.category].push(page_visit.attributes);
+      }
+      console.log(page_visits_dict);
+      return page_visits_dict;
+    };
+
+    ActivityChartView.prototype.initChart = function() {
+      var activityChart, ctx, data, page_visits_by_category;
+
+      console.log('init chart');
+      window.npv = this.collection;
+      page_visits_by_category = this.parsePageVisits();
+      console.log(page_visits_by_category);
       ctx = document.getElementById('activity-chart').getContext("2d");
       data = [
         {
-          value: 30,
+          value: page_visits_by_category['politics'].length,
           color: "#F7464A"
         }, {
-          value: 50,
+          value: page_visits_by_category['business'].length,
           color: "#E2EAE9"
         }, {
-          value: 100,
+          value: page_visits_by_category['technology'].length,
           color: "#D4CCC5"
+        }, {
+          value: page_visits_by_category['sports'].length,
+          color: "#ccc"
+        }, {
+          value: page_visits_by_category['science'].length,
+          color: "#9c9c9c"
+        }, {
+          value: page_visits_by_category['entertainment'].length,
+          color: "#000"
+        }, {
+          value: page_visits_by_category['other'].length,
+          color: "#c30000"
         }
       ];
       console.log(ctx);
