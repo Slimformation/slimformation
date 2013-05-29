@@ -11,7 +11,7 @@ module.exports = class ActivityChartView extends View
   parsePageVisits: ->
     page_visit_count = @collection.length
     page_visits = @collection.models
-    page_visits_dict = { 'Politics': 0, 'business': 0, 'technology': 0, 'sports': 0, 'science': 0, 'entertainment': 0, 'other': 0 }
+    page_visits_dict = { 'politics': 0, 'business': 0, 'technology': 0, 'sports': 0, 'science': 0, 'entertainment': 0, 'other': 0 }
 
     for page_visit in page_visits
       counter = (page_visit.attributes.updated_at - page_visit.attributes.created_at)/1000
@@ -21,6 +21,7 @@ module.exports = class ActivityChartView extends View
 
   initChart: ->
     page_visits_by_category = @parsePageVisits()
+    console.log page_visits_by_category
 
     nv.addGraph(->
       chart = nv.models.pieChart().x((d) -> return d.key).values((d) -> return d).showLabels(true).color(d3.scale.category10().range()).labelThreshold(.05).donut(true)
