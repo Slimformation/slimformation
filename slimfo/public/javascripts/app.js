@@ -1166,47 +1166,50 @@ window.require.register("views/charts/activity-chart-view", function(exports, re
       };
       for (_i = 0, _len = page_visits.length; _i < _len; _i++) {
         page_visit = page_visits[_i];
-        console.log(page_visit.attributes.category);
         page_visits_dict[page_visit.attributes.category].push(page_visit.attributes);
       }
-      console.log(page_visits_dict);
       return page_visits_dict;
     };
 
     ActivityChartView.prototype.initChart = function() {
-      var activityChart, ctx, data, page_visits_by_category;
+      var page_visits_by_category;
 
-      console.log('init chart');
-      window.npv = this.collection;
       page_visits_by_category = this.parsePageVisits();
-      console.log(page_visits_by_category);
-      ctx = document.getElementById('activity-chart').getContext("2d");
-      data = [
-        {
-          value: page_visits_by_category['politics'].length,
-          color: "#F7464A"
-        }, {
-          value: page_visits_by_category['business'].length,
-          color: "#E2EAE9"
-        }, {
-          value: page_visits_by_category['technology'].length,
-          color: "#D4CCC5"
-        }, {
-          value: page_visits_by_category['sports'].length,
-          color: "#ccc"
-        }, {
-          value: page_visits_by_category['science'].length,
-          color: "#9c9c9c"
-        }, {
-          value: page_visits_by_category['entertainment'].length,
-          color: "#000"
-        }, {
-          value: page_visits_by_category['other'].length,
-          color: "#c30000"
-        }
-      ];
-      console.log(ctx);
-      return activityChart = new Chart(ctx).Doughnut(data);
+      return nv.addGraph(function() {
+        var chart, data;
+
+        chart = nv.models.pieChart().x(function(d) {
+          return d.key;
+        }).values(function(d) {
+          return d;
+        }).showLabels(true).color(d3.scale.category10().range()).labelThreshold(.05).donut(true);
+        data = [
+          {
+            key: "Politics",
+            y: page_visits_by_category['politics'].length
+          }, {
+            key: "Business",
+            y: page_visits_by_category['business'].length
+          }, {
+            key: "Technology",
+            y: page_visits_by_category['technology'].length
+          }, {
+            key: "Sports",
+            y: page_visits_by_category['sports'].length
+          }, {
+            key: "Science",
+            y: page_visits_by_category['science'].length
+          }, {
+            key: "Entertainment",
+            y: page_visits_by_category['entertainment'].length
+          }, {
+            key: "Other",
+            y: page_visits_by_category['other'].length
+          }
+        ];
+        d3.select('#chart svg').datum([data]).transition().duration(1200).call(chart);
+        return chart;
+      });
     };
 
     return ActivityChartView;
@@ -1620,7 +1623,7 @@ window.require.register("views/templates/popup/activity", function(exports, requ
     
 
 
-    return "<div id=\"activity-chart-container\" class=\"container\">\n  <canvas id=\"activity-chart\" width=\"250\" height=\"250\"></canvas>\n</div>\n<div id=\"recent-page-visits\"></div>\n";
+    return "<div id=\"activity-chart-container\" class=\"container\">\n  <div id=\"chart\">\n    <svg></svg>\n  </div>\n</div>\n<div id=\"recent-page-visits\"></div>\n";
     });
 });
 window.require.register("views/templates/popup/footer", function(exports, require, module) {
