@@ -8,44 +8,28 @@ module.exports = class GoalsChartView extends View
   autoAttach: true
   template: template
 
-  # initialize: ->
-  #   super
-    # '!region:show' is fired on this view after @attach is executed
-    # Chaplin.mediator.subscribe '!region:show', @initChart, @
-
-  # render: ->
-  #   super
-  #   @initChart()
-  #   @
-
   initChart: ->
-    # data = [
-    #     labels: ["January","February","March","April","May","June","July"],
-    #     datasets: [
-    #       {
-    #         fillColor : "rgba(220,220,220,0.5)"
-    #         strokeColor : "rgba(220,220,220,1)"
-    #         data : [65,59,90,81,56,55,40]
-    #       },
-    #       {
-    #         fillColor : "rgba(151,187,205,0.5)"
-    #         strokeColor : "rgba(151,187,205,1)"
-    #         pointColor : "rgba(151,187,205,1)"
-    #         pointStrokeColor : "#fff"
-    #         data : [28,48,40,19,96,27,100]
-    #       }
-    #     ]
-    # ]
-    # console.log ctx
-    # goalsChart = new Chart(ctx).Bar(data)
-    # ctx = document.getElementById('goals-chart').getContext("2d")
-    data = [4, 8, 15, 16, 23, 32]
-    labels = {4: 'Food', 8: 'Politics', 15: 'Science', 16: 'Tech', 23: 'Business', 32: 'Sports'}
+    politics_data = {
+      'title': 'Politics',
+      'subtitle': 'Reading goals (hrs)',
+      'ranges': [150, 225, 300],
+      'measures': [200],
+      'markers': [250]
+    }
 
-    chart = d3.select('#goals-chart-container').append('div').attr('class', 'chart')
+    business_data = {
+      'title': 'Business',
+      'subtitle': 'Reading goals (hrs)',
+      'ranges': [25, 10, 100],
+      'measures': [70],
+      'markers': [80]
+    }
 
-    chart.selectAll("div")
-        .data(data)
-      .enter().append("div")
-        .style("width", (d) -> d * 10 + "px")
-        .text((d) -> labels[d] )
+    nv.addGraph(->
+      chart = nv.models.bulletChart()
+
+      d3.select('#politics').datum(politics_data).transition().duration(1000).call(chart)
+
+      return chart
+      )
+
