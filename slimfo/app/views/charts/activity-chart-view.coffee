@@ -8,13 +8,22 @@ module.exports = class ActivityChartView extends View
   autoAttach: true
   template: template
 
+  politics_color = "#F7464A"
+  business_color = "#E2EAE9"
+  technology_color = "#D4CCC5"
+  sports_color = "#ccc"
+  science_color = "#9c9c9c"
+  entertainment_color = "#000"
+  other_color = "#c30000"
+
   parsePageVisits: ->
     page_visit_count = @collection.length
     page_visits = @collection.models
-    page_visits_dict = { 'politics': [], 'business': [], 'technology': [], 'sports': [], 'science': [], 'entertainment': [], 'other': [] }
+    page_visits_dict = { 'politics': 0, 'business': 0, 'technology': 0, 'sports': 0, 'science': 0, 'entertainment': 0, 'other': 0 }
 
     for page_visit in page_visits
-      page_visits_dict[page_visit.attributes.category].push(page_visit.attributes)
+      counter = (page_visit.attributes.updated_at - page_visit.attributes.created_at)/1000
+      page_visits_dict[page_visit.attributes.category] += counter
 
     return page_visits_dict
 
@@ -27,31 +36,31 @@ module.exports = class ActivityChartView extends View
       data = [
         {
           key: "Politics",
-          y: page_visits_by_category['politics'].length
+          y: page_visits_by_category['politics']
         },
         {
           key: "Business",
-          y: page_visits_by_category['business'].length
+          y: page_visits_by_category['business']
         },
         {
           key: "Technology",
-          y: page_visits_by_category['technology'].length
+          y: page_visits_by_category['technology']
         },
         {
           key: "Sports",
-          y: page_visits_by_category['sports'].length
+          y: page_visits_by_category['sports']
         },
         {
           key: "Science",
-          y: page_visits_by_category['science'].length
+          y: page_visits_by_category['science']
         },
         {
           key: "Entertainment",
-          y: page_visits_by_category['entertainment'].length
+          y: page_visits_by_category['entertainment']
         },
         {
           key: "Other",
-          y: page_visits_by_category['other'].length
+          y: page_visits_by_category['other']
         }
       ]
 
