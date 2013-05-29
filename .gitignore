@@ -1,3 +1,12 @@
+# Public folder is all compiled
+slimfo/public/
+
+# NPM packages folder.
+slimfo/node_modules/
+
+# Brunch folder for temporary files.
+slimfo/tmp/
+
 *.sw[op]
 **/*.sw[op]
 .DS_store

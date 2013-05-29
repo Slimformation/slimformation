@@ -1135,8 +1135,6 @@ window.require.register("views/charts/activity-chart-view", function(exports, re
   template = require('views/templates/charts/activity-chart');
 
   module.exports = ActivityChartView = (function(_super) {
-    var business_color, entertainment_color, other_color, politics_color, science_color, sports_color, technology_color;
-
     __extends(ActivityChartView, _super);
 
     function ActivityChartView() {
@@ -1152,27 +1150,13 @@ window.require.register("views/charts/activity-chart-view", function(exports, re
 
     ActivityChartView.prototype.template = template;
 
-    politics_color = "#F7464A";
-
-    business_color = "#E2EAE9";
-
-    technology_color = "#D4CCC5";
-
-    sports_color = "#ccc";
-
-    science_color = "#9c9c9c";
-
-    entertainment_color = "#000";
-
-    other_color = "#c30000";
-
     ActivityChartView.prototype.parsePageVisits = function() {
       var counter, page_visit, page_visit_count, page_visits, page_visits_dict, _i, _len;
 
       page_visit_count = this.collection.length;
       page_visits = this.collection.models;
       page_visits_dict = {
-        'politics': 0,
+        'Politics': 0,
         'business': 0,
         'technology': 0,
         'sports': 0,
@@ -1189,36 +1173,44 @@ window.require.register("views/charts/activity-chart-view", function(exports, re
     };
 
     ActivityChartView.prototype.initChart = function() {
-      var activityChart, ctx, data, page_visits_by_category;
+      var page_visits_by_category;
 
-      window.npv = this.collection;
       page_visits_by_category = this.parsePageVisits();
-      ctx = document.getElementById('activity-chart').getContext("2d");
-      data = [
-        {
-          value: page_visits_by_category['politics'],
-          color: politics_color
-        }, {
-          value: page_visits_by_category['business'],
-          color: business_color
-        }, {
-          value: page_visits_by_category['technology'],
-          color: technology_color
-        }, {
-          value: page_visits_by_category['sports'],
-          color: sports_color
-        }, {
-          value: page_visits_by_category['science'],
-          color: science_color
-        }, {
-          value: page_visits_by_category['entertainment'],
-          color: entertainment_color
-        }, {
-          value: page_visits_by_category['other'],
-          color: other_color
-        }
-      ];
-      return activityChart = new Chart(ctx).Doughnut(data);
+      return nv.addGraph(function() {
+        var chart, data;
+
+        chart = nv.models.pieChart().x(function(d) {
+          return d.key;
+        }).values(function(d) {
+          return d;
+        }).showLabels(true).color(d3.scale.category10().range()).labelThreshold(.05).donut(true);
+        data = [
+          {
+            key: "Politics",
+            y: page_visits_by_category['politics']
+          }, {
+            key: "Business",
+            y: page_visits_by_category['business']
+          }, {
+            key: "Technology",
+            y: page_visits_by_category['technology']
+          }, {
+            key: "Sports",
+            y: page_visits_by_category['sports']
+          }, {
+            key: "Science",
+            y: page_visits_by_category['science']
+          }, {
+            key: "Entertainment",
+            y: page_visits_by_category['entertainment']
+          }, {
+            key: "Other",
+            y: page_visits_by_category['other']
+          }
+        ];
+        d3.select('#chart svg').datum([data]).transition().duration(1200).call(chart);
+        return chart;
+      });
     };
 
     return ActivityChartView;
@@ -1659,7 +1651,7 @@ window.require.register("views/templates/popup/activity", function(exports, requ
     
 
 
-    return "<div id=\"activity-chart-container\" class=\"container\">\n  <canvas id=\"activity-chart\" width=\"250\" height=\"250\"></canvas>\n</div>\n<div id=\"recent-page-visits\"></div>\n";
+    return "<div id=\"activity-chart-container\" class=\"container\">\n  <div id=\"chart\">\n    <svg></svg>\n  </div>\n</div>\n<div id=\"recent-page-visits\"></div>\n";
     });
 });
 window.require.register("views/templates/popup/footer", function(exports, require, module) {
