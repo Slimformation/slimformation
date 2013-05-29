@@ -1438,6 +1438,26 @@ window.require.register("views/popup/goals-view", function(exports, require, mod
 
     GoalsView.prototype.template = template;
 
+    GoalsView.prototype.initialize = function() {
+      return this.delegate('click', '#edit-goals', this.showForm);
+    };
+
+    GoalsView.prototype.showForm = function() {
+      $('#goals-chart-container').toggle();
+      $('#goals-form-container').toggle();
+      if ($('#goals-form-container').css('display') === "block") {
+        $('#edit-goals').text('Save Goals');
+      }
+      if ($('#goals-form-container').css('display') === "none") {
+        return $('#edit-goals').text('Edit Goals');
+      }
+    };
+
+    GoalsView.prototype.showChart = function() {
+      $('#goals-chart-container').toggle();
+      return $('#goals-form-contrainer').toggle();
+    };
+
     GoalsView.prototype.regions = {
       '#goals-header-container': 'goals-header',
       '#goals-chart-container': 'goals-chart'
@@ -1655,7 +1675,7 @@ window.require.register("views/templates/popup/goals", function(exports, require
     
 
 
-    return "<div id=\"goals-header-container\" class=\"container\" style=\"margin:3%;\">\n  <button class=\"btn btn-small btn-inverse\" href=\"#\" id=\"edit-goals\" style=\"float:right\">\n    Edit Goals\n  </button>\n  <b style=\"font-size:24px\">Weekly Reading Goals</b>\n</div>\n\n<div id=\"goals-chart-container\" class=\"container\">\n</div>\n";
+    return "<div id=\"goals-header-container\" class=\"container\" style=\"margin:3%;\">\n  <button class=\"btn btn-mini btn-inverse\" href=\"#\" id=\"edit-goals\" style=\"float:right\">\n    Edit Goals\n  </button>\n  <b style=\"font-size:24px\">Weekly Reading Goals</b>\n</div>\n\n<div id=\"goals-chart-container\" class=\"container\">\n</div>\n\n<div id=\"goals-form-container\" class=\"container\" style=\"display:none;margin:3%;\">\n  <div id=\"all-sliders\" style=\"margin:10%\">\n    <div class=\"progress\">\n      <div class=\"bar\" style=\"width:30%;\"></div>\n      <div class=\"bar bar-warning\" style=\"width:20%;\"></div>\n    </div>\n  </div>\n  \n</div>\n";
     });
 });
 window.require.register("views/templates/popup/header", function(exports, require, module) {
