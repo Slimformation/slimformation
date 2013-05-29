@@ -1135,6 +1135,8 @@ window.require.register("views/charts/activity-chart-view", function(exports, re
   template = require('views/templates/charts/activity-chart');
 
   module.exports = ActivityChartView = (function(_super) {
+    var business_color, entertainment_color, other_color, politics_color, science_color, sports_color, technology_color;
+
     __extends(ActivityChartView, _super);
 
     function ActivityChartView() {
@@ -1150,23 +1152,38 @@ window.require.register("views/charts/activity-chart-view", function(exports, re
 
     ActivityChartView.prototype.template = template;
 
+    politics_color = "#F7464A";
+
+    business_color = "#E2EAE9";
+
+    technology_color = "#D4CCC5";
+
+    sports_color = "#ccc";
+
+    science_color = "#9c9c9c";
+
+    entertainment_color = "#000";
+
+    other_color = "#c30000";
+
     ActivityChartView.prototype.parsePageVisits = function() {
-      var page_visit, page_visit_count, page_visits, page_visits_dict, _i, _len;
+      var counter, page_visit, page_visit_count, page_visits, page_visits_dict, _i, _len;
 
       page_visit_count = this.collection.length;
       page_visits = this.collection.models;
       page_visits_dict = {
-        'politics': [],
-        'business': [],
-        'technology': [],
-        'sports': [],
-        'science': [],
-        'entertainment': [],
-        'other': []
+        'politics': 0,
+        'business': 0,
+        'technology': 0,
+        'sports': 0,
+        'science': 0,
+        'entertainment': 0,
+        'other': 0
       };
       for (_i = 0, _len = page_visits.length; _i < _len; _i++) {
         page_visit = page_visits[_i];
-        page_visits_dict[page_visit.attributes.category].push(page_visit.attributes);
+        counter = (page_visit.attributes.updated_at - page_visit.attributes.created_at) / 1000;
+        page_visits_dict[page_visit.attributes.category] += counter;
       }
       return page_visits_dict;
     };
@@ -1186,25 +1203,25 @@ window.require.register("views/charts/activity-chart-view", function(exports, re
         data = [
           {
             key: "Politics",
-            y: page_visits_by_category['politics'].length
+            y: page_visits_by_category['politics']
           }, {
             key: "Business",
-            y: page_visits_by_category['business'].length
+            y: page_visits_by_category['business']
           }, {
             key: "Technology",
-            y: page_visits_by_category['technology'].length
+            y: page_visits_by_category['technology']
           }, {
             key: "Sports",
-            y: page_visits_by_category['sports'].length
+            y: page_visits_by_category['sports']
           }, {
             key: "Science",
-            y: page_visits_by_category['science'].length
+            y: page_visits_by_category['science']
           }, {
             key: "Entertainment",
-            y: page_visits_by_category['entertainment'].length
+            y: page_visits_by_category['entertainment']
           }, {
             key: "Other",
-            y: page_visits_by_category['other'].length
+            y: page_visits_by_category['other']
           }
         ];
         d3.select('#chart svg').datum([data]).transition().duration(1200).call(chart);
@@ -1425,9 +1442,32 @@ window.require.register("views/popup/goals-view", function(exports, require, mod
 
     GoalsView.prototype.autoRender = true;
 
+    GoalsView.prototype.autoAttach = true;
+
     GoalsView.prototype.template = template;
 
+    GoalsView.prototype.initialize = function() {
+      return this.delegate('click', '#edit-goals', this.showForm);
+    };
+
+    GoalsView.prototype.showForm = function() {
+      $('#goals-chart-container').toggle();
+      $('#goals-form-container').toggle();
+      if ($('#goals-form-container').css('display') === "block") {
+        $('#edit-goals').text('Save Goals');
+      }
+      if ($('#goals-form-container').css('display') === "none") {
+        return $('#edit-goals').text('Edit Goals');
+      }
+    };
+
+    GoalsView.prototype.showChart = function() {
+      $('#goals-chart-container').toggle();
+      return $('#goals-form-contrainer').toggle();
+    };
+
     GoalsView.prototype.regions = {
+      '#goals-header-container': 'goals-header',
       '#goals-chart-container': 'goals-chart'
     };
 
@@ -1643,7 +1683,7 @@ window.require.register("views/templates/popup/goals", function(exports, require
     
 
 
-    return "<div id=\"goals-chart-container\" class=\"container\">\n  <h1>Your Goals</h1>\n</div>\n";
+    return "<div id=\"goals-header-container\" class=\"container\" style=\"margin:3%;\">\n  <button class=\"btn btn-mini btn-inverse\" href=\"#\" id=\"edit-goals\" style=\"float:right\">\n    Edit Goals\n  </button>\n  <b style=\"font-size:24px\">Weekly Reading Goals</b>\n</div>\n\n<div id=\"goals-chart-container\" class=\"container\">\n</div>\n\n<div id=\"goals-form-container\" class=\"container\" style=\"display:none;margin:3%;\">\n  <div id=\"all-sliders\" style=\"margin:10%\">\n    <div class=\"progress\">\n      <div class=\"bar\" style=\"width:30%;\"></div>\n      <div class=\"bar bar-warning\" style=\"width:20%;\"></div>\n    </div>\n  </div>\n  \n</div>\n";
     });
 });
 window.require.register("views/templates/popup/header", function(exports, require, module) {
