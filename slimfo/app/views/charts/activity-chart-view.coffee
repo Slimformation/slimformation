@@ -14,41 +14,48 @@ module.exports = class ActivityChartView extends View
     page_visits_dict = { 'politics': [], 'business': [], 'technology': [], 'sports': [], 'science': [], 'entertainment': [], 'other': [] }
 
     for page_visit in page_visits
-      console.log page_visit.attributes.category
       page_visits_dict[page_visit.attributes.category].push(page_visit.attributes)
 
-    console.log page_visits_dict
     return page_visits_dict
 
   initChart: ->
-    console.log 'init chart'
-    window.npv = @collection
     page_visits_by_category = @parsePageVisits()
 
-    console.log page_visits_by_category
-    ctx = document.getElementById('activity-chart').getContext("2d")
+    nv.addGraph(->
+      chart = nv.models.pieChart().x((d) -> return d.key).values((d) -> return d).showLabels(true).color(d3.scale.category10().range()).labelThreshold(.05).donut(true)
 
-    data = [
-        value: page_visits_by_category['politics'].length
-        color:"#F7464A"
-      ,
-        value: page_visits_by_category['business'].length
-        color : "#E2EAE9"
-      ,
-        value : page_visits_by_category['technology'].length
-        color : "#D4CCC5"
-      ,
-        value : page_visits_by_category['sports'].length
-        color : "#ccc"
-      ,
-        value : page_visits_by_category['science'].length
-        color : "#9c9c9c"
-      ,
-        value : page_visits_by_category['entertainment'].length
-        color : "#000"
-      ,
-        value : page_visits_by_category['other'].length
-        color : "#c30000"
-    ]
-    console.log ctx
-    activityChart = new Chart(ctx).Doughnut(data)
+      data = [
+        {
+          key: "Politics",
+          y: page_visits_by_category['politics'].length
+        },
+        {
+          key: "Business",
+          y: page_visits_by_category['business'].length
+        },
+        {
+          key: "Technology",
+          y: page_visits_by_category['technology'].length
+        },
+        {
+          key: "Sports",
+          y: page_visits_by_category['sports'].length
+        },
+        {
+          key: "Science",
+          y: page_visits_by_category['science'].length
+        },
+        {
+          key: "Entertainment",
+          y: page_visits_by_category['entertainment'].length
+        },
+        {
+          key: "Other",
+          y: page_visits_by_category['other'].length
+        }
+      ]
+
+      d3.select('#chart svg').datum([data]).transition().duration(1200).call(chart)
+
+      return chart
+      )
