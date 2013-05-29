@@ -1135,6 +1135,8 @@ window.require.register("views/charts/activity-chart-view", function(exports, re
   template = require('views/templates/charts/activity-chart');
 
   module.exports = ActivityChartView = (function(_super) {
+    var business_color, entertainment_color, other_color, politics_color, science_color, sports_color, technology_color;
+
     __extends(ActivityChartView, _super);
 
     function ActivityChartView() {
@@ -1150,62 +1152,72 @@ window.require.register("views/charts/activity-chart-view", function(exports, re
 
     ActivityChartView.prototype.template = template;
 
+    politics_color = "#F7464A";
+
+    business_color = "#E2EAE9";
+
+    technology_color = "#D4CCC5";
+
+    sports_color = "#ccc";
+
+    science_color = "#9c9c9c";
+
+    entertainment_color = "#000";
+
+    other_color = "#c30000";
+
     ActivityChartView.prototype.parsePageVisits = function() {
-      var page_visit, page_visit_count, page_visits, page_visits_dict, _i, _len;
+      var counter, page_visit, page_visit_count, page_visits, page_visits_dict, _i, _len;
 
       page_visit_count = this.collection.length;
       page_visits = this.collection.models;
       page_visits_dict = {
-        'politics': [],
-        'business': [],
-        'technology': [],
-        'sports': [],
-        'science': [],
-        'entertainment': [],
-        'other': []
+        'politics': 0,
+        'business': 0,
+        'technology': 0,
+        'sports': 0,
+        'science': 0,
+        'entertainment': 0,
+        'other': 0
       };
       for (_i = 0, _len = page_visits.length; _i < _len; _i++) {
         page_visit = page_visits[_i];
-        console.log(page_visit.attributes.category);
-        page_visits_dict[page_visit.attributes.category].push(page_visit.attributes);
+        counter = (page_visit.attributes.updated_at - page_visit.attributes.created_at) / 1000;
+        page_visits_dict[page_visit.attributes.category] += counter;
       }
-      console.log(page_visits_dict);
       return page_visits_dict;
     };
 
     ActivityChartView.prototype.initChart = function() {
       var activityChart, ctx, data, page_visits_by_category;
 
-      console.log('init chart');
       window.npv = this.collection;
       page_visits_by_category = this.parsePageVisits();
-      console.log(page_visits_by_category);
       ctx = document.getElementById('activity-chart').getContext("2d");
       data = [
         {
-          value: page_visits_by_category['politics'].length,
-          color: "#F7464A"
+          value: page_visits_by_category['politics'],
+          color: politics_color
         }, {
-          value: page_visits_by_category['business'].length,
-          color: "#E2EAE9"
+          value: page_visits_by_category['business'],
+          color: business_color
         }, {
-          value: page_visits_by_category['technology'].length,
-          color: "#D4CCC5"
+          value: page_visits_by_category['technology'],
+          color: technology_color
         }, {
-          value: page_visits_by_category['sports'].length,
-          color: "#ccc"
+          value: page_visits_by_category['sports'],
+          color: sports_color
         }, {
-          value: page_visits_by_category['science'].length,
-          color: "#9c9c9c"
+          value: page_visits_by_category['science'],
+          color: science_color
         }, {
-          value: page_visits_by_category['entertainment'].length,
-          color: "#000"
+          value: page_visits_by_category['entertainment'],
+          color: entertainment_color
         }, {
-          value: page_visits_by_category['other'].length,
-          color: "#c30000"
+          value: page_visits_by_category['other'],
+          color: other_color
         }
       ];
-      console.log(ctx);
       return activityChart = new Chart(ctx).Doughnut(data);
     };
 
