@@ -15,6 +15,8 @@ module.exports = class PopupGoalsController extends PopupSiteController
     urg.fetch()
     if urg.length == 0
       Chaplin.mediator.publish 'user-reading-goals-empty'
-
+      
     goalsChartView = new GoalsChartView(autoRender: true, container: @el, region: 'goals-chart')
     goalsChartView.initChart()
+    
+
