@@ -10,26 +10,16 @@ module.exports = class GoalsView extends View
 
   initialize: ->
     @delegate 'click', '#edit-goals', @showForm
-    Chaplin.mediator.subscribe 'user-reading-goals-empty', @showForm
 
   showForm: ->
     $('#goals-chart-container').toggle()
-    $('#goals-form-container').toggle()
-    if $('#goals-form-container').css('display') == "block"
+    $('#goals-sliders-container').toggle()
+    if $('#goals-sliders-container').css('display') == "block"
       $('#edit-goals').text('Save Goals')
-      # now visible sliders, so display crap
-      $('.slider-inner').slider(
-        min: 0
-        max: 100
-        step: 1
-        orientation: 'horizontal'
-        value: 40
-        handle: 'round'
-        tooltip: 'hide'
-      )
-    if $('#goals-form-container').css('display') == "none"
+    if $('#goals-sliders-container').css('display') == "none"
       $('#edit-goals').text('Edit Goals')
 
   regions:
     '#goals-header-container': 'goals-header'
     '#goals-chart-container':  'goals-chart'
+    '#goals-sliders-container': 'goals-sliders'

@@ -8,3 +8,7 @@ module.exports = class UserReadingGoalsView extends CollectionView
   template: template
   itemView: UserReadingGoalView
   listSelector: '#user-reading-goals'
+
+  initSliders: ->
+    # actually initialize the sliders
+    $('.indiv-slider > input').slider()
