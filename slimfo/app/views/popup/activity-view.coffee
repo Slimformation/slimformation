@@ -11,6 +11,7 @@ module.exports = class ActivityView extends View
   regions:
     '#activity-chart-container':  'activity-chart'
     '#recent-page-visits': 'recent-page-visits'
+    '#source-page-visits': 'source-page-visits'
 
   # initialize: ->
   #   super
