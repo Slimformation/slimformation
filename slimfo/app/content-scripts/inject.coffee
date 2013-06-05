@@ -21,7 +21,6 @@ measureActivity = () ->
       if window.isActive
         ActivityPort.postMessage
           type: "update"
-          timestamp: (new Date()).getTime()
   ), 1000)
 
 ActivityPort.onMessage.addListener (msg) ->

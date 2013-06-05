@@ -15,8 +15,12 @@ module.exports = class ActivityChartView extends View
 
     for page_visit in page_visits
       #console.log page_visit.attributes
-      counter = (page_visit.attributes.updated_at - page_visit.attributes.created_at)/60000
+
+      counter = Math.round((page_visit.attributes.updated_at - page_visit.attributes.created_at)/60)
+      if counter == 0
+        continue
       page_visits_dict[page_visit.attributes.category] += counter
+      console.log page_visits_dict
 
     page_visits_array = []
     for topic, time of page_visits_dict
