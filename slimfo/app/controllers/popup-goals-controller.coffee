@@ -11,7 +11,26 @@ module.exports = class PopupGoalsController extends PopupSiteController
   initialize: ->
     super
     Chaplin.mediator.subscribe 'user-reading-goals-empty', @createSliders
+    Chaplin.mediator.subscribe 'slideStop', @updateSliderValue
     @checkIfReadingGoalsExist()
+
+  updateSliderValue: (event) ->
+    # extract category
+    cat = $(event.currentTarget.lastChild).attr('data-slider-category')
+    $.when(
+      # fetch all reading goals
+      urg = new UserReadingGoals
+      urg.fetch()
+    ).then((urg) ->
+      # find model to update
+      readingGoal = urg.findWhere(
+        name: cat
+      )
+    ).then((readingGoal) ->
+      # update model's value
+      readingGoal.save
+        value: event.value
+    )
 
   checkIfReadingGoalsExist: ->
     urg = new UserReadingGoals

@@ -1,6 +1,7 @@
 CollectionView = require 'views/base/collection-view'
 template = require 'views/templates/collections/user-reading-goals'
 UserReadingGoalView = require 'views/models/user-reading-goal-view'
+Chaplin = require 'chaplin'
 
 module.exports = class UserReadingGoalsView extends CollectionView
   autoRender: true
@@ -12,3 +13,7 @@ module.exports = class UserReadingGoalsView extends CollectionView
   initSliders: ->
     # actually initialize the sliders
     $('.indiv-slider > input').slider()
+    # publish sliding events
+    $('.slider').on('slideStop', (event) ->
+      Chaplin.mediator.publish "slideStop", event
+    )
