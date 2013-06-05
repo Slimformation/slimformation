@@ -20,7 +20,6 @@ module.exports = class ActivityChartView extends View
       if counter == 0
         continue
       page_visits_dict[page_visit.attributes.category] += counter
-      console.log page_visits_dict
 
     page_visits_array = []
     for topic, time of page_visits_dict
