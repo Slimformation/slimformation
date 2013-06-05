@@ -13,7 +13,11 @@ module.exports = class UserReadingGoalsView extends CollectionView
   initSliders: ->
     # actually initialize the sliders
     $('.indiv-slider > input').slider()
-    # publish sliding events
+    # publish slideStop events
     $('.slider').on('slideStop', (event) ->
       Chaplin.mediator.publish "slideStop", event
+    )
+    # publish sliding events
+    $('.slider').on('slide', (event) ->
+      Chaplin.mediator.publish "slide", event
     )
