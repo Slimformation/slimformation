@@ -43,16 +43,31 @@ module.exports = class PopupGoalsController extends PopupSiteController
     target =
       category: $(event.currentTarget.lastChild).attr('data-slider-category')
       value: event.value
+
+    
     # update distribution
     others = _.map($('.slider'), (slider) ->
       category: $(slider.lastChild).attr('data-slider-category')
       value: $(slider.lastChild).attr('data-slider-value')
     )
+
     # remove old value
     withoutTarget = _.filter(others, (item) ->
         item.category != target.category
       )
-    actual = withoutTarget.concat([target])
+
+    # check if in DOM; if there, use it; if not, determine it & store it
+    if window.actual is undefined
+      actual = withoutTarget.concat([target])
+      window.actual = actual
+    else
+      actualUpdate = _.filter(window.actual, (item) ->
+        item.category != target.category
+      )
+      actual = actualUpdate.concat([target])
+      window.actual = actual
+      
+
     # calculate % of total (portions)
     values = _.pluck(actual, 'value')
     total = _.reduce(values, ((m,i) -> Number(m)+Number(i)), 0)
