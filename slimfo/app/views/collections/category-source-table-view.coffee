@@ -24,6 +24,7 @@ module.exports = class ActivityTableView extends View
         category_source_dict[page_visit.attributes.category][base_url]=counter
       else
         category_source_dict[page_visit.attributes.category][base_url]+=counter
+      counter=0
 
     category_source_arr = { 'politics': [], 'business':[], 'technology': [], 'sports': [], 'science': [], 'entertainment': [], 'other': []}
     for category of category_source_dict
@@ -42,11 +43,14 @@ module.exports = class ActivityTableView extends View
     for category of category_source_arr
       word = category.charAt(0).toUpperCase() + category.slice(1)
       $('#source-page-visits').append("<tr><td><h4>"+word+"</h4></td></tr>")
-      for i in [0..Math.min(category_source_arr[category].length-1, 2)] #Need to watch out for when we don't have much data
-        timer = category_source_arr[category][i][1].toFixed(0);
-        if ((i%2)==1) #if odd
-          $('#source-page-visits').append("<tr class='row-blank'><td>" + category_source_arr[category][i][0] + "</td><td class='time'>" + timer + " minutes</td></tr>")
-        else
-          $('#source-page-visits').append("<tr class='row-shaded'><td>" + category_source_arr[category][i][0] + "</td><td class='time'>" + timer + " minutes</td></tr>")
+      if category_source_arr[category].length>0 #given there data to show, then show it
+        for i in [0..Math.min(category_source_arr[category].length-1, 2)] #Need to watch out for when we don't have much data
+          timer = category_source_arr[category][i][1].toFixed(0);
+          if ((i%2)==1) #if odd
+            $('#source-page-visits').append("<tr class='row-blank'><td>" + category_source_arr[category][i][0] + "</td><td class='time'>" + timer + " min</td></tr>")
+          else
+            $('#source-page-visits').append("<tr class='row-shaded'><td>" + category_source_arr[category][i][0] + "</td><td class='time'>" + timer + " min</td></tr>")
+      else #there isn't any data
+        $('#source-page-visits').append("<tr><td>No sites visited yet for this category!</td></tr>")
       $('#source-page-visits').append("</br>")
     $('#source-page-visits').append("</table>")
