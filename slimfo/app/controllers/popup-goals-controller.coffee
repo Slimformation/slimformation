@@ -12,7 +12,64 @@ module.exports = class PopupGoalsController extends PopupSiteController
     super
     Chaplin.mediator.subscribe 'user-reading-goals-empty', @createSliders
     Chaplin.mediator.subscribe 'slideStop', @updateSliderValue
+    Chaplin.mediator.subscribe 'slideStop', @updateOverallDistribution
+    Chaplin.mediator.subscribe 'editGoals', @initializeOverallDistribution
     @checkIfReadingGoalsExist()
+
+  initializeOverallDistribution: () ->
+    actual = _.map($('.slider'), (slider) ->
+      category: $(slider.lastChild).attr('data-slider-category')
+      value: $(slider.lastChild).attr('data-slider-value')
+    )
+    values = _.pluck(actual, 'value')
+    total = _.reduce(values, ((m,i) -> Number(m)+Number(i)), 0)
+    actualWithPortions = _.map(actual, (i) ->
+      category: i.category
+      value: i.value
+      portion: ((i.value/total)*100).toString()+"%"  
+    )
+    _.each($('#overall-distribution div'), (item) ->
+      cat = $(item).attr('data-slider-category')
+      newItem = _.find(actualWithPortions, (i) ->
+        i.category == cat
+      )
+      $(item).css('width', newItem.portion)
+    )
+    
+    
+
+  updateOverallDistribution: (event) ->
+    # extract target attrs
+    target =
+      category: $(event.currentTarget.lastChild).attr('data-slider-category')
+      value: event.value
+    # update distribution
+    others = _.map($('.slider'), (slider) ->
+      category: $(slider.lastChild).attr('data-slider-category')
+      value: $(slider.lastChild).attr('data-slider-value')
+    )
+    # remove old value
+    withoutTarget = _.filter(others, (item) ->
+        item.category != target.category
+      )
+    actual = withoutTarget.concat([target])
+    # calculate % of total (portions)
+    values = _.pluck(actual, 'value')
+    total = _.reduce(values, ((m,i) -> Number(m)+Number(i)), 0)
+    actualWithPortions = _.map(actual, (i) ->
+      category: i.category
+      value: i.value
+      portion: ((i.value/total)*100).toString()+"%"  
+    )
+    _.each($('#overall-distribution div'), (item) ->
+      cat = $(item).attr('data-slider-category')
+      newItem = _.find(actualWithPortions, (i) ->
+        i.category == cat
+      )
+      $(item).css('width', newItem.portion)
+    )
+    
+    
 
   updateSliderValue: (event) ->
     # extract category
