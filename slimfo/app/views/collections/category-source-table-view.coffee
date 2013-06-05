@@ -16,6 +16,8 @@ module.exports = class ActivityTableView extends View
     category_source_dict = { 'politics': {}, 'business':{}, 'technology': {}, 'sports': {}, 'science': {}, 'entertainment': {}, 'other': {}}
     for page_visit in page_visits
       counter = (page_visit.attributes.updated_at - page_visit.attributes.created_at)/60000
+      if(counter == 0)
+        continue
       url_tuple = page_visit.attributes.url.match(siteRegexp)
       base_url = _.last(url_tuple)
       if _.isUndefined(category_source_dict[page_visit.attributes.category][base_url])
