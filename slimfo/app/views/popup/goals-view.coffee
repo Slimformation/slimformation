@@ -9,9 +9,12 @@ module.exports = class GoalsView extends View
   template: template
 
   initialize: ->
-    @delegate 'click', '#edit-goals', (-> Chaplin.mediator.publish "editGoals")
-    Chaplin.mediator.subscribe "editGoals", @showForm
-
+    super
+    @delegate 'click', '#edit-goals', (->
+      Chaplin.mediator.publish("editGoals")
+      @showForm()
+    )
+    
 
   showForm: ->
     $('#goals-chart-container').toggle()
