@@ -46,8 +46,8 @@ module.exports = class ChromeService extends Service
         if (!senderPort.sender.tab.highlighted or
             !utils.validListenUrl(senderPort.sender.tab.url))
           return
-        console.log senderPort.sender.tab
-        console.log "Activity Update: " + JSON.stringify(msg)
+        #console.log senderPort.sender.tab
+        #console.log "Activity Update: " + JSON.stringify(msg)
         switch msg.type
           when "update"
             $.when(
@@ -56,8 +56,5 @@ module.exports = class ChromeService extends Service
               npv.findWhere {url: senderPort.sender.tab.url}
             ).then((pv) ->
               pv.save
-                updated_at: msg.timestamp
+                updated_at: Math.round((new Date()).getTime() / 1000)
             )
-            # console.log pv
-            # do (pv) ->
-            #   pv.save {updated_at: msg.timestamp}

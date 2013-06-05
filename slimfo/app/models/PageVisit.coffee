@@ -25,8 +25,8 @@ module.exports = class PageVisit extends Model
 
 
   defaults:
-    created_at: (new Date()).getTime()
-    updated_at: (new Date()).getTime()
+    created_at: Math.round((new Date()).getTime() / 1000) # in seconds
+    updated_at: Math.round((new Date()).getTime() / 1000) # in seconds
     category: "other"
 
   validate: (attrs, options) ->
