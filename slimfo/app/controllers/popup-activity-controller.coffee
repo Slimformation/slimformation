@@ -3,6 +3,7 @@ PopupActivityView = require 'views/popup/activity-view'
 NewPageVisitsView = require 'views/collections/new-page-visits-view'
 ActivityChartView = require 'views/charts/activity-chart-view'
 NewPageVisits = require 'models/NewPageVisits'
+ActivityTableView = require 'views/collections/category-source-table-view'
 
 module.exports = class PopupActivityController extends PopupSiteController
   show: ->
@@ -14,7 +15,9 @@ module.exports = class PopupActivityController extends PopupSiteController
     activityChartView = new ActivityChartView(collection: npv, autoRender: true, container: @el, region: 'activity-chart')
     activityChartView.initChart()
 
-    newPageVisitsView = new NewPageVisitsView(collection: npv, region: 'recent-page-visits')
+    activityTableView = new ActivityTableView(collection: npv, autoRender: true, container: @el, region: 'source-page-visits')
+    activityTableView.initTable()
+  #  newPageVisitsView = new NewPageVisitsView(collection: npv, region: 'recent-page-visits')
 
   # newPageVisits: ->
   #   npv = new NewPageVisits
