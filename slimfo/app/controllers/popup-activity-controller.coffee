@@ -7,21 +7,17 @@ ActivityTableView = require 'views/collections/category-source-table-view'
 
 module.exports = class PopupActivityController extends PopupSiteController
   show: ->
+    # main view, which sets up regions for other views
     @view = new PopupActivityView region: 'popup-main'
-    # other views, using region setup in the main view
+
+    # fetch all new page visits
     npv = new NewPageVisits
     npv.fetch()
+
+    # other views, using region setup in the main view
 
     activityChartView = new ActivityChartView(collection: npv, autoRender: true, container: @el, region: 'activity-chart')
     activityChartView.initChart()
 
     activityTableView = new ActivityTableView(collection: npv, autoRender: true, container: @el, region: 'source-page-visits')
     activityTableView.initTable()
-  #  newPageVisitsView = new NewPageVisitsView(collection: npv, region: 'recent-page-visits')
-
-  # newPageVisits: ->
-  #   npv = new NewPageVisits
-  #   npv.fetch()
-  #   # console.log npv
-
-  #   @view = new NewPageVisitsView(collection: npv, region: 'popup-main')
