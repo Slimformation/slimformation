@@ -2,6 +2,22 @@ body {
   width: 420px;
 }
 
+.btn {
+    border-radius: 0px;
+}
+
+a:focus { outline: none; color: white; }
+
+// overall styles
+
+#popup-main-container {
+    height: 460px;
+    overflow: scroll;
+    padding: 0px;
+    margin: 0px;
+}
+
+
 #activity-chart-container {
   text-align: center;
 }
@@ -16,59 +32,74 @@ body {
 }
 
 #source-page-visits {
- width: 400px;
  overflow-y: scroll;
- overflow-x: hidden;
- padding: 25px;
+ margin: 0px 15px 0px;
  display: block;
-
- td {
-  width: 200px;
- }
 }
 
 .navbar {
-  .navbar-inner { padding-bottom: 10px; }
+  border-radius: 0px;
+  .navbar-inner { padding: 0px; border-radius: 0px; background-color: #2C3E50; }
 
-  .nav{ padding-left: 50px; }
+  .nav{ 
+      width: 420px;
+      height: 80px;
+      text-align: center;
+  }
+
+  .nav > li {
+      float: none;
+  }
+  
+
   li {
     display: inline-block;
-    line-height: 50px;
+    margin: 0 auto;
+    height: inherit;
+    width: 110px;
+    float: none;
+    
+    a.my-nav-a {
+        color: white;
+    }
+
+    a.my-nav-a:focus {
+        color: white
+    }
+
+    a.my-nav-a:hover {
+        color: #BDC3C7;
+    }
+
+    a {
+        position: relative;
+        top: 40px;
+        padding: 5px;
+        box-shadow: none;
+    }
+
+
+    // background color of each header tab button
+    &.activity#active {background-color:#2980B9;}
+    &.goals#active {background-color: #E74C3C;}
+    &.prescription#active {background-color: #27AE60;}    
 
     &.activity {
-      background: url('/public/images/activity.png') center no-repeat;
-      background-position: 25px 25px;
+      background: url('/public/images/activity_white.png') center no-repeat;
+      background-position: 40px 15px;
       background-size: 25px 25px;
-      padding-right: 45px;
-
-      a {
-        position: relative;
-        top: 30px;
-      }
     }
 
     &.goals {
-      background: url('/public/images/goals.png') center no-repeat;
-      background-position: 20px 25px;
+      background: url('/public/images/goals_white.png') center no-repeat;
+      background-position: 40px 15px;
       background-size: 25px 25px;
-      padding-right: 45px;
-
-      a {
-        position: relative;
-        top: 30px;
-      }
     }
 
     &.prescription {
-      background: url('/public/images/prescription.png') center no-repeat;
-      background-position: 40px 25px;
+      background: url('/public/images/prescription_white.png') center no-repeat;
+      background-position: 40px 15px;
       background-size: 25px 25px;
-      padding-right: 20px;
-
-      a {
-        position: relative;
-        top: 30px;
-      }
     }
   }
 }
