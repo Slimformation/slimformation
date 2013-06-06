@@ -9,7 +9,7 @@ module.exports = class PopupActivityController extends PopupSiteController
   show: ->
     # main view, which sets up regions for other views
     @view = new PopupActivityView region: 'popup-main'
-
+    
     # fetch all new page visits
     npv = new NewPageVisits
     npv.fetch()
