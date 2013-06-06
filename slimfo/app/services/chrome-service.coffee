@@ -22,6 +22,7 @@ module.exports = class ChromeService extends Service
       # add new PageVisit
       npv = new NewPageVisits
       pv = npv.create
+        created_at: Math.round((new Date()).getTime() / 1000)
         url: changeInfo.url
       Chaplin.mediator.publish 'add:PageVisit', pv
 
