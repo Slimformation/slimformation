@@ -3,30 +3,23 @@ Config = require 'config'
 Model = require 'models/base/model'
 
 module.exports = class PageVisit extends Model
-  # initialize: () ->
-  #   @set 'created_at', (new Date()).getTime()
-  #   @set 'updated_at', (new Date()).getTime()
+
+  # attributes...
 
   created_at: null
-
   updated_at: null
-
   url: null
-
   category: null
-
   title: null
-
   content: null
-
   wordCount: null
-
   readingScore: null
 
+  # methods, etc ...
 
   defaults:
-    created_at: Math.round((new Date()).getTime() / 1000) # in seconds
-    updated_at: Math.round((new Date()).getTime() / 1000) # in seconds
+    created_at: 0
+    updated_at: 0
     category: "other"
 
   validate: (attrs, options) ->
