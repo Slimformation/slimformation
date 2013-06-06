@@ -1,6 +1,7 @@
 Chaplin = require 'chaplin'
 View = require 'views/base/view'
 template = require 'views/templates/charts/activity-chart'
+utils = require 'lib/utils'
 
 module.exports = class ActivityTableView extends View
   el: $('#activity-chart-container')
@@ -13,25 +14,40 @@ module.exports = class ActivityTableView extends View
     page_visits = @collection.models
     siteRegexp = /^(\w+:\/\/[^\/]+).*$/
 
-    category_source_dict = { 'politics': {}, 'business':{}, 'technology': {}, 'sports': {}, 'science': {}, 'entertainment': {}, 'other': {}}
-    for page_visit in page_visits
-      counter = (page_visit.attributes.updated_at - page_visit.attributes.created_at)/60
-      if(counter == 0)
-        continue
+    category_source_dict =
+      'politics': {}
+      'business':{}
+      'technology': {}
+      'sports': {}
+      'science': {}
+      'entertainment': {}
+      'other': {}
+
+    _.each(page_visits, (page_visit) ->
+      counter = utils.elapsedTimeInMin(page_visit.attributes.created_at,
+                                       page_visit.attributes.updated_at)
       url_tuple = page_visit.attributes.url.match(siteRegexp)
       base_url = _.last(url_tuple)
       if _.isUndefined(category_source_dict[page_visit.attributes.category][base_url])
         category_source_dict[page_visit.attributes.category][base_url]=counter
       else
         category_source_dict[page_visit.attributes.category][base_url]+=counter
-      counter=0
+    )
 
-    category_source_arr = { 'politics': [], 'business':[], 'technology': [], 'sports': [], 'science': [], 'entertainment': [], 'other': []}
+    category_source_arr =
+      'politics': []
+      'business':[]
+      'technology': []
+      'sports': []
+      'science': []
+      'entertainment': []
+      'other': []
+        
     for category of category_source_dict
       for url, time of category_source_dict[category]
         category_source_arr[category].push([url, time])
       category_source_arr[category].sort((a,b) -> b[1]-a[1])
-    #console.log category_source_arr
+    
     return category_source_arr
 
   initTable: ->
