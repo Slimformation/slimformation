@@ -3,6 +3,9 @@ PopupGoalsView = require 'views/popup/goals-view'
 GoalsChartView = require 'views/charts/goals-chart-view'
 UserReadingGoal = require 'models/UserReadingGoal'
 UserReadingGoals = require 'models/UserReadingGoals'
+ReadingBudget = require 'models/ReadingBudget'
+ReadingBudgets = require 'models/ReadingBudgets'
+ReadingBudgetsView = require 'views/collections/reading-budgets-view'
 UserReadingGoalsView = require 'views/collections/user-reading-goals-view'
 Chaplin = require 'chaplin'
 
@@ -138,8 +141,10 @@ module.exports = class PopupGoalsController extends PopupSiteController
       goalsSlidersView.initSliders()
     )
     
-    
-    goalsChartView = new GoalsChartView(autoRender: true, container: @el, region: 'goals-chart')
-    goalsChartView.initChart()
+
+    rbs = new ReadingBudgets
+    # override fetch() to compute the right stuff
+    rbs.fetch()
+    goalsChartView = new ReadingBudgetsView(collection: rbs, container: @el, region: 'goals-chart')
     
 
