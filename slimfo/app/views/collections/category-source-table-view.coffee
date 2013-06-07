@@ -10,29 +10,7 @@ module.exports = class ActivityTableView extends View
   template: template
 
   sourceSort: ->
-    page_visit_count = @collection.length
-    page_visits = @collection.models
-    siteRegexp = /^(\w+:\/\/[^\/]+).*$/
-
-    category_source_dict =
-      'politics': {}
-      'business':{}
-      'technology': {}
-      'sports': {}
-      'science': {}
-      'entertainment': {}
-      'other': {}
-
-    _.each(page_visits, (page_visit) ->
-      counter = utils.elapsedTimeInSec(page_visit.attributes.created_at,
-                                       page_visit.attributes.updated_at)
-      url_tuple = page_visit.attributes.url.match(siteRegexp)
-      base_url = _.last(url_tuple)
-      if _.isUndefined(category_source_dict[page_visit.attributes.category][base_url])
-        category_source_dict[page_visit.attributes.category][base_url]=counter
-      else
-        category_source_dict[page_visit.attributes.category][base_url]+=counter
-    )
+    category_source_dict = utils.categorySourceCountMap(@collection)
 
     category_source_arr =
       'politics': []
@@ -55,7 +33,7 @@ module.exports = class ActivityTableView extends View
     #console.log "IN INIT TABLE"
     #console.log category_source_arr
 
-    # $('#source-page-visits').append("<b>Top Sources for Each Category</b>")
+    $('#source-page-visits').append("<b>Top Sources for Each Category</b>")
     $('#source-page-visits').append("<table class='table table-striped table-condensed table-hover' id='cat-source-table'></table>")
     $('#cat-source-table').append("<thead><th>Category</th><th>Time</th></thead>")
     for category of category_source_arr

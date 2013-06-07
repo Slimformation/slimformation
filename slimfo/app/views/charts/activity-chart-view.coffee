@@ -10,21 +10,7 @@ module.exports = class ActivityChartView extends View
   template: template
 
   parsePageVisits: ->
-    page_visit_count = @collection.length
-    page_visits = @collection.models
-    page_visits_dict =
-      'politics': 0
-      'business': 0
-      'technology': 0
-      'sports': 0
-      'science': 0
-      'entertainment': 0
-      'other': 0
-
-    _.each(page_visits, (page_visit) ->
-      counter = utils.elapsedTimeInMin(page_visit.attributes.created_at, page_visit.attributes.updated_at)
-      page_visits_dict[page_visit.attributes.category] += counter
-    )
+    page_visits_dict = utils.categoryReadingAmountMap(@collection)
 
     # recast the collection as an array of [topic, time] arrays
     page_visits_array = _.map(page_visits_dict, (value, key) -> [key, value])
@@ -52,7 +38,7 @@ module.exports = class ActivityChartView extends View
       
         data = _.map(page_visits_by_category, (item) ->
           word = utils.capitalizeFirstLetter(item[0])
-          return {key: word, y: item[1]}
+          return {key: word, y: (Number(item[1])/60)}
         )
 
       d3.select('#chart svg')

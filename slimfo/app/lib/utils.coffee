@@ -3,6 +3,12 @@ Chaplin = require 'chaplin'
 # Application-specific utilities
 # ------------------------------
 
+elapsedTimeInSec = (tsec1, tsec2) ->
+  Math.abs(tsec1 - tsec2)
+
+elapsedTimeInMin = (tsec1, tsec2) ->
+  elapsedTimeInSec(tsec2 - tsec1)/60
+
 # Delegate to Chaplin’s utils module
 utils = Chaplin.utils.beget Chaplin.utils
 
@@ -20,11 +26,9 @@ _(utils).extend
     ), false, this)
     return !testAll
 
-  elapsedTimeInSec: (tsec1, tsec2) ->
-    Math.abs(tsec1 - tsec2)
+  elapsedTimeInSec: elapsedTimeInSec
 
-  elapsedTimeInMin: (tsec1, tsec2) ->
-    Math.abs((tsec2 - tsec1)/60)
+  elapsedTimeInMin: elapsedTimeInMin
 
   capitalizeFirstLetter: (word) ->
     word.charAt(0).toUpperCase() + word.slice(1)
@@ -53,5 +57,56 @@ _(utils).extend
     if out is ""
       out = "none"
     return out
+
+  # takes a NewPageVisits collection and buils a map that has the
+  # categories as the keys and the total reading time in seconds as
+  # the value 
+  categoryReadingAmountMap: (collection) ->
+    page_visit_count = collection.length
+    page_visits = collection.models
+    page_visits_dict =
+      'politics': 0
+      'business': 0
+      'technology': 0
+      'sports': 0
+      'science': 0
+      'entertainment': 0
+      'other': 0
+
+    _.each(page_visits, (page_visit) ->
+      counter = elapsedTimeInSec(page_visit.attributes.created_at, page_visit.attributes.updated_at)
+      page_visits_dict[page_visit.attributes.category] += counter
+    )
+    return page_visits_dict
+
+  # takes a NewPageVisits collection and builds a map that has the
+  # categories as the keys, and a map of the top sources and their
+  # total reading time as the values.
+  categorySourceCountMap: (collection) ->
+    page_visit_count = collection.length
+    page_visits = collection.models
+    siteRegexp = /^(\w+:\/\/[^\/]+).*$/
+
+    category_source_dict =
+      'politics': {}
+      'business':{}
+      'technology': {}
+      'sports': {}
+      'science': {}
+      'entertainment': {}
+      'other': {}
+
+    _.each(page_visits, (page_visit) ->
+      counter = elapsedTimeInSec(page_visit.attributes.created_at,
+                                 page_visit.attributes.updated_at)
+      url_tuple = page_visit.attributes.url.match(siteRegexp)
+      base_url = _.last(url_tuple)
+      if _.isUndefined(category_source_dict[page_visit.attributes.category][base_url])
+        category_source_dict[page_visit.attributes.category][base_url]=counter
+      else
+        category_source_dict[page_visit.attributes.category][base_url]+=counter
+    )
+
+    return category_source_dict
 
 module.exports = utils
