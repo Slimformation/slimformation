@@ -96,9 +96,9 @@ module.exports = class ActivityTableView extends View
     if (Math.abs(rb['actual']-rb['projected'])<=THRESHOLD) #within threshold of projected
       pl.append("Congrats! You met your goal for " + category + ".")
     else if ((rb['actual']-rb['projected'])>THRESHOLD)
-      pl.append("Oops! You went over your budget for " + category + ".")
+      pl.append("Oops! You went over your budget for " + category + ". Try cutting back on " + category + ".")
     else
-      pl.append("You didn't meet your goal for " + category + ".")
+      pl.append("You didn't meet your goal for " + category + ". Try to focus on reading more about " +category)
 
   diversityAndReadingLevelCheckup: (category) ->
     pl=$('#prescription-list')
@@ -112,7 +112,6 @@ module.exports = class ActivityTableView extends View
       #console.log sourcesAboveThreshold
       #Get the top three sources along with the reading level: array of length 3 of arrays[baseUrl, timeSpent, and readingScore]
       #topThreeSources = @topThreeSourcesAndReadingScore(category_source_arr)
-      #Get the average reading level for this category
       avgReadingLevel = @averageReadingLevel(category_source_arr)
       #console.log "AVG RL:"
       #console.log avgReadingLevel
