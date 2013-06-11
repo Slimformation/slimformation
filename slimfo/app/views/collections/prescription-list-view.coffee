@@ -88,21 +88,29 @@ module.exports = class ActivityTableView extends View
 
   goalsCheckup: (category) ->
     THRESHOLD = 5
+    goalsMet = false
     pl=$('#prescription-list')
     rb = @getReadingBudget(category, @collection)
     pl.append("</br></br>")
     pl.append("<b>Goals</b>: ")
-    console.log rb
+    #console.log rb
     if (Math.abs(rb['actual']-rb['projected'])<=THRESHOLD) #within threshold of projected
       pl.append("Congrats! You met your goal for " + category + ".")
+      goalsMet = true
     else if ((rb['actual']-rb['projected'])>THRESHOLD)
       pl.append("Oops! You went over your budget for " + category + ". Try cutting back on " + category + ".")
     else
       pl.append("You didn't meet your goal for " + category + ". Try to focus on reading more about " +category)
+    if goalsMet
+      return 1
+    else
+      return 0
 
   diversityAndReadingLevelCheckup: (category) ->
     pl=$('#prescription-list')
     total_category_source_arr = @sourceSort()
+    isDiverse = false
+    isGoodReadingLevel = false
 
     if _.isEmpty(total_category_source_arr) #no data collected yet
       pl.append("No data collected yet. Try browsing some sites first.")
@@ -122,6 +130,7 @@ module.exports = class ActivityTableView extends View
       pl.append("<b>Diversity</b>: ")
       if _.isEmpty(sourcesAboveThreshold)
         pl.append("You have been doing well in terms of getting content about " + category + " from different sources!")
+        isDiverse = true
       else #Source above threshold - report it
         pl.append("Oh no! You've been viewing too much content about " + category + " from ")
         if sourcesAboveThreshold.length==2
@@ -143,5 +152,15 @@ module.exports = class ActivityTableView extends View
           pl.append("You are currently reading at the level of a high schooler. Not bad, but you can do better!")
         else if (avgReadingLevel[1]>30) and (avgReadingLevel[1] < 60)
           pl.append("You are currently reading at the level of a college student. Good work!")
+          isGoodReadingLevel = true
         else if avgReadingLevel[1]<=30
           pl.append("You are reading at an extremely high level. Be proud of yourself!")
+          isGoodReadingLevel = true
+    if isDiverse and isGoodReadingLevel
+      return 2
+    else if isDiverse and not isGoodReadingLevel
+      return 1
+    else if not isDiverse and isGoodReadingLevel
+      return 1
+    else if not isDiverse and not isGoodReadingLevel
+      return 0
