@@ -109,4 +109,18 @@ _(utils).extend
 
     return category_source_dict
 
+  # given a category reading amount map, which has keys as categories
+  # and the total reading amount as the values, this produces a map
+  # with the same keys but with propotion of the combined reading
+  # amount as the value
+  categoryReadingProportionsMap: (catReadingAmountMap) ->
+    total = _.reduce(catReadingAmountMap, ((acc, v, k) ->
+        acc += Number(v)
+      ), 0)
+    newMap = _.reduce(catReadingAmountMap, ((acc, v, k) ->
+      acc[k] = Number(v)/Number(total)
+      return acc
+      ), {})
+    return newMap
+
 module.exports = utils
