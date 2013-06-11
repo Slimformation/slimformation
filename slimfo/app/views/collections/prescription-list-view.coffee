@@ -28,7 +28,7 @@ module.exports = class ActivityTableView extends View
     
     return category_source_arr
   
-  #Returns sources that have 40% or more of the overall time spent in this category
+  #Returns sources that have 45% or more of the overall time spent in this category
   sourcesAboveTimeThreshold: (category_source_arr) ->
     totalTime = 0
     BIASED = 0.45
@@ -59,7 +59,7 @@ module.exports = class ActivityTableView extends View
     )
     count = 0
     weightedAverageReadingLevel = 0
-    console.log category_source_arr
+    #console.log category_source_arr
     _.each(category_source_arr, (pair) ->
       if _.isUndefined(pair[2])
         count += 0
@@ -70,6 +70,35 @@ module.exports = class ActivityTableView extends View
     )
 
     return [count, weightedAverageReadingLevel]
+
+  getReadingBudget: (category, readingBudgetsModel) ->
+    model = readingBudgetsModel
+    readingBudgets =     
+      'politics': {}
+      'business':{}
+      'technology': {}
+      'sports': {}
+      'science': {}
+      'entertainment': {}
+    rbs = model['models']
+    for i in [0..5]
+      readingBudgets[rbs[i]['attributes']['category']] = rbs[i]['attributes']
+    rb = readingBudgets[category]
+    return rb
+
+  goalsCheckup: (category) ->
+    THRESHOLD = 5
+    pl=$('#prescription-list')
+    rb = @getReadingBudget(category, @collection)
+    pl.append("</br></br>")
+    pl.append("<b>Goals</b>: ")
+    console.log rb
+    if (Math.abs(rb['actual']-rb['projected'])<=THRESHOLD) #within threshold of projected
+      pl.append("Congrats! You met your goal for " + category + ".")
+    else if ((rb['actual']-rb['projected'])>THRESHOLD)
+      pl.append("Oops! You went over your budget for " + category + ".")
+    else
+      pl.append("You didn't meet your goal for " + category + ".")
 
   diversityAndReadingLevelCheckup: (category) ->
     pl=$('#prescription-list')
@@ -85,12 +114,12 @@ module.exports = class ActivityTableView extends View
       #topThreeSources = @topThreeSourcesAndReadingScore(category_source_arr)
       #Get the average reading level for this category
       avgReadingLevel = @averageReadingLevel(category_source_arr)
-      console.log "AVG RL:"
-      console.log avgReadingLevel
+      #console.log "AVG RL:"
+      #console.log avgReadingLevel
       #console.log topThreeSources
-      pl.append("<b>Checkup</b></br>")
       
       #If no sources above threshold
+      pl.append("</br></br>")
       pl.append("<b>Diversity</b>: ")
       if _.isEmpty(sourcesAboveThreshold)
         pl.append("You have been doing well in terms of getting content about " + category + " from different sources!")
@@ -111,9 +140,9 @@ module.exports = class ActivityTableView extends View
         #rate the reading level based on wikipedia flesch kincaid
         if avgReadingLevel[1]>=90
           pl.append("You are currently reading at the same level as an 11-year old. Try to step it up!")
-        else if avgReadingLevel[1]>=60 and avgReadingLevel[1] < 90
+        else if (avgReadingLevel[1]>=60) and (avgReadingLevel[1] < 90)
           pl.append("You are currently reading at the level of a high schooler. Not bad, but you can do better!")
-        else if avgReadingLevel[1]>30 and avgReadingLevel[1] < 60
+        else if (avgReadingLevel[1]>30) and (avgReadingLevel[1] < 60)
           pl.append("You are currently reading at the level of a college student. Good work!")
         else if avgReadingLevel[1]<=30
           pl.append("You are reading at an extremely high level. Be proud of yourself!")
