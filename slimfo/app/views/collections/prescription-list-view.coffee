@@ -42,14 +42,7 @@ module.exports = class ActivityTableView extends View
         biased_list.push(source_time_pair)
     )
     #console.log totalTime
-    return biased_list
-
-  #Returns the top 3 sources and corresponding reading level
-  topThreeSourcesAndReadingScore: (category_source_arr) ->
-    topThree = []
-    for i in [0..2]
-      topThree.push(category_source_arr[i])
-    return topThree
+    return [biased_list, totalTime]
 
   #Returns the average reading level for this category
   averageReadingLevel: (category_source_arr) ->
@@ -120,25 +113,23 @@ module.exports = class ActivityTableView extends View
       category_source_arr = total_category_source_arr[category]
       sourcesAboveThreshold = @sourcesAboveTimeThreshold(category_source_arr)
       #console.log sourcesAboveThreshold
-      #Get the top three sources along with the reading level: array of length 3 of arrays[baseUrl, timeSpent, and readingScore]
-      #topThreeSources = @topThreeSourcesAndReadingScore(category_source_arr)
       avgReadingLevel = @averageReadingLevel(category_source_arr)
-      #console.log "AVG RL:"
-      #console.log avgReadingLevel
-      #console.log topThreeSources
-      
-      #If no sources above threshold
+
       pl.append("</br></br>")
       pl.append("<b>Diversity</b>: ")
-      if _.isEmpty(sourcesAboveThreshold)
+      console.log sourcesAboveThreshold
+      if sourcesAboveThreshold[1]==0 #no time stored
+        pl.append("No data collected so far. Try viewing more sites.")
+        isDiverse = false
+      else if _.isEmpty(sourcesAboveThreshold) #If no sources above threshold
         pl.append("You have been doing well in terms of getting content about " + category + " from different sources!")
         isDiverse = true
       else #Source above threshold - report it
         pl.append("Oh no! You've been viewing too much content about " + category + " from ")
-        if sourcesAboveThreshold.length==2
-          pl.append(sourcesAboveThreshold[0][0] + " and " + sourcesAboveThreshold[1][0] + ". Try some other sources!")
+        if sourcesAboveThreshold[0].length==2
+          pl.append(sourcesAboveThreshold[0][0][0] + " and " + sourcesAboveThreshold[0][1][0] + ". Try some other sources!")
         else
-          pl.append(sourcesAboveThreshold[0][0] + ". Try some other sources!")
+          pl.append(sourcesAboveThreshold[0][0][0] + ". Try some other sources!")
 
       #Display 3 top reading level / sources
       pl.append("</br></br>")
