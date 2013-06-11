@@ -17,7 +17,7 @@ module.exports = class GoalsView extends View
     
 
   showForm: ->
-    $('#goals-chart-container').toggle()
+    $('#reading-budgets-container').toggle()
     $('#goals-sliders-container').toggle()
     if $('#goals-sliders-container').css('display') == "block"
       $('#edit-goals').text('Save Goals')
@@ -26,5 +26,6 @@ module.exports = class GoalsView extends View
 
   regions:
     '#goals-header-container': 'goals-header'
-    '#goals-chart-container':  'goals-chart'
+    #'#goals-chart-container':  'goals-chart'
+    '#reading-budgets-container': 'goals-reading-budgets'
     '#goals-sliders-container': 'goals-sliders'

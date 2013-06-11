@@ -1,3 +1,9 @@
-<div class="progress">
-  <div class="bar {{name}}-budget" style="width: {{value}}%;"></div>
+<div id="{{category}}-budget">
+  <div class="progress">
+    <div class="bar actual-bar" style="width: {{actual}}%;"></div>
+    
+  </div>
+  <div class="progress">
+    <div class="bar {{category}}-budget projected-bar" style="width: {{projected}}%;"></div>
+  </div>
 </div>

@@ -41,7 +41,16 @@ module.exports = class PopupGoalsController extends PopupSiteController
       arrayOfPairs = _.map(urg.models, ((item) ->
         return [item.attributes.name, item.attributes.value]
         ))
-      projectedUsage = _.object(arrayOfPairs)
+      total = _.reduce(arrayOfPairs, ((acc, item) ->
+          acc += item[1]
+        ), 0)
+      fixedArrayOfPairs = _.map(arrayOfPairs, ((item) ->
+          if total > 0
+            return [item[0], Number(((item[1]/total)*100).toFixed(2))]
+          else
+            return [item[0], Number((0.00).toFixed(2))]
+        ))
+      projectedUsage = _.object(fixedArrayOfPairs)
     )
     
     # find or create everything in ReadingBudgets
@@ -197,7 +206,6 @@ module.exports = class PopupGoalsController extends PopupSiteController
     rbs = new ReadingBudgets
     # override fetch() to compute the right stuff
     rbs.fetch()
-    console.log rbs
-    goalsChartView = new ReadingBudgetsView(collection: rbs, container: @el, region: 'goals-chart')
+    goalsChartView = new ReadingBudgetsView(collection: rbs, container: @el, region: 'goals-reading-budgets')
     
 

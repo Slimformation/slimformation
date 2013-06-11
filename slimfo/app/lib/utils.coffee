@@ -131,4 +131,13 @@ _(utils).extend
   getCurrentTime: () ->
     Math.round((new Date()).getTime() / 1000)
 
+  # returns the percent out of b that a is
+  computeProportion: (a, b) ->
+    if Number(b) > 0
+      return Number(((Number(a)/Number(b))*100).toFixed(2))
+    else
+      return Number(0.toFixed(2))
+    
+
+
 module.exports = utils
