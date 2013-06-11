@@ -9,17 +9,25 @@ utils = require 'lib/utils'
 module.exports = class ReadingBudgets extends Collection
   model: ReadingBudget
 
-  # localStorage: new Backbone.LocalStorage("ReadingBudgets")
+  localStorage: new Backbone.LocalStorage("ReadingBudgets")
 
   # gather and return collection of ReadingBudget's, with each having
   # a % score which indicates how much of its allotment is used up.
   # An allotment is simply how much of the most read category has been read
-  fetch: (options) ->
-    npv = new NewPageVisits
-    $.when(
-      npv.fetch()
-    ).then((npv) ->
-      utils.categoryReadingAmountMap(npv)
-    ).then((cat_read_map) ->
-      # determine actual ratios of usage
-    )
+  # fetch: (options) ->
+  #   actualUsage = {}
+  #   $.when(
+  #     npv = new NewPageVisits
+  #     npv = npv.fetch()
+  #   ).then((npv) ->
+  #     cat_read_map = utils.categoryReadingAmountMap(npv)
+  #     actualUsage = utils.categoryReadingProportionsMap(cat_read_map)
+  #   )
+  #   projectedUsage = {}
+  #   $.when(
+  #     urg = new UserReadingGoals
+  #     urg.fetch()
+  #   ).then((urg) ->
+  #     projectedUsage = urg
+  #   )
+

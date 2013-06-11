@@ -43,7 +43,7 @@ module.exports = class ActivityTableView extends View
       if category_source_arr[category].length>0 #given there data to show, then show it
         for i in [0..Math.min(category_source_arr[category].length-1, 2)] #Need to watch out for when we don't have much data
           timer = category_source_arr[category][i][1]
-          console.log timer
+          # console.log timer
           humanizedTimer = utils.humanizeTime(utils.detailedTime(timer))
           
           if ((i%2)==1) #if odd
