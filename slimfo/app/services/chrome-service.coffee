@@ -31,8 +31,8 @@ module.exports = class ChromeService extends Service
         # then stored in the prototype out of which
         # objects are made?)
       pv = npv.create(
-        created_at: Math.round((new Date()).getTime() / 1000)
-        updated_at: Math.round((new Date()).getTime() / 1000)        
+        created_at: utils.getCurrentTime()
+        updated_at: utils.getCurrentTime()
         url: changeInfo.url
       )
       Chaplin.mediator.publish 'add:PageVisit', pv

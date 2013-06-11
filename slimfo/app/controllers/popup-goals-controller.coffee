@@ -6,6 +6,8 @@ UserReadingGoals = require 'models/UserReadingGoals'
 ReadingBudget = require 'models/ReadingBudget'
 ReadingBudgets = require 'models/ReadingBudgets'
 ReadingBudgetsView = require 'views/collections/reading-budgets-view'
+NewPageVisits = require 'models/NewPageVisits'
+utils = require 'lib/utils'
 UserReadingGoalsView = require 'views/collections/user-reading-goals-view'
 Chaplin = require 'chaplin'
 
@@ -13,11 +15,58 @@ module.exports = class PopupGoalsController extends PopupSiteController
 
   initialize: ->
     super
+    @checkIfReadingGoalsExist()
     Chaplin.mediator.subscribe 'user-reading-goals-empty', @createSliders
     Chaplin.mediator.subscribe 'slideStop', @updateSliderValue
     Chaplin.mediator.subscribe 'slideStop', @updateOverallDistribution
     Chaplin.mediator.subscribe 'editGoals', @initializeOverallDistribution
-    @checkIfReadingGoalsExist()
+    Chaplin.mediator.subscribe 'init-reading-budgets', @initializeReadingBudgets
+
+  # computes and stores reading budgets
+  initializeReadingBudgets: () ->
+    # compute the necessary maps...
+    actualUsage = {}
+    $.when(
+      npv = new NewPageVisits
+      npv = npv.fetch()
+    ).then((npv) ->
+      cat_read_map = utils.categoryReadingAmountMap(npv)
+      actualUsage = utils.categoryReadingProportionsMap(cat_read_map)
+    )
+    projectedUsage = {}
+    $.when(
+      urg = new UserReadingGoals
+      urg.fetch()
+    ).then((urg) ->
+      arrayOfPairs = _.map(urg.models, ((item) ->
+        return [item.attributes.name, item.attributes.value]
+        ))
+      projectedUsage = _.object(arrayOfPairs)
+    )
+    
+    # find or create everything in ReadingBudgets
+    $.when(
+      rbs = new ReadingBudgets
+      rbs.fetch()
+    ).then((rbs) ->
+      _.each(projectedUsage, ((v, k) ->
+        rb = rbs.findWhere({category: k})
+        if _.isUndefined(rb)
+          rbs.create
+            created_at: utils.getCurrentTime()
+            updated_at: utils.getCurrentTime()
+            category: k
+            value: actualUsage[k]
+            actual: actualUsage[k]
+            projected: v
+        else
+          rb.save
+            updated_at: utils.getCurrentTime()
+            value: actualUsage[k]
+            actual: actualUsage[k]
+            projected: v
+      ))        
+    )
 
   initializeOverallDistribution: () ->
     actual = _.map($('.slider'), (slider) ->
@@ -124,6 +173,9 @@ module.exports = class PopupGoalsController extends PopupSiteController
 
 
   show: ->
+    # make sure to refresh all reading budgets
+    Chaplin.mediator.publish 'init-reading-budgets'
+    
     @view = new PopupGoalsView region: 'popup-main'
     categories = ['Politics', 'Business', 'Technology', 'Sports', 'Science', 'Entertainment', 'Other']
 
@@ -145,6 +197,7 @@ module.exports = class PopupGoalsController extends PopupSiteController
     rbs = new ReadingBudgets
     # override fetch() to compute the right stuff
     rbs.fetch()
+    console.log rbs
     goalsChartView = new ReadingBudgetsView(collection: rbs, container: @el, region: 'goals-chart')
     
 

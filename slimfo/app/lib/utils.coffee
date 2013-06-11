@@ -118,9 +118,17 @@ _(utils).extend
         acc += Number(v)
       ), 0)
     newMap = _.reduce(catReadingAmountMap, ((acc, v, k) ->
-      acc[k] = Number(v)/Number(total)
+      if Number(total) > 0
+        num = Number((Number(v)/Number(total))*100)
+        acc[k] = Number(num.toFixed(2))
+      else
+        acc[k] = Number((0.00).toFixed(2))
       return acc
       ), {})
     return newMap
+
+  # gets current UNIX time, in seconds
+  getCurrentTime: () ->
+    Math.round((new Date()).getTime() / 1000)
 
 module.exports = utils
