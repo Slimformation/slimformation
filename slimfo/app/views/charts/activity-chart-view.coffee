@@ -4,10 +4,10 @@ template = require 'views/templates/charts/activity-chart'
 utils = require 'lib/utils'
 
 module.exports = class ActivityChartView extends View
-  el: $('#activity-chart-container')
   autoRender: true
   autoAttach: true
   template: template
+  className: 'activity-chart-view'
 
   parsePageVisits: ->
     page_visits_dict = utils.categoryReadingAmountMap(@collection)
@@ -35,7 +35,7 @@ module.exports = class ActivityChartView extends View
           d3.scale.category10().range()
         ).labelThreshold(.05)
         .donut(true)
-      
+
         data = _.map(page_visits_by_category, (item) ->
           word = utils.capitalizeFirstLetter(item[0])
           return {key: word, y: (Number(item[1])/60)}

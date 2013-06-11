@@ -167,6 +167,7 @@ _(utils).extend
         #category_source_dict[page_visit.attributes.category][base_url][1]=page_visit.attributes.readingScore
     )
     
-    return category_source_dict    
+    return category_source_dict
+    
 
 module.exports = utils

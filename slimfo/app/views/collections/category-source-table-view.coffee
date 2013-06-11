@@ -1,13 +1,14 @@
 Chaplin = require 'chaplin'
 View = require 'views/base/view'
-template = require 'views/templates/charts/activity-chart'
+template = require 'views/templates/charts/activity-table'
 utils = require 'lib/utils'
 
 module.exports = class ActivityTableView extends View
-  el: $('#activity-chart-container')
+  # el: $('#activity-chart-container')
   autoRender: true
   autoAttach: true
   template: template
+  className: 'activity-table-view'
 
   sourceSort: ->
     category_source_dict = utils.categorySourceCountMap(@collection)
