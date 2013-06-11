@@ -46,10 +46,7 @@ module.exports = class ActivityTableView extends View
           # console.log timer
           humanizedTimer = utils.humanizeTime(utils.detailedTime(timer))
           
-          if ((i%2)==1) #if odd
-            $('#cat-source-table').append("<tr class='row-blank'><td>" + category_source_arr[category][i][0] + "</td><td class='time'>" + humanizedTimer + "</td></tr>")
-          else
-            $('#cat-source-table').append("<tr class='row-shaded'><td>" + category_source_arr[category][i][0] + "</td><td class='time'>" + humanizedTimer + "</td></tr>")
+          $('#cat-source-table').append("<tr><td>" + category_source_arr[category][i][0] + "</td><td class='time'>" + humanizedTimer + "</td></tr>")
       else #there isn't any data
         $('#cat-source-table').append("<tr><td>No sites visited yet for this category!</td></tr>")
       $('#cat-source-table').append("</br>")
