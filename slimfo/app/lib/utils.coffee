@@ -137,7 +137,36 @@ _(utils).extend
       return Number(((Number(a)/Number(b))*100).toFixed(2))
     else
       return Number(0.toFixed(2))
-    
 
+  # takes a NewPageVisits collection and builds a map that has the
+  # categories as the keys, and a map of the top sources and their
+  # total reading time + reading score as the values.
+  categorySourceCountWithReadingLevelMap: (collection) ->
+    page_visit_count = collection.length
+    page_visits = collection.models
+    siteRegexp = /^(\w+:\/\/[^\/]+).*$/
+
+    category_source_dict =
+      'politics': {}
+      'business':{}
+      'technology': {}
+      'sports': {}
+      'science': {}
+      'entertainment': {}
+      'other': {}
+
+    _.each(page_visits, (page_visit) ->
+      counter = elapsedTimeInSec(page_visit.attributes.created_at,
+                                 page_visit.attributes.updated_at)
+      url_tuple = page_visit.attributes.url.match(siteRegexp)
+      base_url = _.last(url_tuple)
+      if _.isUndefined(category_source_dict[page_visit.attributes.category][base_url])
+        category_source_dict[page_visit.attributes.category][base_url]=[counter, page_visit.attributes.readingScore]
+      else
+        category_source_dict[page_visit.attributes.category][base_url][0]+=counter
+        #category_source_dict[page_visit.attributes.category][base_url][1]=page_visit.attributes.readingScore
+    )
+    
+    return category_source_dict    
 
 module.exports = utils
