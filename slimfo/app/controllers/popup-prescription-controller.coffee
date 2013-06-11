@@ -8,7 +8,14 @@ Chaplin = require 'chaplin'
 module.exports = class PopupPrescriptionController extends PopupSiteController
   show: ->
     @view = new PopupPrescriptionView region: 'popup-main'
-    @newPrescriptionTab('politics')
+    politicsCheckup=@newPrescriptionTab('politics')
+    businessCheckup=@newPrescriptionTab('business')
+    technologyCheckup=@newPrescriptionTab('technology')
+    sportsCheckup=@newPrescriptionTab('sports')
+    scienceCheckup=@newPrescriptionTab('science')
+    entertainmentCheckup=@newPrescriptionTab('entertainment')
+    overallHealth = politicsCheckup+businessCheckup+technologyCheckup+sportsCheckup+scienceCheckup+entertainmentCheckup
+    $('#greeting').append('You are meeting ' + ((overallHealth/18)*100).toFixed(1) + '% of your total goals.</br>Please select the category you would like a diagnosis on:')
 
   initialize: ->
   	super
@@ -26,8 +33,10 @@ module.exports = class PopupPrescriptionController extends PopupSiteController
     #categ = $('.btn.btn-primary.active').attr('id')
 
     prescriptionListViewGoals = new PrescriptionListView(collection: rb, autoRender: true, container: @el, region: 'prescription-list')
-    prescriptionListViewGoals.goalsCheckup(categ)
+    goalsMet=prescriptionListViewGoals.goalsCheckup(categ)
 
     prescriptionListView = new PrescriptionListView(collection: npv, autoRender: true, container: @el, region: 'prescription-list')
-    prescriptionListView.diversityAndReadingLevelCheckup(categ)
+    isDiverseAndGoodReadingLevel=prescriptionListView.diversityAndReadingLevelCheckup(categ)
 
+    overallCheckup = goalsMet + isDiverseAndGoodReadingLevel
+    return overallCheckup
