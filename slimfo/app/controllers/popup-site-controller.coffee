@@ -9,7 +9,7 @@ module.exports = class PopupSiteController extends Controller
     '.*': ->
       @compose 'popup-site', PopupSiteView
       @compose 'popup-header', PopupHeaderView, region: 'popup-header'
-      @compose 'popup-footer', PopupFooterView, region: 'popup-footer'
+      #@compose 'popup-footer', PopupFooterView, region: 'popup-footer'
 
   initialize: ->
     super

@@ -8,5 +8,5 @@ module.exports = class PopupSiteView extends View
   regions:
     '#popup-header-container': 'popup-header'
     '#popup-main-container': 'popup-main'
-    '#popup-footer-container': 'popup-footer'
+    #'#popup-footer-container': 'popup-footer'
   template: template
