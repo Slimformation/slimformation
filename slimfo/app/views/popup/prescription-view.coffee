@@ -15,12 +15,44 @@ module.exports = class PrescriptionView extends View
 
   initialize: ->
     super
-    @delegate('click', '#politics', @renderPoliticsTab)
-    @delegate('click', '#business', @renderBusinessTab)
-    @delegate('click', '#technology', @renderTechnologyTab)
-    @delegate('click', '#sports', @renderSportsTab)
-    @delegate('click', '#science', @renderScienceTab)
-    @delegate('click', '#entertainment', @renderEntertainmentTab)
+    @delegate('click', '#politics', (->
+        @renderTab('politics')
+        Chaplin.mediator.publish 'new_prescription_tab', 'politics'
+        ))
+    @delegate('click', '#business', (->
+        @renderTab('business')
+        Chaplin.mediator.publish 'new_prescription_tab', 'business'
+        ))
+    @delegate('click', '#technology', (->
+        @renderTab('technology')
+        Chaplin.mediator.publish 'new_prescription_tab', 'technology'
+        ))
+    @delegate('click', '#sports', (->
+        @renderTab('sports')
+        Chaplin.mediator.publish 'new_prescription_tab', 'sports'
+        ))
+    @delegate('click', '#science', (->
+        @renderTab('science')
+        Chaplin.mediator.publish 'new_prescription_tab', 'science'
+        ))
+    @delegate('click', '#entertainment', (->
+        @renderTab('entertainment')
+        Chaplin.mediator.publish 'new_prescription_tab', 'entertainment'
+        ))
+
+  renderTab: (cat) ->
+    if /politics/.test(cat)
+        @renderPoliticsTab()
+    if /business/.test(cat)
+        @renderBusinessTab()
+    if /technology/.test(cat)
+        @renderTechnologyTab()
+    if /sports/.test(cat)
+        @renderSportsTab()
+    if /science/.test(cat)
+        @renderScienceTab()
+    if /entertainment/.test(cat)
+        @renderEntertainmentTab()
 
   renderPoliticsTab: ->
     $('.btn.btn-primary.active').attr('class','btn btn-primary')
