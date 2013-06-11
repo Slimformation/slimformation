@@ -59,8 +59,13 @@ module.exports = class ChromeService extends Service
             $.when(
               npv.fetch()
             ).then(->
-              npv.findWhere {url: senderPort.sender.tab.url}
-            ).then((pv) ->
-              pv.save
-                updated_at: Math.round((new Date()).getTime() / 1000)
+              pvs = npv.where {url: senderPort.sender.tab.url}
+              sortedPvs = _.sortBy(pvs, (a) ->
+                return a.get('created_at') * (-1)
+              )
+              mostRecentPv = _.first(sortedPvs)
+              return mostRecentPv
+            ).then((mostRecentPv) ->
+              mostRecentPv.save
+                updated_at: utils.getCurrentTime()
             )
