@@ -57,6 +57,8 @@ module.exports = class ActivityTableView extends View
     _.each(category_source_arr, (source_time_pair) ->
       totalTime += source_time_pair[1]
     )
+    if totalTime == 0
+      return [0, 0]
     count = 0
     weightedAverageReadingLevel = 0
     #console.log category_source_arr
