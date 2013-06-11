@@ -19,3 +19,4 @@ module.exports = class PopupSiteController extends Controller
     @subscribeEvent 'prescription_tab', (-> @redirectTo '#prescription')
     # handle events for view display
     @subscribeEvent 'display:NewPageVisits', (-> @redirectTo '#NewPageVisits')
+

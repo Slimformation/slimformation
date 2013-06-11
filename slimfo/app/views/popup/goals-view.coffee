@@ -11,8 +11,12 @@ module.exports = class GoalsView extends View
   initialize: ->
     super
     @delegate 'click', '#edit-goals', (->
-      Chaplin.mediator.publish("editGoals")
-      @showForm()
+      if /Edit Goals/.test($('#edit-goals').text())
+        Chaplin.mediator.publish("editGoals")
+        @showForm()
+      else
+        Chaplin.mediator.publish("saveGoals")
+        @showForm()
     )
     
 

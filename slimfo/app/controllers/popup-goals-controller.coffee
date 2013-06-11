@@ -21,7 +21,10 @@ module.exports = class PopupGoalsController extends PopupSiteController
     Chaplin.mediator.subscribe 'slideStop', @updateOverallDistribution
     Chaplin.mediator.subscribe 'editGoals', @initializeOverallDistribution
     Chaplin.mediator.subscribe 'init-reading-budgets', @initializeReadingBudgets
-
+    Chaplin.mediator.subscribe('saveGoals', (->
+      @initializeReadingBudgets()
+      ), @)
+    
   # computes and stores reading budgets
   initializeReadingBudgets: () ->
     # compute the necessary maps...
@@ -61,19 +64,21 @@ module.exports = class PopupGoalsController extends PopupSiteController
       _.each(projectedUsage, ((v, k) ->
         rb = rbs.findWhere({category: k})
         if _.isUndefined(rb)
-          rbs.create
+          newRb = rbs.create
             created_at: utils.getCurrentTime()
             updated_at: utils.getCurrentTime()
             category: k
             value: actualUsage[k]
             actual: actualUsage[k]
             projected: v
+          Chaplin.mediator.publish('readingBudgetChange', newRb)
         else
           rb.save
             updated_at: utils.getCurrentTime()
             value: actualUsage[k]
             actual: actualUsage[k]
             projected: v
+          Chaplin.mediator.publish('readingBudgetChange', rb)
       ))        
     )
 
@@ -206,6 +211,6 @@ module.exports = class PopupGoalsController extends PopupSiteController
     rbs = new ReadingBudgets
     # override fetch() to compute the right stuff
     rbs.fetch()
-    goalsChartView = new ReadingBudgetsView(collection: rbs, container: @el, region: 'goals-reading-budgets')
+    @goalsChartView = new ReadingBudgetsView(collection: rbs, container: @el, region: 'goals-reading-budgets')
     
 
