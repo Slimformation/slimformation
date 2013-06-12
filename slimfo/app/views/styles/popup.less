@@ -2,76 +2,105 @@ body {
   width: 420px;
 }
 
+.btn {
+    border-radius: 0px;
+}
+
+a:focus { outline: none; color: white; }
+
+// overall styles
+
+#popup-main-container {
+    height: 460px;
+    overflow: scroll;
+    margin: 0px;
+    padding: 0px 15px 5px 15px;
+}
+
 #activity-chart-container {
   text-align: center;
 }
 
-#popup-main-container {
-  height: 450px;
-}
-
 #chart svg {
-  height: 400px;
+  height: 300px;
 }
 
 #chart-goals svg {
   height: 80px;
 }
 
-#recent-page-visits {
- width: 400px;
+#source-page-visits {
  overflow-y: scroll;
- overflow-x: hidden;
- padding: 25px;
+ margin: 0px 15px 0px;
  display: block;
-
- td {
-  width: 200px;
- }
 }
 
 .navbar {
-  .navbar-inner { padding-bottom: 10px; }
+  border-radius: 0px;
+  .navbar-inner { padding: 0px; border-radius: 0px; background-color: #2C3E50; }
 
-  .nav{ padding-left: 50px; }
+  .nav{ 
+      width: 420px;
+      height: 80px;
+      text-align: center;
+  }
+
+  .nav > li {
+      float: none;
+      cursor: pointer;
+  }
+  
+
   li {
     display: inline-block;
-    line-height: 50px;
+    margin: 0 auto;
+    height: inherit;
+    width: 110px;
+    float: none;
+    
+    a.my-nav-a {
+        color: white;
+        font-weight: 200;
+        font-size: 16px;
+    }
+
+    a.my-nav-a:focus {
+        color: white
+    }
+
+    a.my-nav-a:hover {
+        color: #BDC3C7;
+    }
+
+    a {
+        position: relative;
+        top: 40px;
+        padding: 5px;
+        box-shadow: none;
+    }
+
+
+    // background color of each header tab button
+    &.activity#active {background-color:#2980B9;}
+    &.goals#active {background-color: #E74C3C;}
+    &.prescription#active {background-color: #27AE60;}    
 
     &.activity {
-      background: url('/public/images/activity.png') center no-repeat;
-      background-position: 25px 25px;
+      background: url('/public/images/activity_white.png') center no-repeat;
+      background-position: 40px 15px;
       background-size: 25px 25px;
-      padding-right: 45px;
-
-      a {
-        position: relative;
-        top: 30px;
-      }
     }
 
     &.goals {
-      background: url('/public/images/goals.png') center no-repeat;
-      background-position: 20px 25px;
+      background: url('/public/images/goals_white.png') center no-repeat;
+      background-position: 40px 15px;
       background-size: 25px 25px;
-      padding-right: 45px;
-
-      a {
-        position: relative;
-        top: 30px;
-      }
     }
 
     &.prescription {
-      background: url('/public/images/prescription.png') center no-repeat;
-      background-position: 40px 25px;
+      background: url('/public/images/prescription_white.png') center no-repeat;
+      background-position: 40px 15px;
       background-size: 25px 25px;
-      padding-right: 20px;
-
-      a {
-        position: relative;
-        top: 30px;
-      }
     }
   }
 }
@@ -96,14 +125,26 @@ body {
 .span12 {color: black;}
 
 
+.btn-mini {
+    font-size: 12px;
+    line-height: 10px;
+}
+
+
+// all slider related stuff below
+
 .slider-selection {
   background: #bbb;
 }
 
 .slider-handle {
   opacity: 1;
+  background: #95A5A6;
 }
 
+.btn.btn-primary {
+  width: 43px;
+}
 
 .cat-cell {
   width: 50px;
@@ -111,9 +152,130 @@ body {
 
 .slider-cell {
   width: 100px;
+  vertical-align: middle;
 }
 
-.goals-slider {
+#overall-distribution-container {
+    margin-top: 20px;
+}
+
+.indiv-slider {
+    height: 50px;
+    vertical-align: middle;
+}
+
+.slider.slider-horizontal {
+    width: 200px;
 }
 
 
+#slider1, 
+#politics-slider .slider-selection, 
+#politics-budget .actual-bar,
+#politics-budget .projected-bar {
+  background: #3498DB;
+}
+
+#slider2, 
+#business-slider .slider-selection, 
+#business-budget .actual-bar,
+#business-budget .projected-bar {
+  background: #9B59B6;
+}
+
+#slider3,
+#technology-slider .slider-selection,
+#technology-budget .actual-bar,
+#technology-budget .projected-bar {
+  background: #E67E22;
+}
+
+#slider4,
+#sports-slider .slider-selection,
+#sports-budget .actual-bar,
+#sports-budget .projected-bar {
+  background: #2ECC71;
+}
+
+#slider5,
+#science-slider .slider-selection,
+#science-budget .actual-bar,
+#science-budget .projected-bar {
+  background: #E74C3C;
+}
+
+#slider6,
+#entertainment-slider .slider-selection,
+#entertainment-budget .actual-bar,
+#entertainment-budget .projected-bar {
+  background: #F1C40F;
+}
+
+.row-shaded {
+  background-color: #ECF0F1;
+}
+
+.time {
+  text-align: right;
+}
+
+
+// reading budget styling
+.sl-label {
+    float: left;
+    text-align: left;
+    font-size: 16px;
+    line-height: 16px;
+    padding-top: 5px;
+    font-weight: 800;
+}
+.sl-pair {
+    float: left;
+    text-align: right;
+
+    .sl-left {
+        float: left;
+        margin: 0px 5px;
+    }
+    .sl-right {
+        float: right;
+        margin: 0px 5px;
+    }
+}
+
+.budget-row {
+    margin: 5px 0px;
+    height: 60px;
+}
+
+#reading-budgets {
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 20px;
+    margin-left: 30px;
+    clear: both;
+}
+
+#greeting, #prescription-list {
+  margin-left: 5px;
+  margin-right: 5px;
+  font-size: 16px;
+}
+
+#welcome-head {
+  margin-bottom: 40px;
+}
+
+.welcome-item {
+  margin: 20px 0px;
+}
+
+#welcome-foot {
+    margin-top: 100px;
+}
+
+#prescription-header .btn { width: 36px; }
+
+.prescription-special {
+    color: #27AE60;
+}

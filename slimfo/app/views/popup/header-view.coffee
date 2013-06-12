@@ -16,10 +16,16 @@ module.exports = class HeaderView extends View
     @delegate('click', '.prescription', @renderPrescriptionTab)
 
   renderActivityTab: ->
+    $('#active').attr('id','')
+    $('li.activity').attr('id','active')
     Chaplin.mediator.publish 'activity_tab'
 
   renderGoalsTab: ->
+    $('#active').attr('id','')
+    $('li.goals').attr('id','active')
     Chaplin.mediator.publish 'goals_tab'
 
   renderPrescriptionTab: ->
+    $('#active').attr('id','')
+    $('li.prescription').attr('id','active')
     Chaplin.mediator.publish 'prescription_tab'

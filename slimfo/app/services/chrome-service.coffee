@@ -9,6 +9,7 @@ module.exports = class ChromeService extends Service
     super
     # listen to updated tabs
     @subscribeEvent 'listen:onUpdatedTab', @onUpdatedTab
+    # listen to activity updates from content scripts
     @subscribeEvent 'listen:activityPort', @updateActvity
 
   # handler that is called when chrome tabs need to listened to
@@ -18,18 +19,23 @@ module.exports = class ChromeService extends Service
     chrome.tabs.onUpdated.addListener (tabId, changeInfo, tab) ->
       # check if URL is valid
       return if (changeInfo.url == undefined) or !utils.validListenUrl(changeInfo.url)
-      console.log "Tab Update: the url of tab #{tabId} changed to #{changeInfo.url}"
+      # console.log "Tab Update: the url of tab #{tabId} changed to #{changeInfo.url}"
       # add new PageVisit
       npv = new NewPageVisits
-      pv = npv.create
+      # if you don't supply created_at, it won't work correctly.
+        # Basically, it will use the default value, and even if you
+        # had the same expression as a default in PageVisit, it
+        # would hang on to the first created object's created_at
+        # and only use that for all future PageVisit objects
+        # (maybe because the default value gets computed and
+        # then stored in the prototype out of which
+        # objects are made?)
+      pv = npv.create(
+        created_at: utils.getCurrentTime()
+        updated_at: utils.getCurrentTime()
         url: changeInfo.url
+      )
       Chaplin.mediator.publish 'add:PageVisit', pv
-
-      # example of sending one-off message and printing response:
-      # send a message to the content script in that tab
-      # chrome.tabs.getSelected null, (tab) ->
-      #   chrome.tabs.sendMessage tab.id, {greeting: "hello"}, (response) ->
-      #     console.log response
 
 
   # handler to update activity for page visits
@@ -46,18 +52,20 @@ module.exports = class ChromeService extends Service
         if (!senderPort.sender.tab.highlighted or
             !utils.validListenUrl(senderPort.sender.tab.url))
           return
-        console.log senderPort.sender.tab
-        console.log "Activity Update: " + JSON.stringify(msg)
+        #console.log senderPort.sender.tab
+        #console.log "Activity Update: " + JSON.stringify(msg)
         switch msg.type
           when "update"
             $.when(
               npv.fetch()
             ).then(->
-              npv.findWhere {url: senderPort.sender.tab.url}
-            ).then((pv) ->
-              pv.save
-                updated_at: msg.timestamp
+              pvs = npv.where {url: senderPort.sender.tab.url}
+              sortedPvs = _.sortBy(pvs, (a) ->
+                return a.get('created_at') * (-1)
+              )
+              mostRecentPv = _.first(sortedPvs)
+              return mostRecentPv
+            ).then((mostRecentPv) ->
+              mostRecentPv.save
+                updated_at: utils.getCurrentTime()
             )
-            # console.log pv
-            # do (pv) ->
-            #   pv.save {updated_at: msg.timestamp}

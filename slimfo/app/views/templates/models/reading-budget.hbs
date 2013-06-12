@@ -1,0 +1,21 @@
+<div id="{{category}}-budget" class="budget-row">
+  <div class="sl-label" style="width: 75px">
+    {{category}}
+  </div>
+  <div class="sl-pair" style="width: 250px;">
+    <div class="sl-left" style="width: 75px">
+      actual
+    </div>
+    <div class="progress sl-left" style="width:150px">
+      <div class="bar actual-bar" style="width: {{actual}}%;"></div>
+    </div>
+  </div>
+  <div class="sl-pair" style="width: 250px;">
+    <div class="sl-left" style="width: 75px">
+      goal
+    </div>
+    <div class="progress sl-left" style="width:150px">
+      <div class="bar {{category}}-budget projected-bar" style="width: {{projected}}%;"></div>
+    </div>
+  </div>
+</div>

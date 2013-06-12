@@ -21,11 +21,10 @@ measureActivity = () ->
       if window.isActive
         ActivityPort.postMessage
           type: "update"
-          timestamp: (new Date()).getTime()
   ), 1000)
 
 ActivityPort.onMessage.addListener (msg) ->
-  console.log msg
+  # console.log msg
   switch msg.type
     when "initialize"
       measureActivity()

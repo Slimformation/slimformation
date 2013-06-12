@@ -12,7 +12,7 @@ module.exports = class NewscatService extends Service
   categorize: (pageVisit) ->
     pageUrl = pageVisit.attributes.url
     return if pageUrl == null
-    console.log "sending #{pageUrl} to newscat for nomz"
+    # console.log "sending #{pageUrl} to newscat for nomz"
     $.ajax(
       url: Config.newscatEndpoint + "?url=#{pageUrl}"
     ).done((data) ->
@@ -23,6 +23,6 @@ module.exports = class NewscatService extends Service
         wordCount: data.word_count
         readingScore: (new ReadingScore($(data.content).text())).fleschKincaid()
     ).fail((data) ->
-      console.log "Ajax request failed"
-      console.log data
+      # console.log "Ajax request failed"
+      # console.log data
     )

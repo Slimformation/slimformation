@@ -3,22 +3,29 @@ PopupActivityView = require 'views/popup/activity-view'
 NewPageVisitsView = require 'views/collections/new-page-visits-view'
 ActivityChartView = require 'views/charts/activity-chart-view'
 NewPageVisits = require 'models/NewPageVisits'
+ActivityTableView = require 'views/collections/category-source-table-view'
+WelcomeView = require 'views/popup/welcome-view'
+model = require 'models/base/model'
+config = require 'config'
+nuh = require 'lib/new-user-helper'
 
 module.exports = class PopupActivityController extends PopupSiteController
   show: ->
+    # main view, which sets up regions for other views
     @view = new PopupActivityView region: 'popup-main'
-    # other views, using region setup in the main view
-    npv = new NewPageVisits
-    npv.fetch()
+    
+    if nuh.isNewUser()
+      @welcomeView = new WelcomeView region: 'welcome'
+    else
+      # fetch all new page visits
+      npv = new NewPageVisits
+      npv.fetch()
 
-    activityChartView = new ActivityChartView(collection: npv, autoRender: true, container: @el, region: 'activity-chart')
-    activityChartView.initChart()
+      # other views, using region setup in the main view
 
-  #  newPageVisitsView = new NewPageVisitsView(collection: npv, region: 'recent-page-visits')
+      @activityChartView = new ActivityChartView collection: npv, region: 'activity-chart'
+      @activityChartView.initChart()
+      
 
-  # newPageVisits: ->
-  #   npv = new NewPageVisits
-  #   npv.fetch()
-  #   # console.log npv
-
-  #   @view = new NewPageVisitsView(collection: npv, region: 'popup-main')
+      @activityTableView = new ActivityTableView collection: npv, region: 'source-page-visits'
+      @activityTableView.initTable()
