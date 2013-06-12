@@ -24,7 +24,7 @@ measureActivity = () ->
   ), 1000)
 
 ActivityPort.onMessage.addListener (msg) ->
-  console.log msg
+  # console.log msg
   switch msg.type
     when "initialize"
       measureActivity()
