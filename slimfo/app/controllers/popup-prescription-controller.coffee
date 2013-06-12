@@ -15,7 +15,7 @@ module.exports = class PopupPrescriptionController extends PopupSiteController
     entertainmentCheckup=@newPrescriptionTab('entertainment')
     politicsCheckup=@newPrescriptionTab('politics')
     overallHealth = politicsCheckup+businessCheckup+technologyCheckup+sportsCheckup+scienceCheckup+entertainmentCheckup
-    $('#greeting').append('You are meeting ' + ((overallHealth/18)*100).toFixed(1) + '% of your total goals.</br>Please select the category you would like a diagnosis on:')
+    $('#greeting').append('You are meeting <b class="prescription-special">' + ((overallHealth/18)*100).toFixed(1) + '%</b> of your total goals.</br>Please select the category you would like a diagnosis on:')
 
   initialize: ->
   	super
