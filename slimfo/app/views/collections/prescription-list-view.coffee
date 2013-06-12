@@ -121,7 +121,7 @@ module.exports = class ActivityTableView extends View
       if sourcesAboveThreshold[1]==0 #no time stored
         pl.append("No data collected so far. Try viewing more sites.")
         isDiverse = false
-      else if _.isEmpty(sourcesAboveThreshold) #If no sources above threshold
+      else if sourcesAboveThreshold[0].length==0 #If no sources above threshold
         pl.append("You have been doing well in terms of getting content about " + category + " from different sources!")
         isDiverse = true
       else #Source above threshold - report it
