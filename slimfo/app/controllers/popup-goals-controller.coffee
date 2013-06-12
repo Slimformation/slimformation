@@ -192,8 +192,8 @@ module.exports = class PopupGoalsController extends PopupSiteController
 
 
   show: ->
-    if nuh.isNewUser()
-      @bootstrap()
+    
+    @bootstrap()
     
     @view = new PopupGoalsView region: 'popup-main'
     categories = ['Politics', 'Business', 'Technology', 'Sports', 'Science', 'Entertainment', 'Other']
