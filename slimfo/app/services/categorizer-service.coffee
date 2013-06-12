@@ -12,13 +12,13 @@ module.exports = class CategorizerService extends Service
   categorize: (pageVisit) ->
     pageUrl = pageVisit.attributes.url
     return if pageUrl == null
-    console.log "trying to categorize #{pageUrl}"
+    # console.log "trying to categorize #{pageUrl}"
     $.ajax(
       url: Config.categorizerEndpoint + "?url=#{pageUrl}"
     ).done((data) ->
       pageVisit.save
         category: data.category
     ).fail((data) ->
-      console.log "Ajax request failed"
-      console.log data
+      # console.log "Ajax request failed"
+      # console.log data
     )

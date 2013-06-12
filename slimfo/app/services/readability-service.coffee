@@ -14,7 +14,7 @@ module.exports = class ReadabilityService extends Service
   simplify: (pageVisit) ->
     pageUrl = pageVisit.attributes.url
     return if pageUrl == null
-    console.log "trying to simplify #{pageUrl}"
+    # console.log "trying to simplify #{pageUrl}"
     $.ajax(
       url: Config.simplifierEndpoint + "?url=#{pageUrl}"
     ).done((data) ->
@@ -26,6 +26,6 @@ module.exports = class ReadabilityService extends Service
       ).then (pv) ->
           console.log pv
     ).fail((data) ->
-      console.log "Ajax request failed"
-      console.log data
+      # console.log "Ajax request failed"
+      # console.log data
     )
