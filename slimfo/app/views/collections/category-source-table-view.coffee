@@ -34,7 +34,7 @@ module.exports = class ActivityTableView extends View
     #console.log "IN INIT TABLE"
     #console.log category_source_arr
 
-    $('#source-page-visits').append("<b>Top Sources for Each Category</b>")
+    $('#source-page-visits').append("<b style='font-size:24px'>Top Sources Per Category</b>")
     $('#source-page-visits').append("<table class='table table-striped table-condensed table-hover' id='cat-source-table'></table>")
     $('#cat-source-table').append("<thead><th>Category</th><th>Time</th></thead>")
     for category of category_source_arr
