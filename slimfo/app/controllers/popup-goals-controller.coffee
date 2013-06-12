@@ -10,12 +10,12 @@ NewPageVisits = require 'models/NewPageVisits'
 utils = require 'lib/utils'
 UserReadingGoalsView = require 'views/collections/user-reading-goals-view'
 Chaplin = require 'chaplin'
+nuh = require 'lib/new-user-helper'
 
 module.exports = class PopupGoalsController extends PopupSiteController
 
   initialize: ->
     super
-    @checkIfReadingGoalsExist()
     Chaplin.mediator.subscribe 'user-reading-goals-empty', @createSliders
     Chaplin.mediator.subscribe 'slideStop', @updateSliderValue
     Chaplin.mediator.subscribe 'slideStop', @updateOverallDistribution
@@ -178,6 +178,11 @@ module.exports = class PopupGoalsController extends PopupSiteController
     if urg.length < 6
       Chaplin.mediator.publish 'user-reading-goals-empty'
 
+  # sets up reading goals and budgets
+  bootstrap: ->
+    @checkIfReadingGoalsExist()
+    Chaplin.mediator.publish 'init-reading-budgets'
+
   createSliders: ->
     urg = new UserReadingGoals
     cats = ["politics","business","technology","sports","science","entertainment"]
@@ -187,8 +192,8 @@ module.exports = class PopupGoalsController extends PopupSiteController
 
 
   show: ->
-    # make sure to refresh all reading budgets
-    Chaplin.mediator.publish 'init-reading-budgets'
+    if nuh.isNewUser()
+      @bootstrap()
     
     @view = new PopupGoalsView region: 'popup-main'
     categories = ['Politics', 'Business', 'Technology', 'Sports', 'Science', 'Entertainment', 'Other']
