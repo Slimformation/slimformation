@@ -23,11 +23,18 @@ module.exports = class ActivityTableView extends View
       'other': []
         
     for category of category_source_dict
+      total_time = 0
       for url, time of category_source_dict[category]
+        total_time += time
         category_source_arr[category].push([url, time])
       category_source_arr[category].sort((a,b) -> b[1]-a[1])
+
     
     return category_source_arr
+
+  totalTimeForCategory: (cat) ->
+    catMap = utils.categoryReadingAmountMap(@collection)
+    return catMap[cat]
 
   initTable: ->
     category_source_arr = @sourceSort()
@@ -40,7 +47,10 @@ module.exports = class ActivityTableView extends View
     for category of category_source_arr
       word = utils.capitalizeFirstLetter(category)
 
-      $('#cat-source-table').append("<tr><td><b>"+word+"</b></td><td></td></tr>")
+      $('#cat-source-table').append("<tr><td><b>" + word +
+        "</b></td><td>" +
+        utils.humanizeTime(utils.detailedTime((@totalTimeForCategory(category)))) +
+        "</td></tr>")
       if category_source_arr[category].length>0 #given there data to show, then show it
         for i in [0..Math.min(category_source_arr[category].length-1, 2)] #Need to watch out for when we don't have much data
           timer = category_source_arr[category][i][1]
