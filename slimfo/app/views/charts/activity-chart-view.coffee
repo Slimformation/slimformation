@@ -30,7 +30,7 @@ module.exports = class ActivityChartView extends View
           return d.key
         ).values((d) ->
           return d
-        ).showLabels(true)
+        ).showLabels(false)
         .color(
           d3.scale.category10().range()
         ).labelThreshold(.05)
