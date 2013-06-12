@@ -86,7 +86,7 @@ module.exports = class ActivityTableView extends View
     goalsMet = false
     pl=$('#prescription-list')
     rb = @getReadingBudget(category, @collection)
-    pl.append("</br></br>")
+    pl.append("</br>")
     pl.append("<b>Goals</b>: ")
     #console.log rb
     if (Math.abs(rb['actual']-rb['projected'])<=THRESHOLD) #within threshold of projected
