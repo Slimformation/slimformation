@@ -12,6 +12,18 @@ Check out the `docs/` directory.
 
 It's being built using [Brunch](http://brunch.io) and [Chaplin](http://chaplinjs.org/), which is just [Backbone](http://documentcloud.github.io/backbone/) all coffee'd and sugar'd up.
 
+#### Local dev workflow
+
+Navigate to `chrome://extensions` in your browser. Make sure the checkbox for "Developer mode" at the top right is checked.
+
+You should have a menu option to "Load unpacked extension." Click this, and navigate to where you've stored the `slimformation` repository. Select the `slimfo` directory. This should load the extension into Chrome (or Chromium) and bring up the app's icon next to the address bar.
+
+The extension popup is just an HTML file, so you can right click to inspect elements to your desire.
+
+Back in your console, be sure to have `brunch watch` running (do this from the `slimfo/` directory). This will watch and compile any changes you make to the scripts, views or styles.
+
+When you're ready to package the `.crx` file, navigate back to `chrome://extensions`. Select "Pack extension." This will bring up a dialog to select an extension root directory and a private key.
+
 **If you're starting from scratch, you need the following:**
 
 1. Install node and npm.
